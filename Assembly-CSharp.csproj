@@ -250,6 +250,7 @@
     <Compile Include="Assets\Programming\ThirdPerson\Scripts\MovementInput.cs" />
     <Compile Include="Assets\TextProperties.cs" />
     <Compile Include="Assets\tracker.cs" />
+    <None Include="Assets\New Shaders\Test Shaders\UniteShader.shader" />
     <None Include="Assets\ProCore\Polybrush\Shader\z_TriPlanarBlend_SfSrc.shader" />
     <None Include="Assets\ProCore\ProBuilder\Shader\pb_TransparentOverlay.shader" />
     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendMobile.shader" />
@@ -291,6 +292,7 @@
     <None Include="Assets\ProCore\Polybrush\ThirdPartyLicenses.txt" />
     <None Include="Assets\KriptoFX\Realistic Effects Pack v4\Effects\Shaders\DemoMobileDiffuse.shader" />
     <None Include="Assets\KriptoFX\MeshEffect\Shaders\ME_UberDistortionStandardMobile.shader" />
+    <None Include="Assets\New Shaders\Test Shaders\Cheese.shader" />
     <None Include="Assets\KriptoFX\MeshEffect\Shaders\ME_UberParticleShader.shader" />
     <None Include="Assets\DX11_Tessellation\DX11_Tessellation_Free\Shaders\StandardPBS_Fixed.shader" />
     <None Include="Assets\KriptoFX\Realistic Effects Pack v4\Effects\Shaders\RFX4_UberDecal.shader" />
