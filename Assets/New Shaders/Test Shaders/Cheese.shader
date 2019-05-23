@@ -57,8 +57,9 @@
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
 				float4 dissolveColor = tex2D(_DissolveTexture, i.uv);
-				clip(dissolveColor.rgb - _DissolveMult);
-				return col * _Color;
+				clip(dissolveColor.rgb - (sin(_DissolveMult + _Time.y) * 0.6));
+				//clip(dissolveColor.rgb - _DissolveMult);
+				return col * (sin(_Color + _Time.z));
             }
             ENDCG
         }
