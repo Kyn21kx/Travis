@@ -191,6 +191,7 @@
     <Compile Include="Assets\KriptoFX\Realistic Effects Pack v4\SceneResources\Other\RFX4_FPS.cs" />
     <Compile Include="Assets\KriptoFX\Realistic Effects Pack v4\SceneResources\Other\RFX4_MouseOrbit.cs" />
     <Compile Include="Assets\KriptoFX\Realistic Effects Pack v4\SceneResources\Other\RFX4_RealtimeReflection.cs" />
+    <Compile Include="Assets\New Shaders\Test Shaders\SettingsChanger.cs" />
     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_BrushMirror.cs" />
     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_ComponentIndex.cs" />
     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_Culling.cs" />
@@ -228,7 +229,6 @@
     <Compile Include="Assets\Programming\Auxiliar\groundID.cs" />
     <Compile Include="Assets\Programming\Auxiliar\ShootingManager.cs" />
     <Compile Include="Assets\Programming\Auxiliar\Spells\PulseAffected.cs" />
-    <Compile Include="Assets\Programming\Enemy\Basic enemy\En_Shoot.cs" />
     <Compile Include="Assets\Programming\Player\aim.cs" />
     <Compile Include="Assets\Programming\Player\ComboManager.cs" />
     <Compile Include="Assets\Programming\Player\Dash.cs" />

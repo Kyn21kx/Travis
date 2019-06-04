@@ -4,8 +4,12 @@
     {
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
+		_Glossiness("Smoothness", Range(0,1)) = 0.5
+		_Metallic("Metallic", Range(0,1)) = 0.0
+		_DissolvePattern("Dissolve pattern", 2D) = "white" {}
+		_Amount("Dissolve mult", Range(0,1)) = 0
+		_ColorChange ("Color changer", Range(0,1)) = 0
+		_Intensity ("Color intensity", float) = 2
     }
     SubShader
     {
@@ -29,6 +33,10 @@
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
+		sampler2D _DissolvePattern;
+		float _Amount;
+		float _ColorChange;
+		float _Intensity;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -46,6 +54,9 @@
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
+			o.Emission = c.rgb * tex2D(_MainTex, IN.uv_MainTex).a * _Intensity;
+			float4 dissolveColor = tex2D(_DissolvePattern, IN.uv_MainTex);
+			clip(dissolveColor.rgb - _Amount);
         }
         ENDCG
     }

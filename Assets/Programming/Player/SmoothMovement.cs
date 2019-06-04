@@ -19,6 +19,7 @@ public class SmoothMovement : MonoBehaviour {
     Vector3 rotation;
     float maxDis = float.MaxValue;
     public Transform closestFloor = null;
+    public LockOn lockOn;
     #endregion
 
     #region Animation variables
@@ -30,27 +31,38 @@ public class SmoothMovement : MonoBehaviour {
      */
     private void Start() {
         anim = GetComponentInChildren<Animator>();
+        lockOn = GetComponent<LockOn>();
     }
 
     private void FixedUpdate() {
         //Debug.Log(Input.GetAxis("LT"));
-        MovePlayer(gameObject);
+        MovePlayer();
         Jump();
         Identify();
     }
 
-    private void MovePlayer (GameObject moveTarget) {
+    private void MovePlayer () {
         //Input management
         //if controller input, then change
         input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         Vector2 inputDir = input.normalized;
         if (inputDir != Vector2.zero) {
-            float target = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
-            rotation = Vector3.up * Mathf.SmoothDampAngle(moveTarget.transform.eulerAngles.y, target, ref smoothVel, turnTime);
-            moveTarget.transform.eulerAngles = rotation;
-            //Change walk speed for speed and set the variable depending on the input
-            transform.Translate(movPivot.transform.forward * walkSpeed * Time.fixedDeltaTime, Space.World);
-            anim.SetBool("Walk", true);
+            if (!lockOn.locking) {
+                float target = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+                rotation = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, target, ref smoothVel, turnTime);
+                transform.eulerAngles = rotation;
+                //Change walk speed for speed and set the variable depending on the input
+                transform.Translate(transform.forward * walkSpeed * Time.fixedDeltaTime, Space.World);
+                anim.SetBool("Walk", true);
+            }
+            else {
+                float target = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+                rotation = Vector3.up * Mathf.SmoothDampAngle(movPivot.transform.eulerAngles.y, target, ref smoothVel, turnTime);
+                movPivot.transform.eulerAngles = rotation;
+                //Change walk speed for speed and set the variable depending on the input
+                transform.Translate(movPivot.transform.forward * walkSpeed * Time.fixedDeltaTime, Space.World);
+                anim.SetBool("Walk", true);
+            }
         }
         else {
             anim.SetBool("Walk", false);

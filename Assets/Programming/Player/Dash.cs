@@ -9,6 +9,7 @@ public class Dash : MonoBehaviour {
     [SerializeField]
     private Transform center;
     private float auxDis;
+    public float time;
     #endregion
     #region statsVars
     public float speed = 50f;
@@ -25,7 +26,15 @@ public class Dash : MonoBehaviour {
 
     private void _Dash () {
         if (Input.GetButtonDown("B") && GetComponent<StaminaManager>().staminaAmount >= staminaCost) {
-            transform.DOMove(transform.forward, 0.2f);
+            //Vector 3 Lerp
+            RaycastHit hit;
+            Vector3 target = transform.position + transform.forward * speed;
+            //Debug.DrawRay(target, -Vector3.up, Color.green);
+            if (Physics.Linecast(transform.position, target, out hit)) {
+                target = transform.position + transform.forward * (hit.distance - 1f);
+            }
+            transform.position = target;
         }
     }
+    
 }
