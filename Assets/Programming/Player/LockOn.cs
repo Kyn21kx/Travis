@@ -11,6 +11,7 @@ public class LockOn : MonoBehaviour {
     [SerializeField]
     float distanceToTarget;
     public bool locking;
+    private bool onetime = false;
     Vector2 viewportTarget, viewportPlayer;
     public CinemachineFreeLook LockCam;
     public CinemachineFreeLook MainCam;
@@ -27,7 +28,8 @@ public class LockOn : MonoBehaviour {
         if (Input.GetAxis("LT") > 0) {
             locking = true;
             Quaternion rotation = Quaternion.LookRotation(GetTarget());
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 15f * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 15f * Time.deltaTime);
+            onetime = false;
             LockCam.gameObject.SetActive(true);
             MainCam.gameObject.SetActive(false);
         }
@@ -37,6 +39,7 @@ public class LockOn : MonoBehaviour {
             target = null;
             locking = false;
         }
+        Adjustments();
     }
 
     //Find the nearest target
@@ -56,5 +59,11 @@ public class LockOn : MonoBehaviour {
     }
 
     //Adjust the camera
-    
+    private void Adjustments () {
+        if (!locking && !onetime) {
+            MainCam.m_XAxis.Value = LockCam.m_XAxis.Value;
+            onetime = true;
+        }
+
+    }
 }

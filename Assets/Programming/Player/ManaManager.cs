@@ -22,7 +22,7 @@ public class ManaManager : MonoBehaviour {
         maxMana = manaAmount;
     }
 
-    private void FixedUpdate() {
+    private void Update() {
         proportion = manaAmount / maxMana;
         manaBar.fillAmount = proportion;
         Regenerate();
@@ -36,9 +36,9 @@ public class ManaManager : MonoBehaviour {
 
     public void Regenerate () {
         if (reduced) {
-            cntr += Time.fixedDeltaTime;
+            cntr += Time.deltaTime;
             if (cntr >= 1.5f) {
-                manaAmount += regenerationAmount * Time.fixedDeltaTime;
+                manaAmount += regenerationAmount * Time.deltaTime;
                 manaAmount = Mathf.Clamp(manaAmount, 0f, maxMana);
             }
         }

@@ -34,7 +34,7 @@ public class SmoothMovement : MonoBehaviour {
         lockOn = GetComponent<LockOn>();
     }
 
-    private void FixedUpdate() {
+    private void Update() {
         //Debug.Log(Input.GetAxis("LT"));
         MovePlayer();
         Jump();
@@ -52,7 +52,7 @@ public class SmoothMovement : MonoBehaviour {
                 rotation = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, target, ref smoothVel, turnTime);
                 transform.eulerAngles = rotation;
                 //Change walk speed for speed and set the variable depending on the input
-                transform.Translate(transform.forward * walkSpeed * Time.fixedDeltaTime, Space.World);
+                transform.Translate(transform.forward * walkSpeed * Time.deltaTime, Space.World);
                 anim.SetBool("Walk", true);
             }
             else {
@@ -60,7 +60,7 @@ public class SmoothMovement : MonoBehaviour {
                 rotation = Vector3.up * Mathf.SmoothDampAngle(movPivot.transform.eulerAngles.y, target, ref smoothVel, turnTime);
                 movPivot.transform.eulerAngles = rotation;
                 //Change walk speed for speed and set the variable depending on the input
-                transform.Translate(movPivot.transform.forward * walkSpeed * Time.fixedDeltaTime, Space.World);
+                transform.Translate(movPivot.transform.forward * walkSpeed * Time.deltaTime, Space.World);
                 anim.SetBool("Walk", true);
             }
         }

@@ -97,13 +97,13 @@ public class aim : MonoBehaviour {
                 Debug.LogFormat(viewportDistance.ToString(), Color.blue);
                 Vector3 dir = to.position - Camera.main.transform.position;
                 Quaternion rot = Quaternion.LookRotation(dir * 0.5f);
-                Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, rot, 50f * Time.fixedDeltaTime);
+                Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, rot, 50f * Time.deltaTime);
                 if (viewportDistance >= 0.9f) {
-                    Properties.defaultDistance += 20f * Time.fixedDeltaTime;
+                    Properties.defaultDistance += 20f * Time.deltaTime;
                     Properties.defaultDistance = Mathf.Clamp(Properties.defaultDistance, Properties.defaultDistance, 100f);
                 }
                 else if (viewportDistance < 0.8) {
-                    Properties.defaultDistance -= 20f * Time.fixedDeltaTime;
+                    Properties.defaultDistance -= 20f * Time.deltaTime;
                 }
                 
                 break;

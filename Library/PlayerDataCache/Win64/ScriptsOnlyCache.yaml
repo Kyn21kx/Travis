@@ -20,7 +20,9 @@ ScriptsOnlyBuild:
     - RFX1_ShaderFloatCurve
     - RFX1_Target
     - RFX1_TransformMotion
+    - RFX1_UVAnimation
     - RFX1_WindCurves
+    - SettingsChanger
     - SmoothMovement
     - SpellShooting
     - StaminaManager
@@ -37,10 +39,13 @@ ScriptsOnlyBuild:
     - Cinemachine.CinemachinePipeline
     - Cinemachine.CinemachineVirtualCamera
     - Cinemachine.NoiseSettings
+    - CinemachineCameraOffset
     DOTween.dll:
     - DG.Tweening.Core.DOTweenSettings
     ProBuilderCore-Unity5.dll:
     - ProBuilder2.Common.pb_PreferenceDictionary
+    - pb_Entity
+    - pb_Object
     Unity.Postprocessing.Runtime.dll:
     - UnityEngine.Rendering.PostProcessing.AmbientOcclusion
     - UnityEngine.Rendering.PostProcessing.AutoExposure
@@ -156,6 +161,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10122}
     - Class: 114
+      Script: {instanceID: 10130}
+    - Class: 114
       Script: {instanceID: 10156}
     - Class: 114
       Script: {instanceID: 10282}
@@ -202,6 +209,10 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10938}
     - Class: 114
+      Script: {instanceID: 10958}
+    - Class: 114
+      Script: {instanceID: 10966}
+    - Class: 114
       Script: {instanceID: 11012}
     - Class: 114
       Script: {instanceID: 11108}
@@ -218,6 +229,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11374}
     - Class: 114
+      Script: {instanceID: 11400}
+    - Class: 114
       Script: {instanceID: 11418}
     - Class: 114
       Script: {instanceID: 11444}
@@ -226,15 +239,17 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11578}
     - Class: 114
-      Script: {instanceID: 11816}
+      Script: {instanceID: 11814}
     - Class: 114
-      Script: {instanceID: 11830}
+      Script: {instanceID: 11828}
     - Class: 114
-      Script: {instanceID: 11858}
+      Script: {instanceID: 11856}
     - Class: 114
-      Script: {instanceID: 11918}
+      Script: {instanceID: 11916}
     - Class: 114
-      Script: {instanceID: 11924}
+      Script: {instanceID: 11922}
+    - Class: 114
+      Script: {instanceID: 11934}
     - Class: 114
       Script: {instanceID: 11964}
     - Class: 114
@@ -1294,7 +1309,7 @@ ScriptsOnlyBuild:
     className: ME_ParticleCollisionDecal
   - hash:
       serializedVersion: 2
-      Hash: 20bcd1cd6b2b37ab409c9fcec8532364
+      Hash: 3098fcf20e482f7844e1e9d217f2e5c5
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SpellShooting
@@ -1342,7 +1357,7 @@ ScriptsOnlyBuild:
     className: DOTweenSettings
   - hash:
       serializedVersion: 2
-      Hash: 72da5a685051f1bdafb0ac435f99cef6
+      Hash: 4bb898d8c5f31b2fe5d34c6cecc1e5d3
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: LockOn
@@ -1564,7 +1579,7 @@ ScriptsOnlyBuild:
     className: ME_AnimatorEvents
   - hash:
       serializedVersion: 2
-      Hash: d3274c4bd6dbfd8dfc51d695f9d90ea0
+      Hash: f1b8cd972663ce9d53cd196380111d4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Dash
@@ -1828,7 +1843,7 @@ ScriptsOnlyBuild:
     className: CinemachineImpulseSource
   - hash:
       serializedVersion: 2
-      Hash: 5f7241c005e1e78a60aa680fa1faa4d2
+      Hash: ffba3c226bdb5c8dd3de9dcf23cbc9ce
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SmoothMovement
@@ -1942,12 +1957,6 @@ ScriptsOnlyBuild:
     className: ME_ParticleTrails
   - hash:
       serializedVersion: 2
-      Hash: f75246d5c74295b74dbfcf4552452d5b
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: En_Shoot
-  - hash:
-      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -2030,6 +2039,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextMeshPro
+  - hash:
+      serializedVersion: 2
+      Hash: 3247d5a6aa5cad2e5fc453553c411cb8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SettingsChanger
   - hash:
       serializedVersion: 2
       Hash: 98c8373c48ae1d5ea92aca4e1054a71c

@@ -47,8 +47,9 @@ public class Parry : MonoBehaviour {
         auxHealth = health;
         
     }
-    private void FixedUpdate() {
+    private void Update() {
         health = GetComponent<HealthManager>().Health;
+        VibDown();
         //Disable attack when blocking
         if (Input.GetButtonDown("LB")) {
             blocking = true;
@@ -68,13 +69,9 @@ public class Parry : MonoBehaviour {
         }
         CountDown();
     }
-    //After getting a successful parry, we call Late update to set the perfect parry bool to false;
-    private void Update() {
-        VibDown();
-    }
     private void CountDown () {
         if (startTime) {
-            timeDown += Time.fixedDeltaTime;
+            timeDown += Time.deltaTime;
         }
         //Collided
         if (collided) {
@@ -117,7 +114,7 @@ public class Parry : MonoBehaviour {
     private void VibDown () {
         if (vib) {
             GamePad.SetVibration(PlayerIndex.One, 0.3f, 0.3f);
-            vibrationTimer += Time.fixedDeltaTime;
+            vibrationTimer += Time.deltaTime;
             if (vibrationTimer > 0.5f) {
                 GamePad.SetVibration(PlayerIndex.One, 0f, 0f);
                 vibrationTimer = 0;

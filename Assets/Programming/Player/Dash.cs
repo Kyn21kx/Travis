@@ -4,11 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Dash : MonoBehaviour {
-
+    /*
+     * TODO:
+     * Stamina cost
+     * Cooldown
+     */
     #region Varibles
     [SerializeField]
     private Transform center;
     private float auxDis;
+    private LockOn locker;
     public float time;
     #endregion
     #region statsVars
@@ -18,9 +23,10 @@ public class Dash : MonoBehaviour {
 
     private void Start() {
         auxDis = speed;
+        locker = GetComponent<LockOn>();
     }
 
-    private void FixedUpdate() {
+    private void Update() {
         _Dash();
     }
 
@@ -28,7 +34,14 @@ public class Dash : MonoBehaviour {
         if (Input.GetButtonDown("B") && GetComponent<StaminaManager>().staminaAmount >= staminaCost) {
             //Vector 3 Lerp
             RaycastHit hit;
-            Vector3 target = transform.position + transform.forward * speed;
+            Vector3 target;
+            if (!locker.locking) {
+                target = transform.position + transform.forward * speed;
+            }
+            else {
+                Transform piv = GetComponent<SmoothMovement>().movPivot.transform;
+                target = transform.position + piv.forward * speed;
+            }
             //Debug.DrawRay(target, -Vector3.up, Color.green);
             if (Physics.Linecast(transform.position, target, out hit)) {
                 target = transform.position + transform.forward * (hit.distance - 1f);

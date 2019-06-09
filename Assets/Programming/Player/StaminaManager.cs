@@ -22,7 +22,7 @@ public class StaminaManager : MonoBehaviour {
         maxStamina = staminaAmount;
     }
 
-    private void FixedUpdate() {
+    private void Update() {
         proportion = staminaAmount / maxStamina;
         staminaBar.fillAmount = proportion;
         Regenerate();
@@ -36,9 +36,9 @@ public class StaminaManager : MonoBehaviour {
 
     public void Regenerate() {
         if (reduced) {
-            cntr += Time.fixedDeltaTime;
+            cntr += Time.deltaTime;
             if (cntr >= 4f) {
-                staminaAmount += regenerationAmount * Time.fixedDeltaTime;
+                staminaAmount += regenerationAmount * Time.deltaTime;
                 staminaAmount = Mathf.Clamp(staminaAmount, 0f, maxStamina);
             }
         }

@@ -34,7 +34,7 @@ public class ComboManager : MonoBehaviour {
     public Combos_Master lightCombo;
     #endregion
 
-    private void FixedUpdate() {
+    private void Update() {
         XboxInput();
         TimeStart();
         Combo_Selector();
@@ -79,7 +79,7 @@ public class ComboManager : MonoBehaviour {
 
     private void TimeStart () {
         if (startTime) {
-            spacingTime += Time.fixedDeltaTime;
+            spacingTime += Time.deltaTime;
             spacingTime = Mathf.Clamp(spacingTime, 0f, maxTime);
         }
         //Clear time once it gets to the maximum time allowed (maxTime)
