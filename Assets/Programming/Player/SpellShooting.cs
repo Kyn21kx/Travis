@@ -6,14 +6,15 @@ using XInputDotNetPure;
 public class SpellShooting : MonoBehaviour {
     public enum Type {Fire, Electric, Ice, Magnetism};
     #region Variables
-    public List<GameObject> spells;
-    public GameObject spell, holdspell;
+    [Header("1.- Fuego, 2.- Electrico, 3,- Hielo, 4.- Magnetismo")]
+    public List<GameObject> basicSpells, holdingSpells;
+    public GameObject spell, holdspell, heavy;
     public float height;
     [SerializeField]
     private Vector2 DPad;
     public Type type;
     [SerializeField]
-    private float holdTime;
+    private float holdTime, releaseTime = 1f;
     private bool count;
     #endregion
 
@@ -24,15 +25,16 @@ public class SpellShooting : MonoBehaviour {
     }
 
     private void Update() {
+        TypeManager();
         _Input();
     }
 
     private void _Input() {
         DPad = new Vector2(Input.GetAxis("DPadX"), Input.GetAxis("DPadY"));
-        if (Input.GetButtonDown("RB")) {
+        if (Input.GetButtonDown("RB") || Input.GetKeyDown(KeyCode.Q)) {
             count = true;
         }
-        if (Input.GetButtonUp("RB")) {
+        if (Input.GetButtonUp("RB") || Input.GetKeyUp(KeyCode.Q)) {
             count = false;
             Shoot();
         }
@@ -43,7 +45,7 @@ public class SpellShooting : MonoBehaviour {
         else {
             holdTime = 0f;
         }
-        if (holdTime >= 1.5f) {
+        if (holdTime >= releaseTime) {
             GamePad.SetVibration(PlayerIndex.One, 0.2f, 0.2f);
         }
         else {
@@ -68,17 +70,30 @@ public class SpellShooting : MonoBehaviour {
 
     private void Shoot () {
         //Determine mana cost depending of the spell
-        if (GetComponent<ManaManager>().manaAmount >= 10f && holdTime < 1.5f) {
+        if (GetComponent<ManaManager>().manaAmount >= 10f && holdTime < releaseTime) {
             Instantiate(spell, new Vector3(transform.position.x, transform.position.y + height, transform.position.z), transform.rotation);
             GetComponent<ManaManager>().Reduce(10f);
         }
-        else if (GetComponent<ManaManager>().manaAmount >= 15f && holdTime >= 1.5f) {
+        else if (GetComponent<ManaManager>().manaAmount >= 15f && holdTime >= releaseTime) {
             Instantiate(holdspell, new Vector3(transform.position.x, transform.position.y + height, transform.position.z), transform.rotation);
             GetComponent<ManaManager>().Reduce(15f);
         }
     }
     private void TypeManager () {
-        
+        switch (type) {
+            case Type.Fire:
+                spell = basicSpells[0];
+                break;
+            case Type.Electric:
+                spell = basicSpells[1];
+                break;
+            case Type.Ice:
+                spell = basicSpells[2];
+                break;
+            case Type.Magnetism:
+                spell = basicSpells[3];
+                break;
+        }
     }
 
     private void Cooldown (float time) {

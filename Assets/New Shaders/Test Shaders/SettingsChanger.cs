@@ -6,11 +6,10 @@ public class SettingsChanger : MonoBehaviour {
 
     #region
     public Material shader;
-    float ex = 0f;
+    public float ex = 0f;
     #endregion
 
     private void Update() {
-        ex += 1f * Time.deltaTime;
         shader.SetFloat("_Intensity", ex);
         
     }

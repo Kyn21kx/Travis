@@ -7,6 +7,8 @@ public class PlayerDir : MonoBehaviour {
     #region Variables
     [SerializeField]
     Vector2 xyInput;
+    [SerializeField]
+    List<Vector3> data;
     #endregion
 
     private void Update() {
@@ -14,9 +16,10 @@ public class PlayerDir : MonoBehaviour {
         Identify();
     }
 
-    private void Identify () {
-        //Debug.Log("Forward: " + transform.forward.normalized);
-        //Debug.Log("xyInput: " + xyInput);
+    private void Identify() {
+        if (xyInput != Vector2.zero && Input.GetKeyDown(KeyCode.M)) {
+            data.Add(new Vector3(transform.forward.x, transform.eulerAngles.y, transform.forward.z));
+        }
     }
 
 }

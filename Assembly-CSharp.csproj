@@ -229,6 +229,7 @@
     <Compile Include="Assets\Programming\Auxiliar\groundID.cs" />
     <Compile Include="Assets\Programming\Auxiliar\ShootingManager.cs" />
     <Compile Include="Assets\Programming\Auxiliar\Spells\PulseAffected.cs" />
+    <Compile Include="Assets\Programming\Enemy\Behaviour.cs" />
     <Compile Include="Assets\Programming\Player\aim.cs" />
     <Compile Include="Assets\Programming\Player\ComboManager.cs" />
     <Compile Include="Assets\Programming\Player\Dash.cs" />

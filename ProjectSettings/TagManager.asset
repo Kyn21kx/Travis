@@ -14,6 +14,7 @@ TagManager:
   - EnemySpellHolder
   - Enemy
   - Terrain
+  - MovPivot
   layers:
   - Default
   - TransparentFX
@@ -25,7 +26,7 @@ TagManager:
   - 
   - PostP
   - Player
-  - 
+  - Enemy
   - 
   - 
   - 

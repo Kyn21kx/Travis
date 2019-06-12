@@ -157,6 +157,11 @@ public class RFX1_TransformMotion : MonoBehaviour
                         dealt = true;
                     }
                 }
+                else {
+                    if (hit.transform.CompareTag("Enemy")) {
+                        hit.transform.GetComponent<Behaviour>().Damage(damage);
+                    }
+                }
                 return;
             }
         }

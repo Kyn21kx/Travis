@@ -70,17 +70,37 @@ PrefabInstance:
     - target: {fileID: 4447755591889936857, guid: 8964f62354f7f7645b1379ad329fb30b,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4447755591889936857, guid: 8964f62354f7f7645b1379ad329fb30b,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4447755591889936857, guid: 8964f62354f7f7645b1379ad329fb30b,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4340925066423534541, guid: 8964f62354f7f7645b1379ad329fb30b,
+        type: 3}
+      propertyPath: damage
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4569618889955800881, guid: 8964f62354f7f7645b1379ad329fb30b,
+        type: 3}
+      propertyPath: NoiseModule.strength.scalar
+      value: 0.52
+      objectReference: {fileID: 0}
+    - target: {fileID: 4569618889955800881, guid: 8964f62354f7f7645b1379ad329fb30b,
+        type: 3}
+      propertyPath: NoiseModule.frequency
+      value: 1.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 4569618889955800881, guid: 8964f62354f7f7645b1379ad329fb30b,
+        type: 3}
+      propertyPath: NoiseModule.octaves
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4568984717372634199, guid: 8964f62354f7f7645b1379ad329fb30b,
         type: 3}
