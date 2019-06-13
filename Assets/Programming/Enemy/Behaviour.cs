@@ -147,20 +147,38 @@ public class Behaviour : MonoBehaviour {
     [SerializeField]
     float cntr = 0f;
     int patrolIndex = 0;
+    float disToPos;
     #endregion
     private void StealthBehaviour () {
         if (detected) {
             cntr += Time.deltaTime;
             state = States.Heard;
         }
+        else {
+            state = States.Patrol;
+        }
         switch (state) {
             case States.Patrol:
+                agent.isStopped = false;
                 if (targets.Length != 0) {
+                    disToPos = Vector3.Distance(transform.position, targets[patrolIndex].position);
+                    agent.SetDestination(targets[patrolIndex].position);
+                    if (disToPos <= agent.stoppingDistance) {
+                        patrolIndex++;
+                    }
+                    if (patrolIndex >= targets.Length) {
+                        patrolIndex = 0;
 
+                    }
                 }
                 break;
             case States.Heard:
-
+                agent.isStopped = true;
+                Vector3 target = player.position - transform.position;
+                var rotation = Quaternion.LookRotation(target);
+                if (cntr >= 0.2f) {
+                    transform.rotation = Quaternion.Lerp(transform.rotation, rotation, (rotateSpeed / 5f) * Time.deltaTime);
+                }
                 break;
             case States.Warning:
                 break;

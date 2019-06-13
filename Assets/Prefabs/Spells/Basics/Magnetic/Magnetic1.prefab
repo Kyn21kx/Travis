@@ -68,6 +68,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114321906428678634, guid: 1fd871c93fa27bc469e9dbb7f7d943f0,
+        type: 3}
+      propertyPath: CollidesWith.m_Bits
+      value: 1331
+      objectReference: {fileID: 0}
+    - target: {fileID: 114321906428678634, guid: 1fd871c93fa27bc469e9dbb7f7d943f0,
+        type: 3}
+      propertyPath: Speed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114321906428678634, guid: 1fd871c93fa27bc469e9dbb7f7d943f0,
+        type: 3}
+      propertyPath: damage
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114321906428678634, guid: 1fd871c93fa27bc469e9dbb7f7d943f0,
+        type: 3}
+      propertyPath: enemySpell
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1fd871c93fa27bc469e9dbb7f7d943f0, type: 3}
 --- !u!1 &6394625011839455600 stripped
