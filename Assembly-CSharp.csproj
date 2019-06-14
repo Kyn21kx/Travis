@@ -369,6 +369,7 @@
     <None Include="Assets\KriptoFX\Realistic Effects Pack v1\Shaders\Decal\RFX1_DecalWorldIce.shader" />
     <None Include="Assets\DX11_Tessellation\DX11_Tessellation_Free\Shaders\StandardPBS_Phong.shader" />
     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendBmp_SfSrc.shader" />
+    <None Include="Assets\New Shaders\Test Shaders\DashShader.shader" />
     <None Include="Assets\KriptoFX\Realistic Effects Pack v4\Effects\Shaders\Portal\NoStencilTransperentDiffuse.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />

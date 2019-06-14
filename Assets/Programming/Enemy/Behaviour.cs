@@ -102,9 +102,17 @@ public class Behaviour : MonoBehaviour {
         Gizmos.color = Color.black;
         Gizmos.DrawRay(transform.position, transform.forward * radius);
     }
-
-    public void Damage (float dmg) {
-        health -= dmg;
+    float time_down = 0f;
+    public void Damage (float dmg, float t, float dot) {
+        if (t == 0) {
+            health -= dmg;
+        }
+        else {
+            time_down += Time.deltaTime;
+            if (time_down < t) {
+                health -= dmg + (dot / t);
+            }
+        }
     }
 
     public void HealthBehaviour () {

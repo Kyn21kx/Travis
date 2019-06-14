@@ -19,7 +19,7 @@ public class LockOn : MonoBehaviour {
 
     private void Start() {
         LockCam.gameObject.SetActive(false);
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = transform;
         Cursor.lockState = CursorLockMode.Locked;
         target = null;
     }
@@ -43,6 +43,8 @@ public class LockOn : MonoBehaviour {
     }
 
     //Find the nearest target
+    //Add condition if there are no enemies
+    //Add a distance limit
     private Vector3 GetTarget () {
         if (target == null) {
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -51,6 +53,9 @@ public class LockOn : MonoBehaviour {
                 float dis = Vector3.Distance(player.position, enemy.transform.position);
                 if (dis < minDis) {
                     minDis = dis;
+                    target = enemy.transform;
+                }
+                else if (dis == minDis) {
                     target = enemy.transform;
                 }
             }

@@ -83,15 +83,20 @@ public class SpellShooting : MonoBehaviour {
         switch (type) {
             case Type.Fire:
                 spell = basicSpells[0];
+                spell.GetComponentInChildren<RFX1_TransformMotion>().appliedEffect = RFX1_TransformMotion.Effects.Burn;
+                holdspell = holdingSpells[0];
                 break;
             case Type.Electric:
                 spell = basicSpells[1];
+                holdspell = holdingSpells[1];
                 break;
             case Type.Ice:
                 spell = basicSpells[2];
+                holdspell = holdingSpells[2];
                 break;
             case Type.Magnetism:
                 spell = basicSpells[3];
+                holdspell = holdingSpells[3];
                 break;
         }
     }

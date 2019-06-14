@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Dash : MonoBehaviour {
     /*
@@ -47,6 +48,7 @@ public class Dash : MonoBehaviour {
                 target = transform.position + transform.forward * (hit.distance - 1f);
             }
             transform.position = target;
+            
         }
     }
     

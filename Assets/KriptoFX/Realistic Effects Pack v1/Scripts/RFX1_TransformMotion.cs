@@ -6,9 +6,13 @@ using Random = UnityEngine.Random;
 
 public class RFX1_TransformMotion : MonoBehaviour
 {
+    public enum Effects {None, Burn, Slow, Stun};
     public float Distance = 30;
     public float Speed = 1;
     public float damage = 1f;
+    [Header("Damage Over Time")]
+    public float dot = 0f;
+    public float freezingMultiplier = 0f;
     public bool dealt;
     GameObject player;
     [Header("If this is an enemy, mark it")]
@@ -20,7 +24,8 @@ public class RFX1_TransformMotion : MonoBehaviour
     public float RandomMoveSpeedScale = 0;
     public GameObject Target;
     private bool auxColl;
- 
+    [Header("Applied effects on collision")]
+    public Effects appliedEffect;
     public LayerMask CollidesWith = ~0;
    
    
@@ -159,7 +164,21 @@ public class RFX1_TransformMotion : MonoBehaviour
                 }
                 else {
                     if (hit.transform.CompareTag("Enemy")) {
-                        hit.transform.GetComponent<Behaviour>().Damage(damage);
+                        var enemyBehaviour = hit.transform.GetComponent<Behaviour>();
+                        switch (appliedEffect) {
+                            case Effects.None:
+                                enemyBehaviour.Damage(damage, 0, 0);
+                                break;
+                            case Effects.Burn:
+                                //Replace with burn time variable that can be increased by level
+                                enemyBehaviour.Damage(damage, 2f, 0.2f);
+                                Debug.Log("Burn");
+                                break;
+                            case Effects.Slow:
+                                break;
+                            case Effects.Stun:
+                                break;
+                        }
                     }
                 }
                 return;
