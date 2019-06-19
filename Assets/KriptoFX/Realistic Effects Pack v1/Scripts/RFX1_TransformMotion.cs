@@ -171,7 +171,7 @@ public class RFX1_TransformMotion : MonoBehaviour
                                 break;
                             case Effects.Burn:
                                 //Replace with burn time variable that can be increased by level
-                                enemyBehaviour.Damage(damage, 2f, 0.2f);
+                                enemyBehaviour.Damage(damage, 4f, 0.2f);
                                 Debug.Log("Burn");
                                 break;
                             case Effects.Slow:

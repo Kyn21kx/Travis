@@ -50,6 +50,7 @@ public class Behaviour : MonoBehaviour {
     #endregion
     #region Variables
     public bool detected;
+    public bool burn;
     public TextMeshPro text;
     Transform player;
     [Header("Posciciones a los que se va a mover el agente, en orden")]
@@ -57,6 +58,7 @@ public class Behaviour : MonoBehaviour {
     private bool shot;
     private States state;
     private NavMeshAgent agent;
+    private float dmgOverTime, time;
     #endregion
 
     #region Stats
@@ -102,23 +104,37 @@ public class Behaviour : MonoBehaviour {
         Gizmos.color = Color.black;
         Gizmos.DrawRay(transform.position, transform.forward * radius);
     }
-    float time_down = 0f;
+    float time_down;
     public void Damage (float dmg, float t, float dot) {
-        if (t == 0) {
-            health -= dmg;
+        if (t != 0) {
+            time_down = 0f;
+            time = t;
+            dmgOverTime = dot / t;
+            burn = true;
         }
         else {
-            time_down += Time.deltaTime;
-            if (time_down < t) {
-                health -= dmg + (dot / t);
-            }
+            burn = false;
         }
+        health -= dmg;
     }
-
     public void HealthBehaviour () {
         text.text = health.ToString();
         if (health <= 0) {
             Destroy(gameObject);
+        }
+        if (burn) {
+            DamageOverTime();
+        }
+    }
+
+    private void DamageOverTime () {
+        time_down += Time.deltaTime;
+        if (time > 0) {
+            if (time_down >= 1f) {
+                health -= dmgOverTime;
+                time--;
+                time_down = 0f;
+            }
         }
     }
 
