@@ -59,6 +59,7 @@ public class Behaviour : MonoBehaviour {
     private States state;
     private NavMeshAgent agent;
     private float dmgOverTime, time;
+    Vector3 last_pos;
     #endregion
 
     #region Stats
@@ -100,7 +101,6 @@ public class Behaviour : MonoBehaviour {
         else {
             Gizmos.color = Color.green;
         }
-        Gizmos.DrawRay(transform.position, (player.position - transform.position).normalized * radius);
         Gizmos.color = Color.black;
         Gizmos.DrawRay(transform.position, transform.forward * radius);
     }
@@ -179,7 +179,7 @@ public class Behaviour : MonoBehaviour {
             state = States.Heard;
         }
         else {
-            state = States.Patrol;
+            cntr = 0f;
         }
         switch (state) {
             case States.Patrol:
@@ -192,21 +192,29 @@ public class Behaviour : MonoBehaviour {
                     }
                     if (patrolIndex >= targets.Length) {
                         patrolIndex = 0;
-
                     }
                 }
                 break;
             case States.Heard:
                 agent.isStopped = true;
+                //Add a delay to go find the player
                 Vector3 target = player.position - transform.position;
                 var rotation = Quaternion.LookRotation(target);
-                if (cntr >= 0.2f) {
-                    transform.rotation = Quaternion.Lerp(transform.rotation, rotation, (rotateSpeed / 5f) * Time.deltaTime);
+                if (cntr >= 0.1 && cntr <= 0.2) {
+                    last_pos = player.position;
                 }
+                //if (timeAllowed inside)
+                transform.rotation = Quaternion.Lerp(transform.rotation, rotation, (rotateSpeed / 5f) * Time.deltaTime);
+                agent.isStopped = false;
+                agent.SetDestination(last_pos);
+                
                 break;
             case States.Warning:
                 break;
             case States.Combat:
+                target = player.position - transform.position;
+                rotation = Quaternion.LookRotation(target);
+                transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotateSpeed * Time.deltaTime);
                 break;
         }
     }

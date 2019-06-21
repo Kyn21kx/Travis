@@ -7,11 +7,12 @@ public class LockOn : MonoBehaviour {
 
     #region Variables
     [SerializeField]
-    Transform target, player;
+    Transform target, player, collisionAux;
     [SerializeField]
     float distanceToTarget;
     public bool locking;
     private bool onetime = false;
+    private bool isCollided = true;
     Vector2 viewportTarget, viewportPlayer;
     public CinemachineFreeLook LockCam;
     public CinemachineFreeLook MainCam;
@@ -23,11 +24,18 @@ public class LockOn : MonoBehaviour {
         Cursor.lockState = CursorLockMode.Locked;
         target = null;
     }
-
+    //Check if there is a collision in between the player and the enemy, if there is, do not turn around
     private void Update() {
         if (Input.GetAxis("LT") > 0) {
             locking = true;
-            Quaternion rotation = Quaternion.LookRotation(GetTarget());
+            var target = GetTarget();
+            Quaternion rotation = Quaternion.LookRotation(target);
+            collisionAux.rotation = rotation;
+            Ray ray = new Ray(new Vector3(collisionAux.position.x, collisionAux.position.y + 0.5f, collisionAux.position.z), transform.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, Vector3.Distance(new Vector3(collisionAux.position.x, 0, collisionAux.position.z), new Vector3(target.x, 0, target.z)))) {
+
+            }
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 15f * Time.deltaTime);
             onetime = false;
             LockCam.gameObject.SetActive(true);
