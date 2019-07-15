@@ -28,12 +28,12 @@ public class LockOn : MonoBehaviour {
     private void Update() {
         if (Input.GetAxis("LT") > 0) {
             locking = true;
-            var target = GetTarget();
-            Quaternion rotation = Quaternion.LookRotation(target);
+            var _target = GetTarget();
+            Quaternion rotation = Quaternion.LookRotation(_target);
             collisionAux.rotation = rotation;
             Ray ray = new Ray(new Vector3(collisionAux.position.x, collisionAux.position.y + 0.5f, collisionAux.position.z), transform.forward);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Vector3.Distance(new Vector3(collisionAux.position.x, 0, collisionAux.position.z), new Vector3(target.x, 0, target.z)))) {
+            if (Physics.Raycast(ray, out hit, Vector3.Distance(new Vector3(collisionAux.position.x, 0, collisionAux.position.z), new Vector3(_target.x, 0, _target.z)))) {
 
             }
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 15f * Time.deltaTime);
@@ -56,15 +56,17 @@ public class LockOn : MonoBehaviour {
     private Vector3 GetTarget () {
         if (target == null) {
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            float minDis = float.MaxValue;
-            foreach (GameObject enemy in enemies) {
-                float dis = Vector3.Distance(player.position, enemy.transform.position);
-                if (dis < minDis) {
-                    minDis = dis;
-                    target = enemy.transform;
-                }
-                else if (dis == minDis) {
-                    target = enemy.transform;
+            if (enemies != null) {
+                float minDis = float.MaxValue;
+                foreach (GameObject enemy in enemies) {
+                    float dis = Vector3.Distance(player.position, enemy.transform.position);
+                    if (dis < minDis) {
+                        minDis = dis;
+                        target = enemy.transform;
+                    }
+                    else if (dis == minDis) {
+                        target = enemy.transform;
+                    }
                 }
             }
         }

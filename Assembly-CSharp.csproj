@@ -230,6 +230,7 @@
     <Compile Include="Assets\Programming\Auxiliar\ShootingManager.cs" />
     <Compile Include="Assets\Programming\Auxiliar\Spells\PulseAffected.cs" />
     <Compile Include="Assets\Programming\Enemy\Behaviour.cs" />
+    <Compile Include="Assets\Programming\Enemy\Enemy_Environment.cs" />
     <Compile Include="Assets\Programming\Player\aim.cs" />
     <Compile Include="Assets\Programming\Player\ComboManager.cs" />
     <Compile Include="Assets\Programming\Player\Dash.cs" />
@@ -246,6 +247,7 @@
     <Compile Include="Assets\Programming\Spells\Fireball.cs" />
     <Compile Include="Assets\Programming\Spells\Pulse.cs" />
     <Compile Include="Assets\Programming\Spells\RangedAbility.cs" />
+    <Compile Include="Assets\Programming\Test Scripts\ApproximationTest.cs" />
     <Compile Include="Assets\Programming\Test Scripts\RotateShader.cs" />
     <Compile Include="Assets\Programming\Test Scripts\TestSpawner.cs" />
     <Compile Include="Assets\Programming\ThirdPerson\Scripts\MovementInput.cs" />

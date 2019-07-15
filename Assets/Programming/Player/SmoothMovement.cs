@@ -83,7 +83,7 @@ public class SmoothMovement : MonoBehaviour {
         }
         if (distance >= 3) {
             //anim.SetBool("Jump", false);
-            rb.velocity += Vector3.down;
+            rb.velocity += Vector3.down * (jumpForce / 10);
         }
     }
 

@@ -11,7 +11,7 @@ public class ComboManager : MonoBehaviour {
      * Fix animation with input
     */
     //Enums for the combos
-    public enum Combos_Master {Default, A, B, C, Airbone, Dash};
+    public enum Combos_Master {Default, A, B, C, Airbone, Dash, AirSmash};
 
     #region Variables
     public bool lockOn;
@@ -34,10 +34,16 @@ public class ComboManager : MonoBehaviour {
     public Combos_Master lightCombo;
     #endregion
 
+    #region Stats
+    public float airSmashRadius;
+    public float airSmashDmg;
+    #endregion
+
     private void Update() {
         XboxInput();
         TimeStart();
         Combo_Selector();
+        Combo_Effect();
     }
 
     private void XboxInput () {
@@ -49,31 +55,48 @@ public class ComboManager : MonoBehaviour {
         }
     }
 
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, airSmashRadius);
+    }
+
     private void Combo_Selector () {
         if (!preserveCombo) {
-            if (previousSpacingTime >= 1 && previousSpacingTime <= 2 && btnCntrX == 2) {
-                lightCombo = Combos_Master.A;
-                preserveCombo = true;
+            if (!GetComponent<SmoothMovement>().grounded && Input.GetButtonDown("Y")) {
+                GetComponent<Rigidbody>().velocity += Vector3.down * 45f;
+                lightCombo = Combos_Master.AirSmash;
+                //Animation here
+            }
+        }
+    }
 
-            }
-            else if (previousSpacingTime >= 1 && previousSpacingTime <= 2 && btnCntrX == 3) {
-                lightCombo = Combos_Master.B;
-                maxInput = 8;
-                preserveCombo = true;
-            }
-            #region Lock On
-            else if (Input.GetButtonDown("RB")) {
-                lockOn = true;
-            }
-            else if (Input.GetButtonUp("RB")) {
-                lockOn = false;
-            }
-            #endregion
-            else {
-                lightCombo = Combos_Master.Default;
-                //preserveCombo = true;
-                maxInput = 4;
-            }
+    private void Combo_Effect () {
+        switch (lightCombo) {
+            case Combos_Master.Default:
+                break;
+            case Combos_Master.A:
+                break;
+            case Combos_Master.B:
+                break;
+            case Combos_Master.C:
+                break;
+            case Combos_Master.Airbone:
+                break;
+            case Combos_Master.Dash:
+                break;
+            case Combos_Master.AirSmash:
+                if (GetComponent<SmoothMovement>().grounded) {
+
+                    GameObject[] affectedEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+                    foreach (var enemy in affectedEnemies) {
+                        float dis = Vector3.Distance(transform.position, enemy.transform.position);
+                        if (dis <= airSmashRadius) {
+                            enemy.GetComponent<Behaviour>().Damage(airSmashDmg, 0f, 0f);
+                        }
+                    }
+                    lightCombo = Combos_Master.Default;
+                }
+                break;
         }
     }
 
