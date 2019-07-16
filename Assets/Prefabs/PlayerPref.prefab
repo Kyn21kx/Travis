@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 1632729423}
   - component: {fileID: 1632729438}
   - component: {fileID: 1632729435}
+  - component: {fileID: 3526901171773879576}
   - component: {fileID: 868065287}
   - component: {fileID: 868065288}
   - component: {fileID: 1475265388}
@@ -348,6 +349,21 @@ MonoBehaviour:
   preserveCombo: 0
   previousSpacingTime: 0
   lightCombo: 0
+  AirSmashClip: {fileID: 0}
+  airSmashRadius: 0
+  airSmashDmg: 0
+--- !u!114 &3526901171773879576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353749592071220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4e4f698af5714047b188c11b3300dc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &868065287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -536,6 +552,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   player: {fileID: 0}
+  collisionAux: {fileID: 0}
   distanceToTarget: 0
   locking: 0
   LockCam: {fileID: 0}

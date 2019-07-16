@@ -81,10 +81,20 @@ public class SmoothMovement : MonoBehaviour {
             //anim.SetBool("Jump", true);
             rb.velocity += Vector3.up * jumpForce;
         }
-        if (distance >= 3) {
+        if (distance >= 2.4f) {
+            StartCoroutine(FrameJump());
             //anim.SetBool("Jump", false);
-            rb.velocity += Vector3.down * (jumpForce / 10);
         }
+    }
+
+    IEnumerator FrameJump () {
+        var rb = GetComponent<Rigidbody>();
+        rb.velocity += Vector3.down * 0.000000001f;
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        rb.velocity += Vector3.down * (jumpForce / 18);
     }
 
     private void Identify() {

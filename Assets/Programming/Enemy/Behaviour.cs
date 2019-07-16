@@ -150,7 +150,8 @@ public class Behaviour : MonoBehaviour {
     private bool Detect (Transform target) {
         Collider[] overlaps = new Collider[10];
         int count = Physics.OverlapSphereNonAlloc(transform.position, radius, overlaps);
-        for (int i = 0; i < count + 1; i++) {
+        //Try i < count + 1 In case of an error
+        for (int i = 0; i < count; i++) {
             if(overlaps[i] != null) {
                 if (overlaps[i].transform == target) {
                     Vector3 dir = (target.position - transform.position).normalized;

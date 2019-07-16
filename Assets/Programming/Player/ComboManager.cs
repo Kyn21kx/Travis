@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using X_Time;
 
+[RequireComponent(typeof(XTime))]
 public class ComboManager : MonoBehaviour {
 
     /*TODO:
@@ -15,6 +17,7 @@ public class ComboManager : MonoBehaviour {
 
     #region Variables
     public bool lockOn;
+    private XTime xTime;
     [SerializeField]
     float spacingTime = 0f;
     [SerializeField]
@@ -32,12 +35,18 @@ public class ComboManager : MonoBehaviour {
     public float previousSpacingTime;
     //Light combos controlled by different spacing time between the X button
     public Combos_Master lightCombo;
+    [SerializeField]
+    private AudioClip AirSmashClip;
     #endregion
 
     #region Stats
     public float airSmashRadius;
     public float airSmashDmg;
     #endregion
+
+    private void Start() {
+        xTime = GetComponent<XTime>();
+    }
 
     private void Update() {
         XboxInput();
@@ -54,12 +63,6 @@ public class ComboManager : MonoBehaviour {
             startTime = true;
         }
     }
-
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(transform.position, airSmashRadius);
-    }
-
     private void Combo_Selector () {
         if (!preserveCombo) {
             if (!GetComponent<SmoothMovement>().grounded && Input.GetButtonDown("Y")) {
@@ -69,7 +72,7 @@ public class ComboManager : MonoBehaviour {
             }
         }
     }
-
+    float timeScale = 0f;
     private void Combo_Effect () {
         switch (lightCombo) {
             case Combos_Master.Default:
@@ -89,11 +92,13 @@ public class ComboManager : MonoBehaviour {
 
                     GameObject[] affectedEnemies = GameObject.FindGameObjectsWithTag("Enemy");
                     foreach (var enemy in affectedEnemies) {
-                        float dis = Vector3.Distance(transform.position, enemy.transform.position);
+                        float dis = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(enemy.transform.position.x, enemy.transform.position.z));
                         if (dis <= airSmashRadius) {
                             enemy.GetComponent<Behaviour>().Damage(airSmashDmg, 0f, 0f);
                         }
                     }
+                    AudioSource.PlayClipAtPoint(AirSmashClip, transform.position);
+                    xTime.SlowTime(0.5f, 0.3f);
                     lightCombo = Combos_Master.Default;
                 }
                 break;
