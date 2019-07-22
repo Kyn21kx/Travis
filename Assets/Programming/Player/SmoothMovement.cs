@@ -19,6 +19,7 @@ public class SmoothMovement : MonoBehaviour {
     Vector3 rotation;
     float maxDis = float.MaxValue;
     public Transform closestFloor = null;
+    public bool canMove;
     public LockOn lockOn;
     #endregion
 
@@ -30,14 +31,18 @@ public class SmoothMovement : MonoBehaviour {
      * When in the air, disable movement if parrying
      */
     private void Start() {
+        canMove = true;
         anim = GetComponentInChildren<Animator>();
         lockOn = GetComponent<LockOn>();
+        closestFloor = transform;
     }
 
     private void Update() {
         //Debug.Log(Input.GetAxis("LT"));
-        MovePlayer();
-        Jump();
+        if (canMove) {
+            Jump();
+            MovePlayer();
+        }
         Identify();
     }
 

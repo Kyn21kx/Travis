@@ -8,7 +8,11 @@ namespace X_Time {
         private float SlowingFactor;
         private float MaxTime;
         private bool slown;
-        
+
+        private void Start() {
+            Time.timeScale = 1f;
+        }
+
         private void Update() {
             if (slown) {
                 Time.timeScale = SlowingFactor;

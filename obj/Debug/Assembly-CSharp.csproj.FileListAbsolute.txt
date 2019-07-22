@@ -224,3 +224,4 @@ X:\Unity Projects\Travis\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cach
 X:\Unity Projects\Travis\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 X:\Unity Projects\Travis\obj\Debug\Assembly-CSharp.dll
 X:\Unity Projects\Travis\obj\Debug\Assembly-CSharp.pdb
+X:\Unity Projects\Travis\Temp\bin\Debug\Substance.Game.dll

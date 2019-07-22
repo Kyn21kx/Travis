@@ -290,6 +290,7 @@
     <None Include="Assets\KriptoFX\Realistic Effects Pack v4\ImagePostEffects\Mobile\Resources\RFX4_Bloom_Inc.cginc" />
     <None Include="Assets\KriptoFX\MeshEffect\Shaders\ME_DistortionSlime.shader" />
     <None Include="Assets\KriptoFX\Realistic Effects Pack v1\Shaders\RFX1_LightningParticles.shader" />
+    <None Include="Assets\New Shaders\Test Shaders\Force Field.shader" />
     <None Include="Assets\Pending Assets\Pending to buy legally.txt" />
     <None Include="Assets\DX11_Tessellation\DX11_Tessellation_Free\Shaders\Pimped_Tess.shader" />
     <None Include="Assets\ProCore\Polybrush\Shader\z_BaseWithDecals.shader" />
@@ -328,6 +329,7 @@
     <None Include="Assets\DX11_Tessellation\DX11_Tessellation_Free\Shaders\StandardPBS_Smooth.shader" />
     <None Include="Assets\Shader Forge\Assets\ShaderForge\Example Assets\Shaders\Refraction.shader" />
     <None Include="Assets\ProCore\ProBuilder\Shader\pb_VertexPicker.shader" />
+    <None Include="Assets\New Shaders\Test Shaders\Distortion.shader" />
     <None Include="Assets\DX11_Tessellation\DX11_Tessellation_Free\Shaders\FreeTess_Utils.cginc" />
     <None Include="Assets\ProCore\Polybrush\Shader\z_VertexBillboard.shader" />
     <None Include="Assets\ProCore\ProBuilder\Shader\pb_HideVertices.shader" />
@@ -343,6 +345,7 @@
     <None Include="Assets\KriptoFX\MeshEffect\Shaders\ME_Gold.shader" />
     <None Include="Assets\DX11_Tessellation\DX11_Tessellation_Free\Shaders\StandardPBS_EdgeLength.shader" />
     <None Include="Assets\ProCore\ProBuilder\About\ThirdPartyLicenses.txt" />
+    <None Include="Assets\New Shaders\Test Shaders\Fire.shader" />
     <None Include="Assets\KriptoFX\Realistic Effects Pack v1\Shaders\RFX1_Particle.shader" />
     <None Include="Assets\ProCore\ProBuilder\Shader\pb_UnlitVertexColor.shader" />
     <None Include="Assets\ProCore\ProBuilder\Shader\pb_FacePicker.shader" />

@@ -72,6 +72,7 @@ public class Behaviour : MonoBehaviour {
     [Header("The highest, the fastest... (Recommended value: 2)")]
     [Header("The time it takes the enemy to face the player")]
     public float rotateSpeed = 1f;
+    public bool collided;
     public float angle, radius, range;
     #endregion
 
@@ -92,6 +93,7 @@ public class Behaviour : MonoBehaviour {
         Shoot();
         StealthBehaviour();
         detected = Detect(player);
+        collided = Collided(player);
     }
 
     private void OnDrawGizmos() {
@@ -177,6 +179,33 @@ public class Behaviour : MonoBehaviour {
         }
         return false;
     }
+    private bool Collided(Transform target) {
+        Collider[] overlaps = new Collider[10];
+        int count = Physics.OverlapSphereNonAlloc(transform.position, radius, overlaps);
+        //Try i < count + 1 In case of an error
+        for (int i = 0; i < count; i++) {
+            if (overlaps[i] != null) {
+                if (overlaps[i].transform == target) {
+                    Vector3 dir = (target.position - transform.position).normalized;
+                    //Increase accuracy
+                    dir.y *= 0f;
+                        Ray ray = new Ray(new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), target.position - transform.position);
+                        RaycastHit hit;
+                        if (Physics.Raycast(ray, out hit, radius)) {
+                            if (!hit.transform.CompareTag("Player")) {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                        return false;
+                    
+                }
+            }
+        }
+        return true;
+    }
     #region global aux variables
     [SerializeField]
     float cntr = 0f;
@@ -223,13 +252,12 @@ public class Behaviour : MonoBehaviour {
                         float dX = Mathf.Abs(player.position.x - transform.position.x);
                         if (cntr <= 0.2f) {
                             playerAngleX = Mathf.Atan((dZ / dX)) * Mathf.Rad2Deg;
-                            Debug.Log(playerAngleX);
                         }
                         float x = range * Mathf.Cos(playerAngleX) + player.position.x;
                         float z = range * Mathf.Sin(playerAngleX) + player.position.z;
                         toPlayerPos = new Vector3(x, player.position.y, z);
                         #region Conditions to attack
-                        if (distanceToPlayer <= range && detected) {
+                        if (distanceToPlayer <= range && !collided) {
                             agent.isStopped = true;
                             cntr = 0f;
                             //numberOfAttacks = 1;
@@ -240,7 +268,7 @@ public class Behaviour : MonoBehaviour {
                             agent.isStopped = false;
                             agent.SetDestination(toPlayerPos);
                         }
-
+                        
                         #endregion
                         switch (subType) {
                             case SubType.V1:

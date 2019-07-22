@@ -323,7 +323,7 @@ MonoBehaviour:
   runSpeed: 50
   input: {x: 0, y: 0}
   grounded: 0
-  jumpForce: 20
+  jumpForce: 30
   movPivot: {fileID: 901950723}
   closestFloor: {fileID: 0}
   lockOn: {fileID: 0}
@@ -349,9 +349,9 @@ MonoBehaviour:
   preserveCombo: 0
   previousSpacingTime: 0
   lightCombo: 0
-  AirSmashClip: {fileID: 0}
-  airSmashRadius: 0
-  airSmashDmg: 0
+  AirSmashClip: {fileID: 8300000, guid: 6a165f86dbe2a244d8ffbe23b28439c3, type: 3}
+  airSmashRadius: 7
+  airSmashDmg: 2
 --- !u!114 &3526901171773879576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,7 +552,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   player: {fileID: 0}
-  collisionAux: {fileID: 0}
+  collisionAux: {fileID: 2124291376}
   distanceToTarget: 0
   locking: 0
   LockCam: {fileID: 0}
@@ -585,7 +585,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100132, guid: f592b72a216d9de4982ce5728f2a6db0, type: 3}
       propertyPath: m_Name
-      value: passive_marker_man
+      value: Model
       objectReference: {fileID: 0}
     - target: {fileID: 100132, guid: f592b72a216d9de4982ce5728f2a6db0, type: 3}
       propertyPath: m_Layer

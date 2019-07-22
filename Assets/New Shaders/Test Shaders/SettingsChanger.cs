@@ -10,7 +10,7 @@ public class SettingsChanger : MonoBehaviour {
     #endregion
 
     private void Update() {
-        shader.SetFloat("_Intensity", ex);
-        
+        shader.SetFloat("_Opacity", ex);
+        transform.rotation = Quaternion.Lerp(transform.rotation, new Quaternion(0, 180, 0, 0), 5f * Time.deltaTime);
     }
 }

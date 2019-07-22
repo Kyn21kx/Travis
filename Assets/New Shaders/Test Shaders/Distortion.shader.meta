@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 52878c2753684334e8eb43b538d449be
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _Reflectionmap: {fileID: 2800000, guid: f1ca1ad1f3c1f2e429b8ce2612f1ad9c, type: 3}
+  - _Opacity: {fileID: 2800000, guid: 0031ea87100f3604c913cebdcbcedd8b, type: 3}
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
