@@ -9,14 +9,8 @@ using UnityEngine.Audio;
 [RequireComponent (typeof(SmoothMovement))]
 public class Parry : MonoBehaviour {
 
-    /*TODO:
-     * Capture the difference in seconds between a defense button being pressed and the impact time of an attack
-     * Attack is detected if the player's health is reduced
-     * Try to detect an attack by collision and not reduce the health
-     * Average for a successful parry: 0.286999948s
-     */
-
     #region Variables
+    public const float perfectTime = 0.1f;
     public float timeDifference;
     [SerializeField]
     float auxHealth;
@@ -45,7 +39,6 @@ public class Parry : MonoBehaviour {
     private void Start() {
         health = GetComponent<HealthManager>().Health;
         auxHealth = health;
-        
     }
     private void Update() {
         health = GetComponent<HealthManager>().Health;
@@ -99,7 +92,7 @@ public class Parry : MonoBehaviour {
 
     private bool PerfectParry () {
         //0.16f
-        if (timeDifference <= 0.1f && timeDifference != 0f) {
+        if (timeDifference <= perfectTime && timeDifference != 0f) {
             return true;
         }
         else {
@@ -113,7 +106,7 @@ public class Parry : MonoBehaviour {
     
     private void VibDown () {
         if (vib) {
-            GamePad.SetVibration(PlayerIndex.One, 0.3f, 0.3f);
+            GamePad.SetVibration(PlayerIndex.One, 0.4f, 0.4f);
             vibrationTimer += Time.deltaTime;
             if (vibrationTimer > 0.5f) {
                 GamePad.SetVibration(PlayerIndex.One, 0f, 0f);
@@ -122,6 +115,5 @@ public class Parry : MonoBehaviour {
             }
             
         }
-        
     }
 }

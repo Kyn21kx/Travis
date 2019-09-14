@@ -67,6 +67,9 @@ public class ComboManager : MonoBehaviour {
         TimeStart();
         Combo_Selector();
         Combo_Effect();
+        foreach (var combo in lightAvailableCombos) {
+            Debug.Log(combo);
+        }
     }
 
     private void XboxInput () {
@@ -106,7 +109,14 @@ public class ComboManager : MonoBehaviour {
                 if (previousSpacingTime < 0.5f) {
                     lightAvailableCombos.Remove(Combos_Master.C);
                 }
-
+                else {
+                    foreach (var combo in lightAvailableCombos) {
+                        if (combo != Combos_Master.C) {
+                            lightAvailableCombos.Remove(combo);
+                        }
+                    }
+                }
+                lightCombo = lightAvailableCombos.First();
             }
         }
     }

@@ -9,10 +9,10 @@ public class Behaviour : MonoBehaviour {
     /*
      * TODO:
      * Health Manager
-     * Detection (different rates)
      * Levels
      * Shooting
      * Avoiding
+     * Go for the back of the player if there is another enemy in the front part of you
      */
     #region Types of enemies described
     /*
@@ -93,7 +93,6 @@ public class Behaviour : MonoBehaviour {
         Shoot();
         StealthBehaviour();
         detected = Detect(player);
-        collided = Collided(player);
     }
 
     private void OnDrawGizmos() {
@@ -108,12 +107,12 @@ public class Behaviour : MonoBehaviour {
         Gizmos.DrawRay(transform.position, fov2);
         if (!detected) {
             Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position, transform.forward * radius);
         }
         else {
             Gizmos.color = Color.green;
+            Gizmos.DrawRay(transform.position, transform.forward * radius);
         }
-        Gizmos.color = Color.black;
-        Gizmos.DrawRay(transform.position, transform.forward * radius);
     }
     float time_down;
     public void Damage (float dmg, float t, float dot) {
@@ -127,6 +126,7 @@ public class Behaviour : MonoBehaviour {
             burn = false;
         }
         health -= dmg;
+        player.GetComponent<CallOfBeyond>().wrath += (dmg * 0.1f);
     }
     public void HealthBehaviour () {
         text.text = health.ToString();
@@ -179,33 +179,6 @@ public class Behaviour : MonoBehaviour {
         }
         return false;
     }
-    private bool Collided(Transform target) {
-        Collider[] overlaps = new Collider[10];
-        int count = Physics.OverlapSphereNonAlloc(transform.position, radius, overlaps);
-        //Try i < count + 1 In case of an error
-        for (int i = 0; i < count; i++) {
-            if (overlaps[i] != null) {
-                if (overlaps[i].transform == target) {
-                    Vector3 dir = (target.position - transform.position).normalized;
-                    //Increase accuracy
-                    dir.y *= 0f;
-                        Ray ray = new Ray(new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), target.position - transform.position);
-                        RaycastHit hit;
-                        if (Physics.Raycast(ray, out hit, radius)) {
-                            if (!hit.transform.CompareTag("Player")) {
-                                return true;
-                            }
-                            else {
-                                return false;
-                            }
-                        }
-                        return false;
-                    
-                }
-            }
-        }
-        return true;
-    }
     #region global aux variables
     [SerializeField]
     float cntr = 0f;
@@ -257,7 +230,7 @@ public class Behaviour : MonoBehaviour {
                         float z = range * Mathf.Sin(playerAngleX) + player.position.z;
                         toPlayerPos = new Vector3(x, player.position.y, z);
                         #region Conditions to attack
-                        if (distanceToPlayer <= range && !collided) {
+                        if (distanceToPlayer <= range) {
                             agent.isStopped = true;
                             cntr = 0f;
                             //numberOfAttacks = 1;
@@ -268,7 +241,11 @@ public class Behaviour : MonoBehaviour {
                             agent.isStopped = false;
                             agent.SetDestination(toPlayerPos);
                         }
-                        
+                        if (!detected) {
+                            agent.isStopped = false;
+                            agent.SetDestination(player.position);
+                        }
+
                         #endregion
                         switch (subType) {
                             case SubType.V1:
@@ -280,8 +257,11 @@ public class Behaviour : MonoBehaviour {
                         }
                         break;
                     case MasterType.Ranged:
-                        //TODO: Make the enemy take an aiming position around his allies, or a cover in the terrain
+                        /* TODO: Make the enemy take an aiming position around his allies, or a cover in the terrain
+                         * Spell availability is based in the enemy type (Básicos, Casters, Minions)
+                        */
                         switch (subType) {
+
                             case SubType.V1:
                                 break;
                             case SubType.V2:

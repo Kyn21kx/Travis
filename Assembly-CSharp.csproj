@@ -232,6 +232,7 @@
     <Compile Include="Assets\Programming\Enemy\Behaviour.cs" />
     <Compile Include="Assets\Programming\Enemy\Enemy_Environment.cs" />
     <Compile Include="Assets\Programming\Player\aim.cs" />
+    <Compile Include="Assets\Programming\Player\CallOfBeyond.cs" />
     <Compile Include="Assets\Programming\Player\ComboManager.cs" />
     <Compile Include="Assets\Programming\Player\Dash.cs" />
     <Compile Include="Assets\Programming\Player\HealthManager.cs" />
