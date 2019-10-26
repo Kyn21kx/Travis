@@ -40,25 +40,31 @@ public class Parry : MonoBehaviour {
         health = GetComponent<HealthManager>().Health;
         auxHealth = health;
     }
+    public void activeParry () {
+        blocking = true;
+        GetComponent<SmoothMovement>().walkSpeed = 2f;
+        GetComponent<SmoothMovement>().runSpeed = 2f;
+        //GetComponent<SmoothMovement>().stealthSpeed *= 0.5f;
+        timeDown = 0;
+        startTime = true;
+    }
+    public void disableParry () {
+        blocking = false;
+        GetComponent<SmoothMovement>().walkSpeed = 8f;
+        GetComponent<SmoothMovement>().runSpeed = 15;
+        //GetComponent<SmoothMovement>().stealthSpeed /= 0.5f;
+        timeDown = 0;
+        startTime = false;
+    }
     private void Update() {
         health = GetComponent<HealthManager>().Health;
         VibDown();
         //Disable attack when blocking
         if (Input.GetButtonDown("LB")) {
-            blocking = true;
-            GetComponent<SmoothMovement>().walkSpeed = 2f;
-            GetComponent<SmoothMovement>().runSpeed = 2f;
-            //GetComponent<SmoothMovement>().stealthSpeed *= 0.5f;
-            timeDown = 0;
-            startTime = true;
+            activeParry();
         }
         else if (Input.GetButtonUp("LB")) {
-            blocking = false;
-            GetComponent<SmoothMovement>().walkSpeed = 8f;
-            GetComponent<SmoothMovement>().runSpeed = 15;
-            //GetComponent<SmoothMovement>().stealthSpeed /= 0.5f;
-            timeDown = 0;
-            startTime = false;
+            disableParry();
         }
         CountDown();
     }

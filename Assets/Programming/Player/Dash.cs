@@ -20,10 +20,12 @@ public class Dash : MonoBehaviour {
     #region statsVars
     public float speed = 50f;
     public float staminaCost = 10f;
+    private float t;
     #endregion
 
     private void Start() {
         auxDis = speed;
+        t = 0f;
         locker = GetComponent<LockOn>();
     }
 
@@ -33,22 +35,8 @@ public class Dash : MonoBehaviour {
 
     private void _Dash () {
         if (Input.GetButtonDown("B") && GetComponent<StaminaManager>().staminaAmount >= staminaCost) {
-            //Vector 3 Lerp
-            RaycastHit hit;
-            Vector3 target;
-            if (!locker.locking) {
-                target = transform.position + transform.forward * speed;
-            }
-            else {
-                Transform piv = GetComponent<SmoothMovement>().movPivot.transform;
-                target = transform.position + piv.forward * speed;
-            }
-            //Debug.DrawRay(target, -Vector3.up, Color.green);
-            if (Physics.Linecast(transform.position, target, out hit)) {
-                target = transform.position + transform.forward * (hit.distance - 1f);
-            }
-            transform.position = target;
-            
+            t += Time.deltaTime;
+            transform.Translate(GetComponent<SmoothMovement>().movPivot.transform.forward * speed * Time.deltaTime, Space.World);
         }
     }
     

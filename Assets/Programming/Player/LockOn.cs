@@ -26,9 +26,9 @@ public class LockOn : MonoBehaviour {
     }
     //Check if there is a collision in between the player and the enemy, if there is, do not turn around
     private void Update() {
+        var _target = GetTarget();
         if (Input.GetAxis("LT") > 0) {
             locking = true;
-            var _target = GetTarget();
             Quaternion rotation = Quaternion.LookRotation(_target);
             collisionAux.rotation = rotation;
             Ray ray = new Ray(new Vector3(collisionAux.position.x, collisionAux.position.y + 0.5f, collisionAux.position.z), transform.forward);
@@ -54,18 +54,50 @@ public class LockOn : MonoBehaviour {
     //Add condition if there are no enemies
     //Add a distance limit
     private Vector3 GetTarget () {
+        Vector2 joyInput = new Vector2(Input.GetAxis("RightJoystickX"), Input.GetAxis("RightJoystickY"));
+        Debug.LogError(joyInput.x + " || " + joyInput.y);
         if (target == null) {
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             if (enemies != null) {
                 float minDis = float.MaxValue;
-                foreach (GameObject enemy in enemies) {
-                    float dis = Vector3.Distance(player.position, enemy.transform.position);
-                    if (dis < minDis) {
-                        minDis = dis;
-                        target = enemy.transform;
+                float dis;
+                //Changing target to the right
+                if (joyInput. x > 0) {
+                    //Get the second nearest enemy based on +x
+                    foreach (GameObject enemy in enemies) {
+                        dis = Vector3.Distance(player.position, enemy.transform.position);
+                        if (dis < minDis) {
+                            minDis = dis;
+                            target = enemy.transform;
+                        }
+                        else if (dis == minDis) {
+                            target = enemy.transform;
+                        }
                     }
-                    else if (dis == minDis) {
-                        target = enemy.transform;
+                }
+                //Chanigng target to the left
+                else if (joyInput.x < 0) {
+
+                }
+                //Changing target forwards
+                else if (joyInput.y > 0) {
+
+                }
+                //Changing target backwards
+                else if (joyInput.y < 0) {
+
+                }
+                //Default nearest target
+                else {
+                    foreach (GameObject enemy in enemies) {
+                        dis = Vector3.Distance(player.position, enemy.transform.position);
+                        if (dis < minDis) {
+                            minDis = dis;
+                            target = enemy.transform;
+                        }
+                        else if (dis == minDis) {
+                            target = enemy.transform;
+                        }
                     }
                 }
             }
