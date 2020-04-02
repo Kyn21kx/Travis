@@ -68,7 +68,7 @@ public class ComboManager : MonoBehaviour {
         Combo_Selector();
         Combo_Effect();
         foreach (var combo in lightAvailableCombos) {
-            Debug.Log(combo);
+
         }
     }
 

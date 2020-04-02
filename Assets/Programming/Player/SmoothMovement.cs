@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class SmoothMovement : MonoBehaviour {
 
     #region General variables
-    public float stealthSpeed = 4f;
-    public float stealthRun = 5.5f;
     public float walkSpeed = 5f;
     public float runSpeed = 7f;
+    private float auxSpeed;
     public Vector2 input;
     float smoothVel = 5f;
     float turnTime = 0.04f;
     public bool grounded;
+    public float maxJumpDistance;
     public float jumpForce = 20f;
     public GameObject movPivot;
     float distance;
@@ -21,6 +22,7 @@ public class SmoothMovement : MonoBehaviour {
     public Transform closestFloor = null;
     public bool canMove;
     public LockOn lockOn;
+    private CinemachineFreeLook mainCam;
     #endregion
 
     #region Animation variables
@@ -35,6 +37,7 @@ public class SmoothMovement : MonoBehaviour {
         anim = GetComponentInChildren<Animator>();
         lockOn = GetComponent<LockOn>();
         closestFloor = transform;
+        auxSpeed = walkSpeed;
     }
 
     private void Update() {
@@ -51,13 +54,22 @@ public class SmoothMovement : MonoBehaviour {
         //if controller input, then change
         input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         Vector2 inputDir = input.normalized;
+        if (Input.GetKeyDown(KeyCode.LeftShift) || (Input.GetButtonDown("L3"))) {
+            anim.SetBool("Run", true);
+            walkSpeed = runSpeed;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift) || (Input.GetButtonUp("L3"))) {
+            anim.SetBool("Run", false);
+            walkSpeed = auxSpeed;
+        }
         if (inputDir != Vector2.zero) {
+            var rig = GetComponent<Rigidbody>();
             if (!lockOn.locking) {
                 float target = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
                 rotation = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, target, ref smoothVel, turnTime);
                 transform.eulerAngles = rotation;
                 //Change walk speed for speed and set the variable depending on the input
-                transform.Translate(transform.forward * walkSpeed * Time.deltaTime, Space.World);
+                rig.MovePosition(transform.position + transform.forward * walkSpeed * Time.deltaTime);
                 anim.SetBool("Walk", true);
             }
             else {
@@ -65,41 +77,35 @@ public class SmoothMovement : MonoBehaviour {
                 rotation = Vector3.up * Mathf.SmoothDampAngle(movPivot.transform.eulerAngles.y, target, ref smoothVel, turnTime);
                 movPivot.transform.eulerAngles = rotation;
                 //Change walk speed for speed and set the variable depending on the input
-                transform.Translate(movPivot.transform.forward * walkSpeed * Time.deltaTime, Space.World);
+                rig.MovePosition(transform.position + movPivot.transform.forward * walkSpeed * Time.deltaTime);
                 anim.SetBool("Walk", true);
             }
         }
         else {
             anim.SetBool("Walk", false);
         }
-        if (Input.GetKeyDown(KeyCode.LeftShift) || (Input.GetButtonDown("L3"))) {
-            anim.SetBool("Run", true);
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift) || (Input.GetButtonUp("L3"))) {
-            anim.SetBool("Run", false);
-        }
+        
     }
 
     private void Jump () {
         var rb = GetComponent<Rigidbody>();
+        mainCam = lockOn.MainCam;
         if ((Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space)) && grounded) {
             //anim.SetBool("Jump", true);
             rb.velocity += Vector3.up * jumpForce;
         }
-        if (distance >= 2.4f) {
+        if (distance >= maxJumpDistance) {
             StartCoroutine(FrameJump());
             //anim.SetBool("Jump", false);
         }
     }
 
     IEnumerator FrameJump () {
+        //Add camera behaviour
         var rb = GetComponent<Rigidbody>();
-        rb.velocity += Vector3.down * 0.000000001f;
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        rb.velocity += Vector3.down * (jumpForce / 18);
+        rb.velocity += Vector3.down * 0f;
+        yield return new WaitForFixedUpdate();
+        rb.velocity += Vector3.down * (jumpForce / 15f);
     }
 
     private void Identify() {

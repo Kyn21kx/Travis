@@ -3,41 +3,80 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System;
 
 public class Dash : MonoBehaviour {
     /*
      * TODO:
-     * Stamina cost
-     * Cooldown
      */
     #region Varibles
-    [SerializeField]
-    private Transform center;
+    public float maxDis;
     private float auxDis;
-    private LockOn locker;
     public float time;
+    private Rigidbody rg;
+    private bool dashed;
+    Transform targetTransform;
+    [SerializeField]
+    LayerMask mask;
+    public float dashTime;
+    private float auxDashTime;
     #endregion
     #region statsVars
     public float speed = 50f;
     public float staminaCost = 10f;
-    private float t;
     #endregion
 
     private void Start() {
-        auxDis = speed;
-        t = 0f;
-        locker = GetComponent<LockOn>();
+        auxDis = maxDis;
+        dashed = false;
+        auxDashTime = dashTime;
+        rg = GetComponent<Rigidbody>();
+        targetTransform = transform;
     }
 
     private void Update() {
+        if (!dashed) {
+            _Input();
+        }
         _Dash();
     }
 
-    private void _Dash () {
-        if (Input.GetButtonDown("B") && GetComponent<StaminaManager>().staminaAmount >= staminaCost) {
-            t += Time.deltaTime;
-            transform.Translate(GetComponent<SmoothMovement>().movPivot.transform.forward * speed * Time.deltaTime, Space.World);
+    private bool TimingDownDash() {
+        dashTime -= Time.deltaTime;
+        if (dashTime <= 0f) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
-    
+
+    private void _Input () {
+        //Raycast
+        if (Input.GetButtonDown("B") && GetComponent<StaminaManager>().staminaAmount >= staminaCost) {
+            dashed = true;
+            targetTransform = transform;
+            if (GetComponent<LockOn>().locking) {
+                targetTransform = GetComponent<SmoothMovement>().movPivot.transform;
+            }
+            rg.AddForce(targetTransform.forward * speed, ForceMode.VelocityChange);
+            GetComponent<SmoothMovement>().canMove = false;
+            GetComponent<StaminaManager>().Reduce(staminaCost);
+        }
+    }
+    private void _Dash () {
+        if (dashed) {
+            if (TimingDownDash()) {
+                StopDash();
+            }
+        }
+    }
+
+    public void StopDash () {
+        dashTime = auxDashTime;
+        dashed = false;
+        rg.velocity *= 0f;
+        GetComponent<SmoothMovement>().canMove = true;
+    }
+
 }

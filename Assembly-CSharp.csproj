@@ -233,6 +233,7 @@
     <Compile Include="Assets\Programming\Enemy\Enemy_Environment.cs" />
     <Compile Include="Assets\Programming\Player\aim.cs" />
     <Compile Include="Assets\Programming\Player\CallOfBeyond.cs" />
+    <Compile Include="Assets\Programming\Player\Combat.cs" />
     <Compile Include="Assets\Programming\Player\ComboManager.cs" />
     <Compile Include="Assets\Programming\Player\Dash.cs" />
     <Compile Include="Assets\Programming\Player\HealthManager.cs" />
@@ -240,8 +241,6 @@
     <Compile Include="Assets\Programming\Player\LockOn.cs" />
     <Compile Include="Assets\Programming\Player\ManaManager.cs" />
     <Compile Include="Assets\Programming\Player\Parry.cs" />
-    <Compile Include="Assets\Programming\Player\PlayerDir.cs" />
-    <Compile Include="Assets\Programming\Player\RotatePlayer.cs" />
     <Compile Include="Assets\Programming\Player\SmoothMovement.cs" />
     <Compile Include="Assets\Programming\Player\SpellShooting.cs" />
     <Compile Include="Assets\Programming\Player\StaminaManager.cs" />

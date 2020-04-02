@@ -55,7 +55,6 @@ public class LockOn : MonoBehaviour {
     //Add a distance limit
     private Vector3 GetTarget () {
         Vector2 joyInput = new Vector2(Input.GetAxis("RightJoystickX"), Input.GetAxis("RightJoystickY"));
-        Debug.LogError(joyInput.x + " || " + joyInput.y);
         if (target == null) {
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             if (enemies != null) {
