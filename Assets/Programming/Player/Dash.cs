@@ -61,6 +61,7 @@ public class Dash : MonoBehaviour {
             }
             rg.AddForce(targetTransform.forward * speed, ForceMode.VelocityChange);
             GetComponent<SmoothMovement>().canMove = false;
+            GetComponent<Combat>().canMeleeAttack = false;
             GetComponent<StaminaManager>().Reduce(staminaCost);
         }
     }
@@ -76,6 +77,7 @@ public class Dash : MonoBehaviour {
         dashTime = auxDashTime;
         dashed = false;
         rg.velocity *= 0f;
+        GetComponent<Combat>().canMeleeAttack = true;
         GetComponent<SmoothMovement>().canMove = true;
     }
 

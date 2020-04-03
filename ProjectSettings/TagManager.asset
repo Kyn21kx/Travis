@@ -16,7 +16,7 @@ TagManager:
   - Terrain
   - MovPivot
   - GlobalParameters
-  - Ray_Origins
+  - Sword
   layers:
   - Default
   - TransparentFX
