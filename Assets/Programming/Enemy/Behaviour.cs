@@ -297,6 +297,16 @@ public class Behaviour : MonoBehaviour {
         }
     }
 
+    #region MeleeCombat
+    private void OnTriggerEnter(Collider other) {
+        var combatController = player.GetComponent<Combat>();
+        //Detects if the enemy is being hit by the player's sword
+        if (other.transform.Equals(combatController.sword)) {
+            this.Damage(combatController.swordDamage, 0f, 0f);
+        }
+    }
+    #endregion
+
     private void Shoot () {
         /*if (detected) {
             Vector3 target = player.position- transform.position;

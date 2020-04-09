@@ -39,7 +39,7 @@ ModelImporter:
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 90
+      lastFrame: 71
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -68,6 +68,13 @@ ModelImporter:
         messageOptions: 0
       - time: 1
         functionName: Finished_Anim
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.5721152
+        functionName: FinishedStrike
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

@@ -31,6 +31,7 @@ public class Parry : MonoBehaviour {
     #region Stats Variables
     public float block_amount = 0.4f;
     public float manaCost = 30f;
+    private Combat combatRef;
     #endregion
     //Testing vars
     [SerializeField]
@@ -39,17 +40,20 @@ public class Parry : MonoBehaviour {
     private void Start() {
         health = GetComponent<HealthManager>().Health;
         auxHealth = health;
+        combatRef = GetComponent<Combat>();
     }
-    public void activeParry () {
+    public void ActiveParry () {
         blocking = true;
+        combatRef.canMeleeAttack = false;
         GetComponent<SmoothMovement>().walkSpeed = 2f;
         GetComponent<SmoothMovement>().runSpeed = 2f;
         //GetComponent<SmoothMovement>().stealthSpeed *= 0.5f;
         timeDown = 0;
         startTime = true;
     }
-    public void disableParry () {
+    public void DisableParry () {
         blocking = false;
+        combatRef.canMeleeAttack = true;
         GetComponent<SmoothMovement>().walkSpeed = 8f;
         GetComponent<SmoothMovement>().runSpeed = 15;
         //GetComponent<SmoothMovement>().stealthSpeed /= 0.5f;
@@ -61,10 +65,10 @@ public class Parry : MonoBehaviour {
         VibDown();
         //Disable attack when blocking
         if (Input.GetButtonDown("LB")) {
-            activeParry();
+            ActiveParry();
         }
         else if (Input.GetButtonUp("LB")) {
-            disableParry();
+            DisableParry();
         }
         CountDown();
     }

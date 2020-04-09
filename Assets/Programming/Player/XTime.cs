@@ -33,5 +33,10 @@ namespace X_Time {
             slown = true;
             SlowingFactor = slowingFactor;
         }
+
+        public void PauseTime (float pauseDuration) {
+
+        }
+
     }
 }
