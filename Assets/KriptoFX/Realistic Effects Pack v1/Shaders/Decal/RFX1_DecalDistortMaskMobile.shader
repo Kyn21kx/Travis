@@ -1,4 +1,3 @@
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
 Shader "KriptoFX/RFX1/Decal/DistortMaskMobile" {
 Properties {
@@ -22,11 +21,11 @@ Category {
 
 	SubShader {
 		Pass {
-		
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			
+
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
@@ -41,7 +40,7 @@ Category {
 			half4 _Tex_NextFrame;
 			half InterpolationValue;
 			half4 _Offset;
-			
+
 			struct appdata_t {
 				float4 vertex : POSITION;
 				half4 color : COLOR;
@@ -56,7 +55,7 @@ Category {
 				UNITY_FOG_COORDS(2)
 
 			};
-			
+
 			float4 _MainTex_ST;
 			float4 _DistortTex_ST;
 			float4 _Mask_ST;
@@ -66,7 +65,7 @@ Category {
 				v2f o;
 #if UNITY_VERSION >= 550
 				o.vertex = UnityObjectToClipPos(v.vertex);
-#else 
+#else
 				o.vertex = UnityObjectToClipPos(v.vertex);
 #endif
 				o.color = v.color;
@@ -77,7 +76,7 @@ Category {
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
-			
+
 			half4 frag (v2f i) : SV_Target
 			{
 				half4 distort = tex2D(_DistortTex, i.texcoord.zw)*2-1;
@@ -87,17 +86,17 @@ Category {
 				tex *= tex2;
 				half mask = tex2D(_Mask, i.uvMask).a;
 				mask = pow(mask, _MaskPow);
-				
+
 				half4 col = 2.0f * i.color * _TintColor * tex;
-				
+
 				UNITY_APPLY_FOG(i.fogCoord, col);
-				
+
 				half m = saturate(mask - _Cutoff);
 				half alpha = saturate(tex.a * m * _TintColor.a * 2 * i.color.a);
 				return half4(col.rgb * pow(alpha, _AlphaPow), alpha);
 			}
-			ENDCG 
+			ENDCG
 		}
-	}	
+	}
 }
 }

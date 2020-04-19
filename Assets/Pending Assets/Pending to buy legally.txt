@@ -1,2 +1,0 @@
-Enviro - Dynamic enviroment
-Shader Forge (Free to use, but needs to be put in the crdits, with license: https://www.tldrlegal.com/l/mit // http://www.acegikmo.com/shaderforge/).

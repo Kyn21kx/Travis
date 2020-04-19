@@ -1,4 +1,4 @@
-//RFX1_KriptoFX
+
 	sampler2D _GrabTexture;
 	sampler2D _MainTex;
 	sampler2D _NormalTex;
@@ -174,7 +174,9 @@
 #endif
 		
 #ifdef USE_ALPHA_CLIPING
-		half alphaBump = saturate((0.94 - pow(dist.z, 127)) * _AlphaClip * 0.2);
+		//half alphaBump = saturate((0.94 - pow(dist.z, 127)) * _AlphaClip * 0.2);
+		half alphaBump = abs(dot(dist.xy, 0.5)) - 0.02;
+		alphaBump = saturate(alphaBump * _AlphaClip);
 #endif
 
 #if defined (USE_SOFT_PARTICLES)  && defined (SOFTPARTICLES_ON)
@@ -190,6 +192,8 @@
 		
 		half3 fresnelCol = 0;
 #ifdef USE_FRESNEL
+		_FresnelColor.rgb = _FresnelColor.rgb * _FresnelColor.rgb * 2;
+
 		#if  defined (USE_HEIGHT)
 			#ifdef UNITY_UV_STARTS_AT_TOP
 				half3 n = normalize(cross(ddx(i.localPos.xyz), ddy(i.localPos.xyz) * _ProjectionParams.x ));
@@ -213,7 +217,7 @@
 		half cutoutAlpha = tex2D(_CutoutTex, i.uvCutout).r - (dist.r + dist.g) / 10;
 		half alpha = step(0, (_Cutout - cutoutAlpha));
 		half alpha2 = step(0, (_Cutout - cutoutAlpha + _CutoutThreshold));
-		cutoutCol.rgb = _CutoutColor * saturate(alpha2 - alpha);
+		cutoutCol.rgb = _CutoutColor.rgb * _CutoutColor.rgb * 2 * saturate(alpha2 - alpha);
 		cutoutCol.a = alpha2 * pow(_Cutout, 0.2);
 #endif
 		

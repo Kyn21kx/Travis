@@ -12,22 +12,22 @@ Properties {
 
 Category {
 	Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
-	Blend SrcAlpha OneMinusSrcAlpha
+	Blend SrcAlpha One
 	//ColorMask RGB
-	Cull Off 
-	Lighting Off 
+	Cull Off
+	Lighting Off
 	ZWrite Off
 
 	SubShader {
 		Pass {
-		
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 2.0
 			#pragma multi_compile_particles
 			#pragma multi_compile_fog
-			
+
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
@@ -37,7 +37,7 @@ Category {
 			half _Speed;
 			half _Scale;
 			float4x4 _InverseTransformMatrix;
-			
+
 			struct appdata_t {
 				float4 vertex : POSITION;
 				fixed4 color : COLOR;
@@ -53,7 +53,7 @@ Category {
 				float4 projPos : TEXCOORD2;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
-			
+
 			float4 _MainTex_ST;
 			float4 _CutoutMap_ST;
 
@@ -65,6 +65,7 @@ Category {
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.projPos = ComputeScreenPos (o.vertex);
 				COMPUTE_EYEDEPTH(o.projPos.z);
+				_TintColor.rgb = _TintColor.rgb * _TintColor.rgb;
 				o.color = v.color * _TintColor;
 				o.texcoord.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
 				float2 pos = mul(_InverseTransformMatrix, float4(v.vertex.xyz, 1)).xz;
@@ -75,15 +76,15 @@ Category {
 
 			sampler2D_float _CameraDepthTexture;
 			float _InvFade;
-			
+
 			half4 frag (v2f i) : SV_Target
 			{
-				#ifdef SOFTPARTICLES_ON 
+				#ifdef SOFTPARTICLES_ON
 				float sceneZ = LinearEyeDepth (SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)));
 				float partZ = i.projPos.z;
 				float fade = 1 - saturate (_InvFade * (sceneZ-partZ));
 				float fade2 = 1 - saturate(_InvFade * (sceneZ - partZ) * 5);
-				
+
 				fixed2 tex1 = tex2D(_MainTex, i.texcoord + _Time.x * _Speed * half2(0, -0.5)).xy;
 				fixed tex2 = tex2D(_MainTex, i.texcoord + tex1.xy * _Scale + _Time.x * _Speed * half2(-2, 3)).b;
 				half4 col = fade2 * i.color + i.color * tex2 * tex2 * fade * 2;
@@ -96,8 +97,8 @@ Category {
 				return 0;
 				#endif
 			}
-			ENDCG 
+			ENDCG
 		}
-	}	
+	}
 }
 }

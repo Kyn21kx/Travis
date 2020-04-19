@@ -26,9 +26,9 @@ public class LockOn : MonoBehaviour {
     }
     //Check if there is a collision in between the player and the enemy, if there is, do not turn around
     private void Update() {
+        _Input();
         var _target = GetTarget();
-        if (Input.GetAxis("LT") > 0) {
-            locking = true;
+        if (locking) {
             Quaternion rotation = Quaternion.LookRotation(_target);
             collisionAux.rotation = rotation;
             Ray ray = new Ray(new Vector3(collisionAux.position.x, collisionAux.position.y + 0.5f, collisionAux.position.z), transform.forward);
@@ -48,6 +48,15 @@ public class LockOn : MonoBehaviour {
             locking = false;
         }
         Adjustments();
+    }
+
+    private void _Input () {
+        if (Input.GetButtonDown("RS") && !locking) {
+            locking = true;
+        }
+        else if (Input.GetButtonDown("RS") && locking) {
+            locking = false;
+        }
     }
 
     //Find the nearest target

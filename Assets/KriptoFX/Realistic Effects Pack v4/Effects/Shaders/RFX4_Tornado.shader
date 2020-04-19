@@ -14,18 +14,18 @@ Properties {
 Category {
 	Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" }
 	//Blend SrcAlpha OneMinusSrcAlpha
-	Cull Back 
+	Cull Back
 	ZWrite On
 
 	SubShader {
 		Pass {
-		
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma multi_compile_particles
 			#pragma multi_compile_fog
-			
+
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
@@ -34,7 +34,7 @@ Category {
 			float4 _TwistScale;
 			float4 _WavesScale;
 			float4 _FireOffsetSpeed;
-			
+
 			struct appdata_t {
 				float4 vertex : POSITION;
 				half4 color : COLOR;
@@ -52,7 +52,7 @@ Category {
 				#endif
 				float height : TEXCOORD3;
 			};
-			
+
 			float4 _MainTex_ST;
 			float4 _PerlinNoise_ST;
 
@@ -63,15 +63,13 @@ Category {
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//float3 wpos = mul(unity_ObjectToWorld, v.vertex).xyz;
 				float3 wpos = v.vertex.xyz;
-				float4 pivot = mul(unity_ObjectToWorld, float4(0,0,0,1));
-				//v.vertex.xyz += offsetNoise;
 
 #ifndef UNITY_COLORSPACE_GAMMA
 				_TwistScale = pow(_TwistScale, 0.4545);
 #endif
-				
 
-				float height = (wpos.y - pivot.y + _TwistScale.w) * _TwistScale.y;
+
+				float height = (wpos.y + _TwistScale.w) * _TwistScale.y;
 				v.vertex.x += sin(_Time.y*_TwistScale.z + wpos.y * _TwistScale.x) * height;
 				v.vertex.z += sin(_Time.y*_TwistScale.z + wpos.y * _TwistScale.x + 3.1415/2) * height;
 				v.vertex.xz += (v.normal.xz/_WavesScale.x + v.normal.xz * sin(-_Time.y * _WavesScale.z + wpos.y*_WavesScale.x)*_WavesScale.y)* height;
@@ -93,21 +91,23 @@ Category {
 			half4 frag (v2f i) : SV_Target
 			{
 				half4 noise = tex2D(_MainTex, i.texcoord - _FireOffsetSpeed.xy * _Time.y);
+
 #ifndef UNITY_COLORSPACE_GAMMA
 				noise = pow(noise, 0.4545);
-				
+
 #endif
-				
+				float alphaClip = noise.r;
+				noise.rgb = noise.rgb * noise.rgb * noise.rgb;
 				half4 col = 2.0f * i.color * _TintColor * noise;
-				//clip(_TintColor.a - col.r / 3);
+				clip(_TintColor.a - alphaClip);
 				//col.rgb = lerp(col.rgb  + col.rgb *  (0.85-_TintColor.a)*5, col.rgb, _TintColor.a);
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				//col.a = 1;
 				//col.a = saturate(col.a);
 				return col;
 			}
-			ENDCG 
+			ENDCG
 		}
-	}	
+	}
 }
 }

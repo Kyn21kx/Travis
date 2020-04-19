@@ -36655,6 +36655,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ParticlesBudget: 1
+  UseLightShadows: 0
+  UseFastFlatDecalsForMobiles: 0
   UseCustomColor: 0
   EffectColor: {r: 1, g: 0, b: 0, a: 1}
   IsVisible: 1

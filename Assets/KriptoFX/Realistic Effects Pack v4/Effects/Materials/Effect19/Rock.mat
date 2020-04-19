@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Rock
   m_Shader: {fileID: 4800000, guid: 4f726be83ba72084792ae45251375596, type: 3}
   m_ShaderKeywords: USE_CUTOUT USE_CUTOUT_THRESHOLD USE_FRESNEL _ALPHATEST_ON _BLENDMODE_BLEND
@@ -114,7 +115,7 @@ Material:
     - _ZWrite: 1
     - _ZWriteMode: 1
     m_Colors:
-    - _BorderColor: {r: 3, g: 1.0147059, b: 1.0147059, a: 1}
+    - _BorderColor: {r: 13.016314, g: 0.7411952, b: 0, a: 1}
     - _Color: {r: 0.63235295, g: 0.63235295, b: 0.63235295, a: 1}
     - _CutoutColor: {r: 2.044, g: 0.6462647, b: 0.6462647, a: 1}
     - _DistortionSpeedScale: {r: 1, g: -1, b: 0.15, a: 0.15}

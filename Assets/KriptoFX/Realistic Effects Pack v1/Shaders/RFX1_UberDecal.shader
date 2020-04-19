@@ -1,4 +1,3 @@
-// Upgrade NOTE: upgraded instancing buffer 'Props' to new syntax.
 
 Shader "KriptoFX/RFX1/Decal"
 {
@@ -158,7 +157,7 @@ Shader "KriptoFX/RFX1/Decal"
 #if USE_QUAD_DECAL
 	#ifdef USE_WORLD_SPACE_UV
 			o.uv = mul(unity_ObjectToWorld, v.vertex).xz;
-	#else 
+	#else
 			o.uv = v.vertex.xz + 0.5;
 	#endif
 #endif
@@ -195,10 +194,10 @@ Shader "KriptoFX/RFX1/Decal"
 		half height = normal.y;
 		normal = pow(normal, 10);
 		float2 uv = wpos.yz * normal.x + wpos.xz * height + wpos.xy *  normal.z;
-	
+
 		//uv = wpos.xz;
 		//return float4(frac(uv), 0, 1);
-#else 
+#else
 		float2 uv = opos.xz + 0.5;
 #endif
 
@@ -232,7 +231,7 @@ Shader "KriptoFX/RFX1/Decal"
 		tex = lerp(tex, tex3, InterpolationValue);
 	#endif
 
-	#else 
+	#else
 		half4 tex = tex2D(_MainTex, uvMain);
 
 	#ifdef USE_FRAME_BLENDING
@@ -244,8 +243,9 @@ Shader "KriptoFX/RFX1/Decal"
 		tex = lerp(tex, tex * height, 0.35);
 #endif
 
-
-		half4 res = tex * UNITY_ACCESS_INSTANCED_PROP(_TintColor_arr, _TintColor);
+		half4 tintColor = UNITY_ACCESS_INSTANCED_PROP(_TintColor_arr, _TintColor);
+		tintColor.rgb = tintColor.rgb * tintColor.rgb * 2;
+		half4 res = tex * tintColor;
 		res.rgba *= 2;
 	#ifdef USE_CUTOUT
 
@@ -258,7 +258,7 @@ Shader "KriptoFX/RFX1/Decal"
 		half alphaMask = saturate((mask - (cutout * 2 - 1)) * _CutoutAlphaMul) * res.a;
 		res.a = alphaMask;
 
-	#endif	
+	#endif
 
 
 

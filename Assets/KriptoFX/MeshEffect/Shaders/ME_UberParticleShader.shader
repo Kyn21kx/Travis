@@ -1,12 +1,10 @@
-// Upgrade NOTE: upgraded instancing buffer 'Props' to new syntax.
-
 Shader "KriptoFX/ME/Particle"
 {
 	Properties
 	{
 		[Header(Main Settings)]
 	[Space]
-	[PerRendererData] [HDR]_TintColor("Tint Color", Color) = (1,1,1,1)
+	[PerRendererData] [HDR] _TintColor("Tint Color", Color) = (1,1,1,1)
 		_MainTex("Main Texture", 2D) = "white" {}
 
 	[Header(Fading)]
@@ -136,7 +134,7 @@ Shader "KriptoFX/ME/Particle"
 	UNITY_INSTANCING_BUFFER_END(Props)
 
 
-	struct appdata_t 
+	struct appdata_t
 	{
 		float4 vertex : POSITION;
 		float4 normal : NORMAL;
@@ -157,7 +155,7 @@ Shader "KriptoFX/ME/Particle"
 		UNITY_VERTEX_INPUT_INSTANCE_ID
 	};
 
-	struct v2f 
+	struct v2f
 	{
 		float4 vertex : SV_POSITION;
 		half4 color : COLOR0;
@@ -330,7 +328,9 @@ Shader "KriptoFX/ME/Particle"
 	tex = lerp(tex, tex3, InterpolationValue);
 #endif
 
-	half4 res = 2 * tex *  UNITY_ACCESS_INSTANCED_PROP(_TintColor_arr, _TintColor);
+	half4 tintColor = UNITY_ACCESS_INSTANCED_PROP(_TintColor_arr, _TintColor);
+	tintColor.rgb = tintColor.rgb * tintColor.rgb * 2;
+	half4 res = 2 * tex * tintColor;
 
 #ifdef USE_CUTOUT
 	fixed cutout = UNITY_ACCESS_INSTANCED_PROP(_Cutout_arr, _Cutout);
@@ -341,7 +341,7 @@ Shader "KriptoFX/ME/Particle"
 #else
 	fixed mask = tex.a;
 #endif
-	
+
 	fixed diffMask = mask - cutout;
 	fixed alphaMask = lerp(saturate(diffMask * 10000) * res.a, saturate(diffMask * 2) * res.a, _UseSoftCutout);
 
@@ -374,7 +374,7 @@ Shader "KriptoFX/ME/Particle"
 	res.rgb = lerp(res.rgb, lerp(1, res.rgb, res.a), _FogColorMultiplier.r);
 	UNITY_APPLY_FOG_COLOR(i.fogCoord, res, _FogColorMultiplier);
 #endif
-	
+
 		return res;
 	}
 		ENDCG

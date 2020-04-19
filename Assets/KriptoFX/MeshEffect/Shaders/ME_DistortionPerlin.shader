@@ -1,5 +1,3 @@
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
 Shader "KriptoFX/ME/DistortionPerlin" {
 	Properties{
 			_TintColor("Main Color", Color) = (1,1,1,1)

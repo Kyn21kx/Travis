@@ -13,12 +13,12 @@ Shader "KriptoFX/RFX1/Particle" {
 Category {
 	Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "RFX1"="Particle"}
 				Blend [SrcMode] [DstMode]
-				Cull [CullMode] 
+				Cull [CullMode]
 				ZWrite Off
-				
+
 	SubShader {
 		Pass {
-				
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -32,7 +32,7 @@ Category {
 			#pragma multi_compile FresnelFade_OFF FresnelFade_ON
 			#pragma multi_compile _ _MOBILEDEPTH_ON
 #pragma target 3.0
-			
+
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
@@ -41,7 +41,7 @@ Category {
 			float _Cutout;
 			half _FresnelStr;
 			half _BloomThreshold;
-			
+
 			struct appdata_t {
 				float4 vertex : POSITION;
 				float4 normal : NORMAL;
@@ -78,8 +78,8 @@ Category {
 
 			};
 
-			
-			
+
+
 
 			v2f vert (appdata_t v)
 			{
@@ -114,18 +114,18 @@ Category {
 			}
 			sampler2D _CameraDepthTexture;
 			float _InvFade;
-			
+
 			half4 frag (v2f i) : SV_Target
 			{
-	
+
 			#if  SOFTPARTICLES_ON
 					float z = tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)).r;
 					float sceneZ = LinearEyeDepth (UNITY_SAMPLE_DEPTH(z));
 					float partZ = i.projPos.z;
 					float fade = saturate (_InvFade * (sceneZ-partZ));
-					i.color.a *= fade;			
+					i.color.a *= fade;
 			#endif
-	
+
 			#ifdef FrameBlend_OFF
 				half4 tex = tex2D(_MainTex, i.texcoord);
 			#else
@@ -134,31 +134,31 @@ Category {
 				half4 tex2 = tex2D(_MainTex, i.texcoord.zw);
 				half4 tex = lerp(tex1, tex2, i.blend);
 			#endif
-
+				_TintColor.rgb = _TintColor.rgb * _TintColor.rgb * 2;
 				half4 res = 2 * tex * _TintColor;
 
 			#ifdef Clip_ON
 				res.a = step(_Cutout, tex.a) * res.a;
-			#endif	
+			#endif
 
 			#ifdef Clip_ON_Alpha
 				res.a = step(1-i.color.a + _Cutout, tex.a);
 				res.rgb *= i.color.rgb;
-			#endif	
+			#endif
 
 			#if !defined(Clip_ON_Alpha)
 				res *= i.color;
-			#endif	
-			
+			#endif
+
 				res.a = saturate(res.a);
 				//res *= i.color;
 			#ifdef FresnelFade_ON
 				res.a *= i.fresnel;
 			#endif
-				
+
 
 			#ifdef BlendAdd
-				UNITY_APPLY_FOG_COLOR(i.fogCoord, res, half4(0,0,0,0)); 
+				UNITY_APPLY_FOG_COLOR(i.fogCoord, res, half4(0,0,0,0));
 			#endif
 			#ifdef BlendAlpha
 				UNITY_APPLY_FOG(i.fogCoord, res);
@@ -173,9 +173,9 @@ Category {
 			#endif
 				return res;
 			}
-			ENDCG 
+			ENDCG
 		}
-	}	
+	}
 }
  CustomEditor "RFX1_CustomMaterialInspectorParticle"
 }

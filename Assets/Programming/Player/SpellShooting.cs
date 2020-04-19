@@ -80,24 +80,13 @@ public class SpellShooting : MonoBehaviour {
         }
     }
     private void TypeManager () {
-        switch (type) {
-            case Type.Fire:
-                spell = basicSpells[0];
-                spell.GetComponentInChildren<RFX1_TransformMotion>().appliedEffect = RFX1_TransformMotion.Effects.Burn;
-                holdspell = holdingSpells[0];
-                break;
-            case Type.Electric:
-                spell = basicSpells[1];
-                holdspell = holdingSpells[1];
-                break;
-            case Type.Ice:
-                spell = basicSpells[2];
-                holdspell = holdingSpells[2];
-                break;
-            case Type.Magnetism:
-                spell = basicSpells[3];
-                holdspell = holdingSpells[3];
-                break;
+        try {
+            int currentType = System.Array.IndexOf(System.Enum.GetValues(typeof(Type)), type);
+            spell = basicSpells[currentType];
+            holdspell = holdingSpells[currentType];
+        }
+        catch (System.Exception err) {
+            Debug.Log("Prefabs have not been set, or the index is out of range: " + err.Message);
         }
     }
 

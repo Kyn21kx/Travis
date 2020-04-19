@@ -22,7 +22,7 @@ public class RFX1_ParticleInfinite : MonoBehaviour {
         CancelInvoke("UpdateParticles");
         Invoke("UpdateParticles", Delay);
     }
-	
+
 	// Update is called once per frame
 	void UpdateParticles () {
         main.simulationSpeed = 0;

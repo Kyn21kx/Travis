@@ -14,7 +14,7 @@ public class RFX1_RotationFreeze : MonoBehaviour
     {
         startRotation = transform.localRotation.eulerAngles;
     }
-	
+
 	// Update is called once per frame
 	void Update ()
 	{

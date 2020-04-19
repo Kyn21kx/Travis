@@ -1,4 +1,3 @@
-// Upgrade NOTE: upgraded instancing buffer 'MyProperties' to new syntax.
 
 Shader "KriptoFX/RFX4/Distortion"
 {
@@ -85,7 +84,7 @@ Shader "KriptoFX/RFX4/Distortion"
 				#pragma multi_compile _ DISTORT_OFF
 
 				#include "UnityCG.cginc"
-				
+
 
 				sampler2D _GrabTexture;
 				sampler2D _MainTex;
@@ -134,7 +133,7 @@ Shader "KriptoFX/RFX4/Distortion"
 				struct appdata
 				{
 					float4 vertex : POSITION;
-	#if defined (USE_HEIGHT) || defined (USE_REFRACTIVE) || defined (USE_FRESNEL) 
+	#if defined (USE_HEIGHT) || defined (USE_REFRACTIVE) || defined (USE_FRESNEL)
 					half3 normal : NORMAL;
 	#endif
 	#ifdef USE_REFRACTIVE
@@ -244,7 +243,7 @@ Shader "KriptoFX/RFX4/Distortion"
 					float3x3 rotation = float3x3(v.tangent.xyz, binormal, v.normal);
 					o.refract = refract(normalize(mul(rotation, ObjSpaceViewDir(v.vertex))), 0, _RefractiveStrength) * v.color.a * v.color.a;
 	#endif
-			
+
 					o.uvgrab = ComputeGrabScreenPos(o.vertex);
 
 	#ifdef _FADING_ON
@@ -290,7 +289,7 @@ Shader "KriptoFX/RFX4/Distortion"
 	#ifdef USE_ALPHA_CLIPING
 				//half alphaBump = saturate((dot(abs(dist.rg), 0.5) - 0.00392) * _AlphaClip);
 				half alphaBump = saturate((0.94 - pow(dist.z, 127)) * _AlphaClip * 0.1);
-				
+
 	#endif
 				half fade = 1;
 #ifdef _FADING_ON
@@ -345,10 +344,10 @@ Shader "KriptoFX/RFX4/Distortion"
 	#ifdef USE_REFRACTIVE
 				i.uvgrab.xy += i.refract * i.color.a;
 	#endif
-				
+
 				i.uvgrab.xy = offset * i.color.a + i.uvgrab.xy;
 				half4 grabColor = tex2Dproj(_GrabTexture, UNITY_PROJ_COORD(i.uvgrab));;
-			
+
 				half4 result;
 				half4 mainCol = UNITY_ACCESS_INSTANCED_PROP(_MainColor_arr, _MainColor);
 				result.rgb = grabColor * lerp(1, mainCol,  i.color.a) + fresnelCol * grabColor + cutoutCol.rgb;
@@ -360,20 +359,20 @@ Shader "KriptoFX/RFX4/Distortion"
 				UNITY_APPLY_FOG_COLOR(i.fogCoord, emissionCol, half4(0,0,0,0));
 				result.rgb += emissionCol.rgb;
 	#endif
-				result.a = lerp(saturate(dot(fresnelCol, 0.33) * 10) * _FresnelColor.a, mainCol.a , mainCol.a)* cutoutCol.a;
-	//#ifdef DISTORT_ON
-	//			result.a *= i.color.a;
-	//#endif
-	#ifdef USE_ALPHA_CLIPING
-				result.a *= alphaBump;
-	#endif
+				result.a = lerp(saturate(dot(fresnelCol, 0.33) * 10) * _FresnelColor.a, mainCol.a , mainCol.a) * cutoutCol.a;
+				//#ifdef DISTORT_ON
+				//			result.a *= i.color.a;
+				//#endif
+				#ifdef USE_ALPHA_CLIPING
+							result.a *= alphaBump;
+				#endif
 
-				result.a = saturate(result.a);
-				return result;
-				}
+							result.a = saturate(result.a);
+							return result;
+							}
 
-				ENDCG
-		}
+							ENDCG
+					}
 
 		}
 			CustomEditor "RFX4_UberDistortionGUI"

@@ -47,6 +47,8 @@ public class RFX1_Decal : MonoBehaviour
         if (addCamData != null) IsScreenSpace = addCamData.requiresDepthTexture;
 #endif
 
+        if (Camera.main.orthographic) IsScreenSpace = false;
+
         if (!IsScreenSpace)
         {
             var sharedMaterial = GetComponent<Renderer>().sharedMaterial;

@@ -4,18 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - EnAttack
-  - Spot
+  - Terrain
+  - GlobalParameters
+  - MovPivot
   - Stamina
   - Crosshair
   - Mana
-  - Spell
-  - SpellHolder
-  - EnemySpellHolder
   - Enemy
-  - Terrain
-  - MovPivot
-  - GlobalParameters
   - Sword
   layers:
   - Default
@@ -26,9 +21,9 @@ TagManager:
   - UI
   - 
   - 
-  - PostP
+  - PostProcessing
   - Player
-  - Enemy
+  - 
   - 
   - 
   - 

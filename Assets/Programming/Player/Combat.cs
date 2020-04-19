@@ -49,11 +49,13 @@ public class Combat : MonoBehaviour {
             attacking = true;
             //Update the transform.forward for another value if you are rotating
             pos1 = transform.position;
-            movingPos = rig.position + transform.forward.normalized;
+            //movingPos = rig.position + attackStepDirection;
+            movingPos = rig.position + transform.forward;
         }
     }
 
     private void GetClosestEnemy () {
+        //Calculate the vector going forwards or backwards here
         var enemies = GameObject.FindGameObjectsWithTag("Enemy");
         float minDis = turningDistance;
         foreach (var enemy in enemies) {
@@ -63,6 +65,7 @@ public class Combat : MonoBehaviour {
                 target = enemy.transform;
             }
         }
+
     }
 
     private void MeleeBehaviours () {
@@ -71,11 +74,8 @@ public class Combat : MonoBehaviour {
                 Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
                 transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f);
             }
-            if (target == null || Vector3.Distance(target.position, transform.position) <= 1) {
-                rig.position = Vector3.Lerp(rig.position, movingPos, Time.deltaTime * 4f);  
-            }
-            else if (Vector3.Distance(target.position, transform.position) <= 0.5f) {
-                //Go backwards
+            if (target == null || Vector3.Distance(target.position, transform.position) <= 1.5) {
+                //rig.position = Vector3.Lerp(rig.position, movingPos, Time.deltaTime * 4f);  
             }
         }
         else {

@@ -6,26 +6,15 @@ using Random = UnityEngine.Random;
 
 public class RFX1_TransformMotion : MonoBehaviour
 {
-    public enum Effects {None, Burn, Slow, Stun};
     public float Distance = 30;
     public float Speed = 1;
-    public float damage = 1f;
-    [Header("Damage Over Time")]
-    public float dot = 0f;
-    public float freezingMultiplier = 0f;
-    public bool dealt;
-    GameObject player;
-    [Header("If this is an enemy, mark it")]
-    public bool enemySpell;
     //public float Dampeen = 0;
     //public float MinSpeed = 1;
     public float TimeDelay = 0;
     public float RandomMoveRadius = 0;
     public float RandomMoveSpeedScale = 0;
     public GameObject Target;
-    private bool auxColl;
-    [Header("Applied effects on collision")]
-    public Effects appliedEffect;
+ 
     public LayerMask CollidesWith = ~0;
    
    
@@ -91,10 +80,6 @@ public class RFX1_TransformMotion : MonoBehaviour
 
     void Update()
     {
-        /*if (dealt) {
-            player.GetComponent<HealthManager>().TakeDamage(damage);
-            dealt = false;
-        }*/
         if (!dropFirstFrameForFixUnityBugWithParticles)
         {
             UpdateWorldPosition();
@@ -153,34 +138,6 @@ public class RFX1_TransformMotion : MonoBehaviour
                 oldPos = t.position;
                 OnCollisionBehaviour(hit);
                 OnCollisionDeactivateBehaviour(false);
-                if (enemySpell) {
-                    if (hit.transform.CompareTag("Player")) {
-                        //hit.transform.GetComponent<HealthManager>().Health -= damage;
-                        player = hit.transform.gameObject;
-                        player.GetComponent<Parry>().collided = true;
-                        player.GetComponent<Parry>().dmg = damage;
-                        dealt = true;
-                    }
-                }
-                else {
-                    if (hit.transform.CompareTag("Enemy")) {
-                        var enemyBehaviour = hit.transform.GetComponent<Behaviour>();
-                        switch (appliedEffect) {
-                            case Effects.None:
-                                enemyBehaviour.Damage(damage, 0, 0);
-                                break;
-                            case Effects.Burn:
-                                //Replace with burn time variable that can be increased by level
-                                enemyBehaviour.Damage(damage, 4f, 0.2f);
-                                Debug.Log("Burn");
-                                break;
-                            case Effects.Slow:
-                                break;
-                            case Effects.Stun:
-                                break;
-                        }
-                    }
-                }
                 return;
             }
         }
@@ -250,6 +207,7 @@ public class RFX1_TransformMotion : MonoBehaviour
            if(effect!=null) effect.SetActive(active);
         }
     }
+
     void OnDrawGizmosSelected()
     {
         if (Application.isPlaying)
@@ -260,7 +218,6 @@ public class RFX1_TransformMotion : MonoBehaviour
         Gizmos.DrawLine(t.position, t.position + t.forward*Distance);
 
     }
-    
 
     public enum RFX4_SimulationSpace
     {
