@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Fire
   m_Shader: {fileID: 4800000, guid: 4775e5a8f344d6348adf934e722da85d, type: 3}
-  m_ShaderKeywords: BlendAlpha Clip_ON FrameBlend_ON FresnelFade_OFF SoftParticles_ON
+  m_ShaderKeywords: BlendAdd Clip_OFF FrameBlend_ON FresnelFade_OFF SoftParticles_ON
     VertLight_OFF
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -58,11 +58,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - CullMode: 2
-    - DstMode: 10
+    - DstMode: 1
     - SrcMode: 5
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _Cutout: 0.15
+    - _Cutout: 0.1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _FresnelStr: 1
@@ -82,4 +82,4 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _TintColor: {r: 0.91692185, g: 0.3611165, b: 0.22923046, a: 0.637}
+    - _TintColor: {r: 1.457671, g: 0.3019528, b: 0.0068758233, a: 0.21568628}

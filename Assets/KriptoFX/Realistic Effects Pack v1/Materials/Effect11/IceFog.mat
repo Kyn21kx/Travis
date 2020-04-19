@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: IceFog
   m_Shader: {fileID: 4800000, guid: 4775e5a8f344d6348adf934e722da85d, type: 3}
-  m_ShaderKeywords: BlendAlpha Clip_ON FrameBlend_ON FresnelFade_OFF SoftParticles_ON
+  m_ShaderKeywords: BlendAlpha Clip_OFF FrameBlend_ON FresnelFade_OFF SoftParticles_ON
     VertLight4_ON
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -82,4 +82,4 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _TintColor: {r: 0.6604664, g: 0.7023621, b: 0.7735849, a: 0.05}
+    - _TintColor: {r: 0.23362409, g: 0.25236005, b: 0.2830189, a: 0.05}

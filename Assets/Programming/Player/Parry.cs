@@ -27,6 +27,7 @@ public class Parry : MonoBehaviour {
     [SerializeField]
     private AudioClip soundEffect;
     public AudioSource camAudio;
+    SmoothMovement movRef;
     #endregion
     #region Stats Variables
     public float block_amount = 0.4f;
@@ -38,6 +39,7 @@ public class Parry : MonoBehaviour {
     int cntr = 0;
     
     private void Start() {
+        movRef = GetComponent<SmoothMovement>();
         health = GetComponent<HealthManager>().Health;
         auxHealth = health;
         combatRef = GetComponent<Combat>();
@@ -45,8 +47,8 @@ public class Parry : MonoBehaviour {
     public void ActiveParry () {
         blocking = true;
         combatRef.canMeleeAttack = false;
-        GetComponent<SmoothMovement>().walkSpeed = 2f;
-        GetComponent<SmoothMovement>().runSpeed = 2f;
+        movRef.walkSpeed = 3f;
+        movRef.runSpeed = 3f;
         //GetComponent<SmoothMovement>().stealthSpeed *= 0.5f;
         timeDown = 0;
         startTime = true;
@@ -54,8 +56,8 @@ public class Parry : MonoBehaviour {
     public void DisableParry () {
         blocking = false;
         combatRef.canMeleeAttack = true;
-        GetComponent<SmoothMovement>().walkSpeed = 8f;
-        GetComponent<SmoothMovement>().runSpeed = 15;
+        movRef.walkSpeed = movRef.auxSpeed;
+        movRef.runSpeed = movRef.auxRunningSpeed;
         //GetComponent<SmoothMovement>().stealthSpeed /= 0.5f;
         timeDown = 0;
         startTime = false;

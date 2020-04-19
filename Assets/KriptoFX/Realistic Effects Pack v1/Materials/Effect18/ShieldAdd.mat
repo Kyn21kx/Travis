@@ -57,5 +57,5 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _FresnelColor: {r: 0.7352942, g: 3.09939, b: 10, a: 1}
     - _FresnelDistort: {r: 8, g: 12, b: 1, a: 1500}
-    - _TintColor: {r: 0.75330037, g: 0.25817785, b: 0.053299546, a: 0.3019608}
+    - _TintColor: {r: 0.75330037, g: 0.25817785, b: 0.053299546, a: 0.14117648}
     - _UVScrollDistort: {r: 8, g: 12, b: 1, a: 1500}

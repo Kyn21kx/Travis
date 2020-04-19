@@ -86,5 +86,5 @@ Material:
     - _SSSColor: {r: 0.98439384, g: 1.0928022, b: 1.4092375, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
     - _Test: {r: 7, g: 8, b: 0, a: 1500}
-    - _TintColor: {r: 0.71323526, g: 0.8338741, b: 1, a: 0.3}
+    - _TintColor: {r: 0.36414206, g: 0.40581036, b: 0.46226418, a: 0.3}
     - _UVScrollFadeDistort: {r: 3, g: 6, b: 0, a: 1500}

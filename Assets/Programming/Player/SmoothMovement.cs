@@ -8,7 +8,10 @@ public class SmoothMovement : MonoBehaviour {
     #region General variables
     public float walkSpeed = 5f;
     public float runSpeed = 7f;
-    private float auxSpeed;
+    [HideInInspector]
+    public float auxSpeed;
+    [HideInInspector]
+    public float auxRunningSpeed;
     public Vector2 input;
     float smoothVel = 5f;
     float turnTime = 0.04f;
@@ -26,7 +29,7 @@ public class SmoothMovement : MonoBehaviour {
     #endregion
 
     #region Animation variables
-    Animator anim;
+    private Animator anim;
     #endregion
     /* TODO:
      * Decrease the movement speed when in the air
@@ -34,6 +37,7 @@ public class SmoothMovement : MonoBehaviour {
      */
     private void Start() {
         canMove = true;
+        auxRunningSpeed = runSpeed;
         anim = GetComponentInChildren<Animator>();
         lockOn = GetComponent<LockOn>();
         closestFloor = transform;

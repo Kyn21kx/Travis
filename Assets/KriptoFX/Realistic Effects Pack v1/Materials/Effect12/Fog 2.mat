@@ -84,7 +84,7 @@ Material:
     - _Cutout: 0.05
     - _CutoutThreshold: 0.015
     - _DetailNormalMapScale: 1
-    - _Distortion: 150
+    - _Distortion: 40
     - _DstBlend: 0
     - _FresnelDistort: 1500
     - _FresnelPow: 5
@@ -119,5 +119,5 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _HeightUVScrollDistort: {r: 8, g: 12, b: 0, a: 0}
-    - _MainColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MainColor: {r: 0, g: 0, b: 0, a: 1}
     - _TintColor: {r: 0.22758651, g: 3, b: 0, a: 1}

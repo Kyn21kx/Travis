@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: SmokeTrail
   m_Shader: {fileID: 4800000, guid: 4775e5a8f344d6348adf934e722da85d, type: 3}
-  m_ShaderKeywords: BlendAlpha Clip_OFF FrameBlend_OFF FresnelFade_OFF SoftParticles_OFF
+  m_ShaderKeywords: BlendAdd Clip_OFF FrameBlend_OFF FresnelFade_OFF SoftParticles_OFF
     VertLight_OFF
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
@@ -26,7 +26,7 @@ Material:
         m_Offset: {x: 0.2, y: 0}
     m_Floats:
     - CullMode: 2
-    - DstMode: 10
+    - DstMode: 1
     - SrcMode: 5
     - _CoreStrength: 6
     - _CutOutLightCore: 1
@@ -37,4 +37,4 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CoreColor: {r: 0.47794116, g: 0.5679513, b: 1, a: 1}
-    - _TintColor: {r: 1, g: 1, b: 1, a: 0.40784314}
+    - _TintColor: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 0.22352941}

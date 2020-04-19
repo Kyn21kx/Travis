@@ -15,10 +15,13 @@ public class SpellShooting : MonoBehaviour {
     public Type type;
     [SerializeField]
     private float holdTime, releaseTime = 1f;
-    private bool count;
+    [HideInInspector]
+    public bool count;
+    public bool canCastSpells;
     #endregion
 
     private void Start() {
+        canCastSpells = true;
         type = Type.Fire;
         count = false;
         holdTime = 0f;
@@ -31,13 +34,20 @@ public class SpellShooting : MonoBehaviour {
 
     private void _Input() {
         DPad = new Vector2(Input.GetAxis("DPadX"), Input.GetAxis("DPadY"));
-        if (Input.GetButtonDown("RB") || Input.GetKeyDown(KeyCode.Q)) {
-            count = true;
+        #region Shooting Input
+        if (canCastSpells) {
+            if (Input.GetButtonDown("RB") || Input.GetKeyDown(KeyCode.Q)) {
+                count = true;
+            }
+            if (Input.GetButtonUp("RB") || Input.GetKeyUp(KeyCode.Q)) {
+                count = false;
+                Shoot();
+            }
         }
-        if (Input.GetButtonUp("RB") || Input.GetKeyUp(KeyCode.Q)) {
+        else {
             count = false;
-            Shoot();
         }
+        #endregion
         #region Timing for hold power
         if (count) {
             holdTime += Time.deltaTime;

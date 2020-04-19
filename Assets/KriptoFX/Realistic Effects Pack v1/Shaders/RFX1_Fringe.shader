@@ -24,8 +24,7 @@ Category {
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma target 2.0
-			#pragma multi_compile_particles
+
 			#pragma multi_compile_fog
 
 			#include "UnityCG.cginc"
@@ -37,6 +36,8 @@ Category {
 			half _Speed;
 			half _Scale;
 			float4x4 _InverseTransformMatrix;
+			UNITY_DECLARE_TEX2DARRAY(_CameraDepthTexture);
+			float4 _DepthPyramidScale;
 
 			struct appdata_t {
 				float4 vertex : POSITION;
@@ -64,8 +65,9 @@ Category {
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.projPos = ComputeScreenPos (o.vertex);
+				o.projPos.xy *= _DepthPyramidScale.xy;
 				COMPUTE_EYEDEPTH(o.projPos.z);
-				_TintColor.rgb = _TintColor.rgb * _TintColor.rgb;
+				_TintColor.rgb = _TintColor.rgb * _TintColor.rgb * 8;
 				o.color = v.color * _TintColor;
 				o.texcoord.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
 				float2 pos = mul(_InverseTransformMatrix, float4(v.vertex.xyz, 1)).xz;
@@ -74,13 +76,14 @@ Category {
 				return o;
 			}
 
-			sampler2D_float _CameraDepthTexture;
+
 			float _InvFade;
 
 			half4 frag (v2f i) : SV_Target
 			{
-				#ifdef SOFTPARTICLES_ON
-				float sceneZ = LinearEyeDepth (SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)));
+				//#ifdef SOFTPARTICLES_ON
+				float z = (UNITY_SAMPLE_TEX2DARRAY_LOD(_CameraDepthTexture, float4(i.projPos.xy / i.projPos.w, 0, 0), 0));
+				float sceneZ = LinearEyeDepth (z);
 				float partZ = i.projPos.z;
 				float fade = 1 - saturate (_InvFade * (sceneZ-partZ));
 				float fade2 = 1 - saturate(_InvFade * (sceneZ - partZ) * 5);
@@ -93,9 +96,7 @@ Category {
 				col.a *= saturate(alpha * pow(_Cutout, .2));
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
-				#else
-				return 0;
-				#endif
+
 			}
 			ENDCG
 		}

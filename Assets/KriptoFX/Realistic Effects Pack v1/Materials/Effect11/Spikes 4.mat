@@ -86,8 +86,8 @@ Material:
     - _Distortion: 300
     - _DstBlend: 0
     - _FPOW: 2
-    - _FresnelDistort: -300
-    - _FresnelPow: 2
+    - _FresnelDistort: 300
+    - _FresnelPow: 5
     - _FresnelR0: -0.1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -119,9 +119,9 @@ Material:
     - _Color: {r: 0.7026384, g: 0.7428498, b: 0.83823526, a: 1}
     - _CutoutColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FresnelColor: {r: 0.98930794, g: 1.0614766, b: 1.1587474, a: 1}
+    - _FresnelColor: {r: 0.8511514, g: 1.0338697, b: 1.2981589, a: 1}
     - _HeightUVScrollDistort: {r: 0, g: 0.2, b: 0, a: 0}
-    - _MainColor: {r: 1.004548, g: 1.049595, b: 1.1486983, a: 1}
+    - _MainColor: {r: 0.09663498, g: 0.10245063, b: 0.115743585, a: 1}
     - _ReflectColor: {r: 0.618404, g: 0.62600374, b: 0.63235295, a: 1}
     - _TexColor: {r: 0.65787196, g: 0.7204989, b: 0.7647059, a: 1}
     - _TintColor: {r: 0.32352942, g: 0.32352942, b: 0.32352942, a: 0.123}

@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Explosion 1
   m_Shader: {fileID: 4800000, guid: 4775e5a8f344d6348adf934e722da85d, type: 3}
-  m_ShaderKeywords: BlendAlpha Clip_ON FrameBlend_ON FresnelFade_OFF SoftParticles_ON
+  m_ShaderKeywords: BlendAlpha Clip_OFF FrameBlend_ON FresnelFade_OFF SoftParticles_ON
     VertLight_OFF
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
@@ -35,4 +35,4 @@ Material:
     - _InvFade: 3
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _TintColor: {r: 2.2185478, g: 0.9423998, b: 0.21976182, a: 1}
+    - _TintColor: {r: 4.5412054, g: 1.9258516, b: 0.427967, a: 1}

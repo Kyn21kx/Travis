@@ -9,10 +9,9 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Decal
   m_Shader: {fileID: 4800000, guid: 32ed75d04da1d2348baeac9738ccd729, type: 3}
-  m_ShaderKeywords: USE_ALPHA_POW USE_CUTOUT USE_CUTOUT_TEX USE_NOISE_DISTORTION
-    _BLENDMODE_BLEND
+  m_ShaderKeywords: USE_ALPHA_POW USE_CUTOUT USE_CUTOUT_TEX USE_NOISE_DISTORTION _BLENDMODE_BLEND
   m_LightmapFlags: 5
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -49,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 596abdd7805a86e4d97b7ed04d66fc41, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2ec1ad6581d238a4e90b67de749c5602, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask:
@@ -108,4 +107,4 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CutoutColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _TintColor: {r: 0.5294118, g: 0.78296155, b: 2, a: 1}
+    - _TintColor: {r: 1.4775324, g: 1.0680627, b: 3.9999995, a: 1}

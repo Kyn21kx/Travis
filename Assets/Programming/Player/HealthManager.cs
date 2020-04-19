@@ -31,4 +31,11 @@ public class HealthManager : MonoBehaviour {
             SceneManager.LoadScene(0);
         }
     }
+
+    public void Damage (float dmg) {
+        var parryRef = GetComponent<Parry>();
+        parryRef.collided = true;
+        parryRef.dmg = dmg;
+    }
+
 }

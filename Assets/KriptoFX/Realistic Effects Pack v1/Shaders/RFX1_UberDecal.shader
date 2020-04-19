@@ -82,7 +82,11 @@ Shader "KriptoFX/RFX1/Decal"
 	sampler2D _NoiseTex;
 	sampler2D _CutoutTex;
 	sampler2D _CutoutRamp;
-	sampler2D _CameraDepthTexture;
+
+	UNITY_DECLARE_TEX2DARRAY(_CameraDepthTexture);
+	float4 _DepthPyramidScale;
+
+
 
 	float4 _CameraDepthTexture_ST;
 	float4 _MainTex_ST;
@@ -153,6 +157,7 @@ Shader "KriptoFX/RFX1/Decal"
 
 		o.ray = UnityObjectToViewPos(v.vertex) * float3(-1, -1, 1);
 		o.screenUV = ComputeScreenPos(o.vertex);
+		o.screenUV.xy *= _DepthPyramidScale.xy;
 
 #if USE_QUAD_DECAL
 	#ifdef USE_WORLD_SPACE_UV
@@ -177,8 +182,8 @@ Shader "KriptoFX/RFX1/Decal"
 #else
 
 		i.ray *= (_ProjectionParams.z / i.ray.z); // Far clip dist/viewspace distance
-
-		float depth = Linear01Depth(tex2Dproj(_CameraDepthTexture, i.screenUV));
+		float z = (UNITY_SAMPLE_TEX2DARRAY_LOD(_CameraDepthTexture, float4(i.screenUV.xy / i.screenUV.w, 0, 0), 0));
+		float depth = Linear01Depth(z);
 		//float3 wpos = mul(unity_CameraToWorld, float4(i.ray * depth, 1)).xyz;
 		//float3 opos = mul(UNITY_ACCESS_INSTANCED_PROP(_InverseTransformMatrix), float4(wpos, 1)).xyz;
 		float3 wpos = mul(unity_CameraToWorld, float4(i.ray * depth, 1)).xyz;
@@ -244,7 +249,7 @@ Shader "KriptoFX/RFX1/Decal"
 #endif
 
 		half4 tintColor = UNITY_ACCESS_INSTANCED_PROP(_TintColor_arr, _TintColor);
-		tintColor.rgb = tintColor.rgb * tintColor.rgb * 2;
+		tintColor.rgb = tintColor.rgb * tintColor.rgb * 30;
 		half4 res = tex * tintColor;
 		res.rgba *= 2;
 	#ifdef USE_CUTOUT

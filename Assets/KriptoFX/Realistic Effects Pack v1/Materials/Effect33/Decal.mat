@@ -110,4 +110,4 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CutoutColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _TintColor: {r: 2.9235694, g: 0.95996433, b: 0.37234142, a: 1}
+    - _TintColor: {r: 1.8144627, g: 0.76465833, b: 0.3229933, a: 1}

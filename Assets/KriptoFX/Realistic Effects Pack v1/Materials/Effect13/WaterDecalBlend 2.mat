@@ -10,7 +10,7 @@ Material:
   m_Name: WaterDecalBlend 2
   m_Shader: {fileID: 4800000, guid: dfe6e51c0ffb87246af0df6ac28d4a6e, type: 3}
   m_ShaderKeywords: BlendMul Clip_OFF FrameBlend_OFF SoftParticles_OFF USE_ALPHA_CLIPING
-    VertLight_OFF
+    USE_MAINTEX VertLight_OFF
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -77,7 +77,7 @@ Material:
     - _Cutoff: 1
     - _Cutout: 0.2
     - _CutoutThreshold: 0.015
-    - _Distortion: -350
+    - _Distortion: -100
     - _FPOW: 1.4
     - _FresnelDistort: 1500
     - _FresnelPow: 2
@@ -100,7 +100,7 @@ Material:
     - _UseCutout: 0
     - _UseFresnel: 0
     - _UseHeight: 0
-    - _UseMainTex: 0
+    - _UseMainTex: 1
     - _UseRefractive: 0
     - _UseSoft: 0
     - _ZWriteMode: 0
@@ -109,11 +109,11 @@ Material:
     - _CutoutColor: {r: 1, g: 1, b: 1, a: 1}
     - _FresnelColor: {r: 0.5529412, g: 0.6262068, b: 0.8, a: 1}
     - _HeightUVScrollDistort: {r: 8, g: 12, b: 0, a: 0}
-    - _MainColor: {r: 0.9191176, g: 0.9566882, b: 1, a: 1}
+    - _MainColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectColor: {r: 0.1454909, g: 0.14565384, b: 0.16911763, a: 1}
     - _RimColor: {r: 0.6729022, g: 0.7286853, b: 0.9338235, a: 1}
     - _SSSColor: {r: 0.98439384, g: 1.0928022, b: 1.4092375, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
     - _Test: {r: 7, g: 8, b: 0, a: 1500}
-    - _TintColor: {r: 0.50913715, g: 0.5241894, b: 0.53676474, a: 1}
+    - _TintColor: {r: 0.023762912, g: 0.042565934, b: 0.05660379, a: 1}
     - _UVScrollFadeDistort: {r: 3, g: 6, b: 0, a: 1500}

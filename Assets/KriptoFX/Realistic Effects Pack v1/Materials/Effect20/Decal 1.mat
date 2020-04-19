@@ -9,10 +9,10 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Decal 1
   m_Shader: {fileID: 4800000, guid: 32ed75d04da1d2348baeac9738ccd729, type: 3}
-  m_ShaderKeywords: USE_ALPHA_POW USE_CUTOUT USE_CUTOUT_TEX USE_NOISE_DISTORTION
-    _BLENDMODE_BLEND _EMISSION
+  m_ShaderKeywords: USE_ALPHA_POW USE_CUTOUT USE_CUTOUT_TEX USE_NOISE_DISTORTION _BLENDMODE_BLEND
+    _EMISSION
   m_LightmapFlags: 1
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -66,7 +66,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
         m_Texture: {fileID: 2800000, guid: ca40b45ef18e3a4439ac0838ea8631e5, type: 3}
-        m_Scale: {x: 4, y: 4}
+        m_Scale: {x: 1.86, y: 3}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
@@ -77,7 +77,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AlphaPow: -0.25
+    - _AlphaPow: 0.1
     - _BlendMode: 1
     - _BumpAmt: -1000
     - _BumpAmtTex: 10
@@ -86,7 +86,7 @@ Material:
     - _Cutout: 0
     - _CutoutAlphaMul: 2
     - _DetailNormalMapScale: 1
-    - _DistortScale: 0.07
+    - _DistortScale: 0.1
     - _DistortSpeed: 0
     - _DstBlend: 0
     - _DstMode: 10
@@ -121,4 +121,4 @@ Material:
     - _CutoutColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectColor: {r: 1, g: 1, b: 1, a: 0.5}
-    - _TintColor: {r: 0.6397059, g: 0.79127824, b: 1, a: 1}
+    - _TintColor: {r: 0.30909577, g: 0.35988894, b: 0.4339623, a: 1}

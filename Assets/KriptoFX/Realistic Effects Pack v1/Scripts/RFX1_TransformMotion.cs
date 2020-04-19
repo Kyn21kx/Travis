@@ -42,6 +42,21 @@ public class RFX1_TransformMotion : MonoBehaviour
     public event EventHandler<RFX1_CollisionInfo> CollisionEnter;
     Vector3 randomTimeOffset;
 
+    public enum Effects {None, Burn, Slow, Stun};
+
+    #region Interacting Variables
+    [Header("Damage on hit")]
+    public float damage;
+    private GameObject player;
+    [Header("Damage Over Time")]
+    public float dot;
+    public float freezingMultiplier;
+    [Header("Is this an enemy spell?")]
+    public bool enemySpell;
+    [Header("Applied effects on collision")]
+    public Effects appliedEffect;
+    #endregion
+
     void Start()
     {
         t = transform;
@@ -138,6 +153,27 @@ public class RFX1_TransformMotion : MonoBehaviour
                 oldPos = t.position;
                 OnCollisionBehaviour(hit);
                 OnCollisionDeactivateBehaviour(false);
+                if (enemySpell) {
+                    if (hit.transform.CompareTag("Player")) {
+                        player = hit.transform.gameObject;
+                        player.GetComponent<HealthManager>().Damage(damage);
+                    }
+                }
+                else {
+                    if (hit.transform.CompareTag("Enemy")) {
+                        var enemyRef = hit.transform.GetComponent<Behaviour>();
+                        enemyRef.Damage(damage, 0f, 0f);
+                        switch (appliedEffect) {
+                            case Effects.Burn:
+                                //Correct burn mechanic
+                                break;
+                            case Effects.Slow:
+                                break;
+                            case Effects.Stun:
+                                break;
+                        }
+                    }
+                }
                 return;
             }
         }

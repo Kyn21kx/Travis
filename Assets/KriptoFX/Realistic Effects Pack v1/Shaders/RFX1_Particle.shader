@@ -22,15 +22,14 @@ Category {
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma multi_compile_particles
-			#pragma multi_compile_fog
-			#pragma multi_compile BlendAdd BlendAlpha BlendMul BlendMul2
-			#pragma multi_compile VertLight_OFF VertLight4_ON VertLight4Normal_ON
-			#pragma shader_feature FrameBlend_OFF
 
-			#pragma multi_compile Clip_OFF Clip_ON Clip_ON_Alpha
-			#pragma multi_compile FresnelFade_OFF FresnelFade_ON
-			#pragma multi_compile _ _MOBILEDEPTH_ON
+			#pragma multi_compile_local BlendAdd BlendAlpha BlendMul BlendMul2
+			#pragma multi_compile_local VertLight_OFF VertLight4_ON VertLight4Normal_ON
+			#pragma shader_feature_local FrameBlend_OFF
+
+			#pragma multi_compile_local Clip_OFF Clip_ON Clip_ON_Alpha
+			#pragma multi_compile_local FresnelFade_OFF FresnelFade_ON
+#pragma shader_feature_local SoftParticles_ON
 #pragma target 3.0
 
 			#include "UnityCG.cginc"
@@ -41,6 +40,9 @@ Category {
 			float _Cutout;
 			half _FresnelStr;
 			half _BloomThreshold;
+			float4 _DepthPyramidScale;
+			UNITY_DECLARE_TEX2DARRAY(_CameraDepthTexture);
+			float _InvFade;
 
 			struct appdata_t {
 				float4 vertex : POSITION;
@@ -69,8 +71,9 @@ Category {
 				fixed blend : TEXCOORD1;
 #endif
 				UNITY_FOG_COORDS(2)
-
+#if  SoftParticles_ON
 				float4 projPos : TEXCOORD3;
+#endif
 
 #ifdef FresnelFade_ON
 				float fresnel : TEXCOORD4;
@@ -86,8 +89,13 @@ Category {
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 
-				o.projPos = ComputeScreenPos (o.vertex);
+#if  SoftParticles_ON
+				o.projPos = ComputeScreenPos(o.vertex);
+				o.projPos.xy *= _DepthPyramidScale.xy;
 				COMPUTE_EYEDEPTH(o.projPos.z);
+#endif
+
+
 
 				o.color = v.color;
 				//o.color.rgb *= ComputeVertexLight(v.vertex, v.normal);
@@ -112,19 +120,13 @@ Category {
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
-			sampler2D _CameraDepthTexture;
-			float _InvFade;
 
-			half4 frag (v2f i) : SV_Target
+
+
+			half4 frag(v2f i) : SV_Target
 			{
 
-			#if  SOFTPARTICLES_ON
-					float z = tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)).r;
-					float sceneZ = LinearEyeDepth (UNITY_SAMPLE_DEPTH(z));
-					float partZ = i.projPos.z;
-					float fade = saturate (_InvFade * (sceneZ-partZ));
-					i.color.a *= fade;
-			#endif
+
 
 			#ifdef FrameBlend_OFF
 				half4 tex = tex2D(_MainTex, i.texcoord);
@@ -134,7 +136,7 @@ Category {
 				half4 tex2 = tex2D(_MainTex, i.texcoord.zw);
 				half4 tex = lerp(tex1, tex2, i.blend);
 			#endif
-				_TintColor.rgb = _TintColor.rgb * _TintColor.rgb * 2;
+				_TintColor.rgb = _TintColor.rgb * _TintColor.rgb * 30;
 				half4 res = 2 * tex * _TintColor;
 
 			#ifdef Clip_ON
@@ -156,7 +158,15 @@ Category {
 				res.a *= i.fresnel;
 			#endif
 
-
+#if  SoftParticles_ON
+				float z = (UNITY_SAMPLE_TEX2DARRAY_LOD(_CameraDepthTexture, float4(i.projPos.xy / i.projPos.w, 0, 0), 0));
+				float sceneZ = LinearEyeDepth(UNITY_SAMPLE_DEPTH(z));
+				float partZ = i.projPos.z;
+				float fade = saturate(_InvFade * (sceneZ - partZ));
+				//i.color.a *= fade;
+				res.rgba *= fade;
+#endif
+				res.rgb *= i.color.a;
 			#ifdef BlendAdd
 				UNITY_APPLY_FOG_COLOR(i.fogCoord, res, half4(0,0,0,0));
 			#endif

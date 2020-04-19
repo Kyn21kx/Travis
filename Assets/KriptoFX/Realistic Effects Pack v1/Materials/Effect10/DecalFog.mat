@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: DecalFog
   m_Shader: {fileID: 4800000, guid: 4775e5a8f344d6348adf934e722da85d, type: 3}
-  m_ShaderKeywords: BlendAlpha Clip_OFF FrameBlend_ON FresnelFade_OFF SoftParticles_ON
+  m_ShaderKeywords: BlendAdd Clip_OFF FrameBlend_ON FresnelFade_OFF SoftParticles_ON
     VertLight4Normal_ON
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -62,7 +62,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - CullMode: 2
-    - DstMode: 10
+    - DstMode: 1
     - SrcMode: 5
     - _AlphaPow: 2
     - _BumpAmt: -50
@@ -88,4 +88,4 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _TintColor: {r: 0.630785, g: 0.6914059, b: 0.764151, a: 0.05}
+    - _TintColor: {r: 0.082725175, g: 0.09114455, b: 0.103773594, a: 0.54509807}

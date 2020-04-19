@@ -3,26 +3,22 @@ You can contact me for any questions.
 
 My English is not very good, and if there are any translation errors, you can let me know :)
 
-This simple tutorial only for Default Legacy rendering.
+This simple tutorial only for HDRP
 Pack includes prefabs of main effects + prefabs of collision effects (Assets\KriptoFX\Realistic Effects Pack v1\Prefabs\).
 
 Supported platforms: PC/Consoles/VR/Mobiles
 All effects tested on Oculus Rift CV1 with single and dual mode rendering and work correctly.
-*If you use URP rendering then you must import HDRP or URP patches "\Assets\KriptoFX\Realistic Effects Pack v4\HDRP and URP patches"
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 NOTE: For correct effects working you must:
 
-1) You need activate HDR rendering. Edit -> ProjectSettings -> Graphics -> select current build target -> uncheck "use default" for tier1, tier2, tier3 -> set "Use HDR = true"
-2) Enable HDR rendering in the current camera. MainCamera -> "AllowHDR = true"
-f you have forward rendering path (by default in Unity), you need disable antialiasing "edit->project settings->quality->antialiasing"
-or turn of "MSAA" on main camera, because HDR does not works with msaa. If you want to use HDR and MSAA then use "post effect msaa".
+	Camera -> Add Component -> Volume -> "IsGlobal = true" -> set the profile "\Assets\KriptoFX\Realistic Effects Pack v1\PostProcess Profile.asset"
 
-3) Add postprocessing stack package to project. Window -> Package Manager -> PostProcessing -> Instal
-4) MainCamera -> AddComponent -> "Post Processing Layer". For "Layer" you should set custom layer (for example UI, or Postprocessing)
-5) Create empty Gameobject and set custom layer as in the camera processing layer (for example UI). Gameobject -> AddComponent -> "Post Process Volume".
-Add included postprocessing profile to "Post Process Volume" "\Assets\KriptoFX\Realistic Effects Pack v1\PostProcess Profile.asset"
+	In unity 2019.3+ added new "Threshold" parameter for bloom and you need change bloom settings (because default behaviour of bloom intencity was changed):
 
+	Threshold 1.5
+	Intencity 0.5
+	Scatter 0.9
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 Using effects:

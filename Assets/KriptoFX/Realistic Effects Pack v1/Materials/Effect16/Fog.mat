@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Fog
   m_Shader: {fileID: 4800000, guid: 4775e5a8f344d6348adf934e722da85d, type: 3}
-  m_ShaderKeywords: BlendAlpha Clip_OFF FrameBlend_ON FresnelFade_OFF SoftParticles_ON
+  m_ShaderKeywords: BlendAdd Clip_OFF FrameBlend_ON FresnelFade_OFF SoftParticles_ON
     VertLight_OFF
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
@@ -26,7 +26,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - CullMode: 2
-    - DstMode: 10
+    - DstMode: 1
     - SrcMode: 5
     - _ColorStrength: 1
     - _Cutout: 0.3
@@ -34,4 +34,4 @@ Material:
     - _InvFade: 2
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _TintColor: {r: 2.342685, g: 2.342685, b: 2.342685, a: 0.07}
+    - _TintColor: {r: 0.1509434, g: 0.1473834, b: 0.1473834, a: 0.6509804}

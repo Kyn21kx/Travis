@@ -60,5 +60,5 @@ Material:
     - _CutoutColor: {r: 0.91176486, g: 4, b: 1.1886411, a: 1}
     - _FresnelColor: {r: 0.06925258, g: 0.40499997, b: 0.041691188, a: 1}
     - _FresnelDistort: {r: 8, g: 12, b: 1, a: 1500}
-    - _TintColor: {r: 1.0085195, g: 1.9999999, b: 0.6176471, a: 0.503}
+    - _TintColor: {r: 0.33721536, g: 0.9068457, b: 0.10693934, a: 0.503}
     - _UVScrollDistort: {r: 8, g: 12, b: 1, a: 1500}

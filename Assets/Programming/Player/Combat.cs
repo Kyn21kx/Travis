@@ -86,6 +86,7 @@ public class Combat : MonoBehaviour {
 
     private void SwordSlash() {
         swordColl.enabled = true;
+        GetComponent<SpellShooting>().canCastSpells = false;
     }
 
     private void FinishedStrike () {
@@ -99,6 +100,7 @@ public class Combat : MonoBehaviour {
         attacking = false;
         target = null;
         movRef.canMove = true;
+        GetComponent<SpellShooting>().canCastSpells = true;
     }
 
 }

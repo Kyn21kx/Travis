@@ -42,4 +42,4 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DistortSpeed: {r: 1, g: 0.21, b: 1, a: 0.2}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
-    - _TintColor: {r: 3.0500748, g: 2.1088865, b: 28.771252, a: 1}
+    - _TintColor: {r: 11.297753, g: 7.531835, b: 102.75575, a: 1}

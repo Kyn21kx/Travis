@@ -55,12 +55,12 @@ Material:
     - _AlphaClip: 10
     - _BumpAmt: 80
     - _CullMode: 2
-    - _Cutout: 0.376
+    - _Cutout: 1
     - _CutoutThreshold: 0.035
-    - _Distortion: 80
+    - _Distortion: -40
     - _FPOW: 7
-    - _FresnelDistort: -2000
-    - _FresnelPow: 7
+    - _FresnelDistort: -1000
+    - _FresnelPow: 5
     - _FresnelR0: -0.05
     - _Height: 0
     - _InvFade: 2
@@ -78,10 +78,10 @@ Material:
     - _ZWriteMode: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _CutoutColor: {r: 1.1353806, g: 1.2935497, b: 4.4117646, a: 1}
-    - _FresnelColor: {r: 0.5735294, g: 0.7910756, b: 3, a: 1}
+    - _CutoutColor: {r: 1.7788666, g: 2.4394448, b: 15.084791, a: 1}
+    - _FresnelColor: {r: 0.77946895, g: 1.0732298, b: 4.030425, a: 1}
     - _FresnelDistort: {r: 8, g: 12, b: 1, a: 1500}
     - _HeightUVScrollDistort: {r: 8, g: 12, b: 0, a: 0}
-    - _MainColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MainColor: {r: 0, g: 0, b: 0, a: 1}
     - _TintColor: {r: 1, g: 1, b: 1, a: 1}
     - _UVScrollDistort: {r: 8, g: 12, b: 1, a: 1500}

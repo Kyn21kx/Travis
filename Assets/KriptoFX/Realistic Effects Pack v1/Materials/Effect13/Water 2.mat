@@ -53,7 +53,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _NormalTex:
         m_Texture: {fileID: 2800000, guid: 4fb80bc804baa8b4a84fca1b633c455a, type: 3}
-        m_Scale: {x: 0.3, y: 0.3}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ReflectionMap:
         m_Texture: {fileID: 2800000, guid: 5cc28bceff05e1944836e09f360fb6c3, type: 3}
@@ -69,12 +69,12 @@ Material:
     - _Cutoff: 1
     - _Cutout: 1
     - _CutoutThreshold: 0.015
-    - _Distortion: 250
+    - _Distortion: 100
     - _FPOW: 1.4
     - _FresnelDistort: 3000
-    - _FresnelPow: 2
-    - _FresnelR0: -0.1
-    - _Height: 1.2
+    - _FresnelPow: 5
+    - _FresnelR0: -0.02
+    - _Height: 1
     - _InvFade: 3
     - _LightStr: 0.41071427
     - _OffsetHeightMap: 1
@@ -83,7 +83,7 @@ Material:
     - _Opacity: 0.6785714
     - _R0: -0.2
     - _ReflectionStrength: 20
-    - _RefractiveStrength: 0.9
+    - _RefractiveStrength: -0.409
     - _RefractiveStrength2: 3.79
     - _RimPower: 8
     - _Shininess: 10.000001
@@ -99,9 +99,9 @@ Material:
     m_Colors:
     - _Color: {r: 0.94963247, g: 1.0291586, b: 1.0852942, a: 1}
     - _CutoutColor: {r: 1, g: 1, b: 1, a: 1}
-    - _FresnelColor: {r: 0.74117637, g: 0.95318437, b: 1.2, a: 1}
+    - _FresnelColor: {r: 3.105724, g: 3.6381338, b: 4.237095, a: 1}
     - _HeightUVScrollDistort: {r: 2, g: 15, b: 0, a: 0}
-    - _MainColor: {r: 0.875, g: 0.94827616, b: 1, a: 1}
+    - _MainColor: {r: 0.0734692, g: 0.098055355, b: 0.122641504, a: 1}
     - _ReflectColor: {r: 0.1454909, g: 0.14565384, b: 0.16911763, a: 1}
     - _RimColor: {r: 0.6729022, g: 0.7286853, b: 0.9338235, a: 1}
     - _SSSColor: {r: 0.98439384, g: 1.0928022, b: 1.4092375, a: 1}
