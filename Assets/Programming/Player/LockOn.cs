@@ -16,9 +16,11 @@ public class LockOn : MonoBehaviour {
     Vector2 viewportTarget, viewportPlayer;
     public CinemachineFreeLook LockCam;
     public CinemachineFreeLook MainCam;
+    private CinemachineFreeLook auxCam;
     #endregion
 
     private void Start() {
+        auxCam = MainCam;
         LockCam.gameObject.SetActive(false);
         player = transform;
         Cursor.lockState = CursorLockMode.Locked;
@@ -38,12 +40,10 @@ public class LockOn : MonoBehaviour {
             }
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 15f * Time.deltaTime);
             onetime = false;
-            LockCam.gameObject.SetActive(true);
-            MainCam.gameObject.SetActive(false);
+            MainCam = LockCam;
         }
         else {
-            LockCam.gameObject.SetActive(false);
-            MainCam.gameObject.SetActive(true);
+            MainCam = auxCam;
             target = null;
             locking = false;
         }

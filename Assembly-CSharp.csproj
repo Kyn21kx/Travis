@@ -10,8 +10,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{2D09527D-32F0-2738-EA5A-048E902974F4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -187,6 +186,7 @@
     <Compile Include="Assets\Programming\Enemy\Behaviour.cs" />
     <Compile Include="Assets\Programming\Enemy\EnemyCombat.cs" />
     <Compile Include="Assets\Programming\Enemy\Enemy_Environment.cs" />
+    <Compile Include="Assets\Programming\GeneralBehaviours.cs" />
     <Compile Include="Assets\Programming\Player\CallOfBeyond.cs" />
     <Compile Include="Assets\Programming\Player\Combat.cs" />
     <Compile Include="Assets\Programming\Player\ComboManager.cs" />
@@ -203,7 +203,6 @@
     <Compile Include="Assets\Programming\Player\aim.cs" />
     <Compile Include="Assets\Programming\Spells\Fireball.cs" />
     <Compile Include="Assets\Programming\Spells\Pulse.cs" />
-    <Compile Include="Assets\Programming\Spells\SpellsBehaviour.cs" />
     <Compile Include="Assets\Programming\Test Scripts\ApproximationTest.cs" />
     <Compile Include="Assets\Programming\Test Scripts\RotateShader.cs" />
     <Compile Include="Assets\Programming\Test Scripts\TestSpawner.cs" />

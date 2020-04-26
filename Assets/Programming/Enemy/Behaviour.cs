@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.AI;
+using Assets.Programming;
 
 public class Behaviour : MonoBehaviour {
 
@@ -63,6 +64,7 @@ public class Behaviour : MonoBehaviour {
     Vector3 toPlayerPos;
     float playerRadius, playerAngleX, playerAngleZ;
     float auxSpeed;
+    GeneralBehaviours generalBehaviours;
     #endregion
 
     #region Stats
@@ -79,6 +81,7 @@ public class Behaviour : MonoBehaviour {
     //Initialization
     private void Start() {
         detected = false;
+        generalBehaviours = new GeneralBehaviours();
         shot = false;
         state = States.Patrol;
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -92,7 +95,7 @@ public class Behaviour : MonoBehaviour {
         HealthBehaviour();
         Shoot();
         StealthBehaviour();
-        detected = Detect(player);
+        detected = generalBehaviours.Detect(player, transform, radius, angle);
     }
 
     private void OnDrawGizmos() {
@@ -149,36 +152,6 @@ public class Behaviour : MonoBehaviour {
         }
     }
 
-    private bool Detect (Transform target) {
-        Collider[] overlaps = new Collider[10];
-        int count = Physics.OverlapSphereNonAlloc(transform.position, radius, overlaps);
-        //Try i < count + 1 In case of an error
-        for (int i = 0; i < count; i++) {
-            if(overlaps[i] != null) {
-                if (overlaps[i].transform == target) {
-                    Vector3 dir = (target.position - transform.position).normalized;
-                    //Increase accuracy
-                    dir.y *= 0f;
-                    float _angle = Vector3.Angle(transform.forward, dir);
-                    //Check if the player is in the field of view by comparing the angle with a max angle value
-                    if (_angle <= angle) {
-                        Ray ray = new Ray(new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), target.position - transform.position);
-                        RaycastHit hit;
-                         if (Physics.Raycast(ray, out hit, radius)) {
-                             if (!hit.transform.CompareTag("Player")) {
-                                 return false;
-                             }
-                             else {
-                                return true;
-                            }
-                         }
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
     #region global aux variables
     [SerializeField]
     float cntr = 0f;

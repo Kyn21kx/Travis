@@ -52,7 +52,7 @@ public class Dash : MonoBehaviour {
 
     private void _Input () {
         //Raycast
-        if (Input.GetButtonDown("B") && GetComponent<StaminaManager>().staminaAmount >= staminaCost) {
+        if (Input.GetButtonDown("B") && GetComponent<StaminaManager>().staminaAmount >= staminaCost && !GetComponent<Combat>().attacking) {
             dashed = true;
             targetTransform = transform;
             if (GetComponent<LockOn>().locking) {

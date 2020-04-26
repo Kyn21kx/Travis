@@ -47,8 +47,8 @@ public class Parry : MonoBehaviour {
     public void ActiveParry () {
         blocking = true;
         combatRef.canMeleeAttack = false;
-        movRef.walkSpeed = 3f;
-        movRef.runSpeed = 3f;
+        movRef.walkSpeed = 2.5f;
+        movRef.runSpeed = 2.5f;
         //GetComponent<SmoothMovement>().stealthSpeed *= 0.5f;
         timeDown = 0;
         startTime = true;
