@@ -68,7 +68,7 @@ PrefabInstance:
     - target: {fileID: 114287051528755172, guid: 45f134f709433794c9fd82ae5c0d5009,
         type: 3}
       propertyPath: CollidesWith.m_Bits
-      value: 311
+      value: 3073
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 45f134f709433794c9fd82ae5c0d5009, type: 3}

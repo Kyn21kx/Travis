@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using XInputDotNetPure;
+using TMPro;
 
 public class SpellShooting : MonoBehaviour {
     public enum Type {Fire, Electric, Ice, Magnetism};
@@ -18,6 +19,8 @@ public class SpellShooting : MonoBehaviour {
     [HideInInspector]
     public bool count;
     public bool canCastSpells;
+    [SerializeField]
+    private TextMeshProUGUI text;
     #endregion
 
     private void Start() {
@@ -30,6 +33,7 @@ public class SpellShooting : MonoBehaviour {
     private void Update() {
         TypeManager();
         _Input();
+        text.SetText("Power: " + type.ToString());
     }
 
     private void _Input() {

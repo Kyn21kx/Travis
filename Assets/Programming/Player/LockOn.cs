@@ -14,17 +14,15 @@ public class LockOn : MonoBehaviour {
     private bool onetime = false;
     private bool isCollided = true;
     Vector2 viewportTarget, viewportPlayer;
-    public CinemachineFreeLook LockCam;
-    public CinemachineFreeLook MainCam;
-    private CinemachineFreeLook auxCam;
+    public CinemachineFreeLook mainCam;
+    public CinemachineFreeLook lockCam;
     #endregion
 
-    private void Start() {
-        auxCam = MainCam;
-        LockCam.gameObject.SetActive(false);
+    private void Awake() {
         player = transform;
         Cursor.lockState = CursorLockMode.Locked;
         target = null;
+        lockCam.gameObject.SetActive(false);
     }
     //Check if there is a collision in between the player and the enemy, if there is, do not turn around
     private void Update() {
@@ -33,21 +31,15 @@ public class LockOn : MonoBehaviour {
         if (locking) {
             Quaternion rotation = Quaternion.LookRotation(_target);
             collisionAux.rotation = rotation;
-            Ray ray = new Ray(new Vector3(collisionAux.position.x, collisionAux.position.y + 0.5f, collisionAux.position.z), transform.forward);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Vector3.Distance(new Vector3(collisionAux.position.x, 0, collisionAux.position.z), new Vector3(_target.x, 0, _target.z)))) {
-
-            }
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 15f * Time.deltaTime);
             onetime = false;
-            MainCam = LockCam;
+            LockCamera();
+            Adjustments();
         }
         else {
-            MainCam = auxCam;
+            UnlockCamera();
             target = null;
-            locking = false;
         }
-        Adjustments();
     }
 
     private void _Input () {
@@ -113,12 +105,18 @@ public class LockOn : MonoBehaviour {
         return target.position - player.position;
     }
 
-    //Adjust the camera
     private void Adjustments () {
-        if (!locking && !onetime) {
-            MainCam.m_XAxis.Value = LockCam.m_XAxis.Value;
-            onetime = true;
-        }
+        mainCam.m_XAxis.Value = lockCam.m_XAxis.Value;
+        mainCam.m_YAxis.Value = lockCam.m_YAxis.Value;
+    }
 
+    private void LockCamera () {
+        mainCam.gameObject.SetActive(false);
+        lockCam.gameObject.SetActive(true);
+    }
+
+    private void UnlockCamera () {
+        mainCam.gameObject.SetActive(true);
+        lockCam.gameObject.SetActive(false);
     }
 }

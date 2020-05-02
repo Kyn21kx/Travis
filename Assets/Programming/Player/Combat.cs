@@ -34,6 +34,8 @@ public class Combat : MonoBehaviour {
     private Transform[] basicAttackPos;
     Transform placeForSword;
     Transform swordHolder;
+    [SerializeField]
+    private Transform magneticCollider;
     Quaternion attackRot;
     [Header("Number of attack animation that you are in")]
     public int attackIndex;
@@ -42,6 +44,7 @@ public class Combat : MonoBehaviour {
     //To Do: Correct the movement when doing the second Fire attack
     private void Start() {
         attackIndex = 0;
+        magneticCollider.gameObject.SetActive(false);
         generalBehaviours = new GeneralBehaviours();
         spellRef = GetComponent<SpellShooting>();
         canMagneticMove = true;
@@ -100,7 +103,7 @@ public class Combat : MonoBehaviour {
             }
             //Move player forwards
             if ((target == null || Vector3.Distance(target.position, transform.position) >= 1.5f) && !spellRef.type.Equals(SpellShooting.Type.Magnetism)) {
-                rig.position = Vector3.Lerp(rig.position, movingPos, Time.deltaTime * 4f);  
+                transform.position = Vector3.Lerp(rig.position, movingPos, Time.deltaTime * 4f);  
             }
             //Activate slash motion
         }
@@ -124,6 +127,7 @@ public class Combat : MonoBehaviour {
     private void Start_Anim () {
         anim.SetTrigger(spellRef.type.ToString());
         movRef.canMove = false;
+        rig.isKinematic = true;
         attacking = true;
         canMeleeAttack = false;
         //Update the transform.forward for another value if you are rotating
@@ -131,6 +135,7 @@ public class Combat : MonoBehaviour {
         //movingPos = rig.position + attackStepDirection;
         spellRef.canCastSpells = false;
         if (spellRef.type.Equals(SpellShooting.Type.Magnetism)) {
+            magneticCollider.position = basicAttackPos[0].position;
             attackRot = sword.rotation;
             sword.position = basicAttackPos[0].position;
             swordColl.enabled = true;
@@ -138,9 +143,14 @@ public class Combat : MonoBehaviour {
     }
 
     private void SwordSlash() {
+        if (spellRef.type.Equals(SpellShooting.Type.Magnetism)) {
+            magneticCollider.gameObject.SetActive(true);
+        }
+        else {
+            swordColl.enabled = true;
+        }
         movRef.canMove = false;
         canMagneticMove = false;
-        swordColl.enabled = true;
     }
 
     private void FinishedStrike () {
@@ -153,12 +163,14 @@ public class Combat : MonoBehaviour {
         //canMagneticMove = true;
         pos2 = transform.position;
         Debug.Log(Vector3.Distance(pos1, pos2));
+        rig.isKinematic = false;
         rig.velocity *= 0f;
         attacking = false;
         target = null;
         movRef.canMove = true;
         GetComponent<SpellShooting>().canCastSpells = true;
         canMagneticMove = true;
+        magneticCollider.gameObject.SetActive(false);
         attackIndex = 0;
     }
 
@@ -230,6 +242,7 @@ public class Combat : MonoBehaviour {
 
     private void Magnetic_Slashes () {
         sword.localRotation = attackRot;
+        magneticCollider.position = Vector3.Lerp(magneticCollider.position, basicAttackPos[1].position, Time.deltaTime * magneticSwordSpeed * 4f);
         rigSword.MovePosition(Vector3.Lerp(sword.position, basicAttackPos[1].position, Time.deltaTime * magneticSwordSpeed * 4f));
     }
 }

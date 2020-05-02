@@ -68,7 +68,7 @@ PrefabInstance:
     - target: {fileID: 114771520313529554, guid: 0684650dd5655514ea7f3df35dc70ceb,
         type: 3}
       propertyPath: CollidesWith.m_Bits
-      value: 311
+      value: 3073
       objectReference: {fileID: 0}
     - target: {fileID: 114771520313529554, guid: 0684650dd5655514ea7f3df35dc70ceb,
         type: 3}

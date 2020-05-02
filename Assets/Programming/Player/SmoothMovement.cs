@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
+using XInputDotNetPure;
 
 public class SmoothMovement : MonoBehaviour {
 
@@ -59,6 +60,7 @@ public class SmoothMovement : MonoBehaviour {
         input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         Vector2 inputDir = input.normalized;
         if (Input.GetKeyDown(KeyCode.LeftShift) || (Input.GetButtonDown("L3"))) {
+            GamePad.SetVibration(PlayerIndex.One, 0.2f, 0.2f);
             anim.SetBool("Run", true);
             walkSpeed = runSpeed;
         }
@@ -93,7 +95,7 @@ public class SmoothMovement : MonoBehaviour {
 
     private void Jump () {
         var rb = GetComponent<Rigidbody>();
-        mainCam = lockOn.MainCam;
+        mainCam = lockOn.mainCam;
         if ((Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space)) && grounded) {
             //anim.SetBool("Jump", true);
             rb.velocity += Vector3.up * jumpForce;

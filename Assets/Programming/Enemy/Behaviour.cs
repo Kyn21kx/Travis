@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.AI;
 using Assets.Programming;
+using System;
 
 public class Behaviour : MonoBehaviour {
 
@@ -51,7 +51,9 @@ public class Behaviour : MonoBehaviour {
     #endregion
     #region Variables
     public bool detected;
+    public float forceMult;
     public bool burn;
+    public bool canMove;
     public TextMeshPro text;
     private Enemy_Environment environment;
     Transform player;
@@ -59,12 +61,21 @@ public class Behaviour : MonoBehaviour {
     public Transform[] targets;
     private bool shot;
     private States state;
-    private NavMeshAgent agent;
+    public float speed;
     private float dmgOverTime, time;
-    Vector3 toPlayerPos;
     float playerRadius, playerAngleX, playerAngleZ;
     float auxSpeed;
     GeneralBehaviours generalBehaviours;
+    public Rigidbody rig;
+    UnitPathfinder unitPathfinder;
+    CorvoPathFinder pathFindingSys;
+    [SerializeField]
+    private float obstacleDistanceDetection;
+    [SerializeField]
+    private Transform[] rayPivot;
+    [SerializeField]
+    private LayerMask radiusAvoidanceMask;
+    public bool hit;
     #endregion
 
     #region Stats
@@ -81,21 +92,64 @@ public class Behaviour : MonoBehaviour {
     //Initialization
     private void Start() {
         detected = false;
+        unitPathfinder = GetComponent<UnitPathfinder>();
         generalBehaviours = new GeneralBehaviours();
+        pathFindingSys = GetComponent<CorvoPathFinder>();
         shot = false;
+        rig = GetComponent<Rigidbody>();
+        rig.isKinematic = false;
+        canMove = true;
         state = States.Patrol;
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        agent = GetComponent<NavMeshAgent>();
         environment = GameObject.FindGameObjectWithTag("GlobalParameters").GetComponent<Enemy_Environment>();
-        toPlayerPos = Vector3.zero;
-        auxSpeed = agent.speed;
+        //auxSpeed = agent.speed;
     }
 
     private void Update() {
+        //agent.speed = speed;
         HealthBehaviour();
         Shoot();
         StealthBehaviour();
         detected = generalBehaviours.Detect(player, transform, radius, angle);
+        StateControl();
+        if (hit) {
+            MoveOnHit();
+        }
+    }
+
+    private void StateControl() {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        switch (state) {
+            case States.Patrol:
+                //agent.speed = auxSpeed;
+                //agent.isStopped = false;
+                if (targets.Length != 0) {
+                    disToPos = Vector3.Distance(transform.position, targets[patrolIndex].position);
+                    //Replace with rigidbody motion
+                    //agent.SetDestination(targets[patrolIndex].position);
+                    /*if (generalBehaviours.ReachedPos()) {
+                        patrolIndex++;
+                    }
+                    if (patrolIndex >= targets.Length) {
+                        patrolIndex = 0;
+                    }*/
+                }
+                break;
+            case States.Combat:
+                if (canMove) {
+                    RotateTowards(player, rotateSpeed);
+                    if (distanceToPlayer <= range) {
+                        //agent.isStopped = true;
+                    }
+                    else {
+                        //agent.isStopped = false;
+                        Vector3 pos = player.position;
+                        PathFindingMovement();
+                        //agent.SetDestination(pos);
+                    }
+                }
+                break;
+        }
     }
 
     private void OnDrawGizmos() {
@@ -119,6 +173,7 @@ public class Behaviour : MonoBehaviour {
     }
     float time_down;
     public void Damage (float dmg, float t, float dot) {
+        //Apply force in the direction of the attack
         if (t != 0) {
             time_down = 0f;
             time = t;
@@ -130,6 +185,7 @@ public class Behaviour : MonoBehaviour {
         }
         health -= dmg;
         player.GetComponent<CallOfBeyond>().wrath += (dmg * 0.1f);
+        environment.detected = true;
     }
     public void HealthBehaviour () {
         text.text = health.ToString();
@@ -137,18 +193,7 @@ public class Behaviour : MonoBehaviour {
             Destroy(gameObject);
         }
         if (burn) {
-            DamageOverTime();
-        }
-    }
-
-    private void DamageOverTime () {
-        time_down += Time.deltaTime;
-        if (time > 0) {
-            if (time_down >= 1f) {
-                health -= dmgOverTime;
-                time--;
-                time_down = 0f;
-            }
+            //DamageOverTime();
         }
     }
 
@@ -168,124 +213,76 @@ public class Behaviour : MonoBehaviour {
         if (environment.detected) {
             state = States.Combat;
         }
-        switch (state) {
-            case States.Patrol:
-                agent.speed = auxSpeed;
-                agent.isStopped = false;
-                if (targets.Length != 0) {
-                    disToPos = Vector3.Distance(transform.position, targets[patrolIndex].position);
-                    agent.SetDestination(targets[patrolIndex].position);
-                    if (disToPos <= agent.stoppingDistance) {
-                        patrolIndex++;
-                    }
-                    if (patrolIndex >= targets.Length) {
-                        patrolIndex = 0;
-                    }
-                }
-                break;
-            case States.Combat:
-                Vector3 target = player.position - transform.position;
-                var rotation = Quaternion.LookRotation(target);
-                float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-                transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotateSpeed * Time.deltaTime);
-                agent.speed = 6;
-                switch (masterType) {
-                    case MasterType.Melee:
-                        //TODO: Make the enemy go around the player in a pseudo random distance
-                        cntr += Time.deltaTime;
-                        //Getting the point x,z on the circumference.
-                        float dZ = Mathf.Abs(player.position.z - transform.position.z);
-                        float dX = Mathf.Abs(player.position.x - transform.position.x);
-                        if (cntr <= 0.2f) {
-                            playerAngleX = Mathf.Atan((dZ / dX)) * Mathf.Rad2Deg;
-                        }
-                        float x = range * Mathf.Cos(playerAngleX) + player.position.x;
-                        float z = range * Mathf.Sin(playerAngleX) + player.position.z;
-                        toPlayerPos = new Vector3(x, player.position.y, z);
-                        #region Conditions to attack
-                        if (distanceToPlayer <= range) {
-                            agent.isStopped = true;
-                            cntr = 0f;
-                            //numberOfAttacks = 1;
-                            //Play animation, rotate, and attack the player
-                            //If after the animation is completed, the player is still in range, set the number of attacks to 2.
-                        }
-                        else {
-                            agent.isStopped = false;
-                            agent.SetDestination(toPlayerPos);
-                        }
-                        if (!detected) {
-                            agent.isStopped = false;
-                            agent.SetDestination(player.position);
-                        }
-
-                        #endregion
-                        switch (subType) {
-                            case SubType.V1:
-                                break;
-                            case SubType.V2:
-                                break;
-                            case SubType.V3:
-                                break;
-                        }
-                        break;
-                    case MasterType.Ranged:
-                        /* TODO: Make the enemy take an aiming position around his allies, or a cover in the terrain
-                         * Spell availability is based in the enemy type (Básicos, Casters, Minions)
-                        */
-                        switch (subType) {
-
-                            case SubType.V1:
-                                break;
-                            case SubType.V2:
-                                break;
-                            case SubType.V3:
-                                break;
-                        }
-                        break;
-                    case MasterType.Buffer:
-                        switch (subType) {
-                            case SubType.V1:
-                                break;
-                            case SubType.V2:
-                                break;
-                            case SubType.V3:
-                                break;
-                        }
-                        break;
-                    case MasterType.Hybrid:
-                        switch (subType) {
-                            case SubType.V1:
-                                break;
-                            case SubType.V2:
-                                break;
-                            case SubType.V3:
-                                break;
-                        }
-                        break;
-                    case MasterType.Boss:
-                        break;
-                }
-                break;
-        }
     }
 
     #region MeleeCombat
     private void OnTriggerEnter(Collider other) {
         var combatController = player.GetComponent<Combat>();
         //Detects if the enemy is being hit by the player's sword
-        if (other.transform.Equals(combatController.sword)) {
+        if (other.transform.CompareTag("Sword")) {
             this.Damage(combatController.swordDamage, 0f, 0f);
+            Debug.Log(other.transform.forward);
+            hit = true;
+            //Apply velocity change;
         }
     }
     #endregion
 
-    private void Shoot () {
-        /*if (detected) {
-            Vector3 target = player.position- transform.position;
-            var rotation = Quaternion.LookRotation(target);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotateSpeed * Time.deltaTime);
-        }*/
+    private void MoveOnHit () {
+        canMove = false;
+        Vector3 newPos = (rig.position + player.forward).normalized * forceMult;
+        rig.MovePosition(Vector3.Lerp(rig.position, newPos, Time.deltaTime));
     }
+
+    bool followingPlayer = false;
+
+    private void PathFindingMovement () {
+        //Destination - source
+        Vector3 dir = (player.position - transform.position).normalized;
+        followingPlayer = CollisionCheck();
+        if (followingPlayer) {
+            unitPathfinder.enabled = false;
+            rig.AddForce(dir * speed, ForceMode.Impulse);
+        }
+        else {
+            unitPathfinder.enabled = true;
+            //Extract the path
+            unitPathfinder.goTo(player.position);
+        }
+    }
+
+    private void RotateTowards (Transform target, float speed) {
+        Vector3 _target = target.position - transform.position;
+        var rotation = Quaternion.LookRotation(_target);
+        rotation.x = 0f;
+        rotation.z = 0f;
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, speed * Time.deltaTime);
+    }
+
+    private bool CollisionCheck () {
+        bool allHit = true;
+        //Setup pivot to calculate the raycast
+        for (int i = 0; i < rayPivot.Length; i++) {
+            rayPivot[i].LookAt(player);
+            RaycastHit obstacleHit;
+            if (Physics.Raycast(rayPivot[i].position, rayPivot[i].forward, out obstacleHit)) {
+                if (obstacleHit.transform.CompareTag("Player")) {
+                    continue;
+                }
+                else {
+                    if (Vector3.Distance(rayPivot[i].position, obstacleHit.point) <= obstacleDistanceDetection) {
+                        allHit = false;
+                        break;
+                    }
+                }
+            }
+        }
+        return allHit;
+    }
+
+    private void Shoot () {
+
+    }
+    //Function for when the enum changes
 
 }

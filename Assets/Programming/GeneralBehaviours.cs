@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 
 namespace Assets.Programming {
@@ -37,8 +38,13 @@ namespace Assets.Programming {
             return false;
         }
 
-        public void CollisionAvoidance (Transform target) {
-
+        public bool ReachedPos (Transform agent, Vector3 finalPos, float threshold) {
+            float dis = Vector3.Distance(agent.position, finalPos);
+            if (dis <= threshold) {
+                return true;
+            }
+            else
+                return false;
         }
 
     }
