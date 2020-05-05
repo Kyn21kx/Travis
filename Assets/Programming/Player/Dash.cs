@@ -9,16 +9,18 @@ public class Dash : MonoBehaviour {
      * TODO:
      */
     #region Varibles
-    public float maxDis;
-    private float auxDis;
     public float time;
     private Rigidbody rg;
     private bool dashed;
     Transform targetTransform;
+    Vector3 dashDir;
     [SerializeField]
     LayerMask mask;
     public float dashTime;
     private float auxDashTime;
+    private SmoothMovement movRef;
+    private StaminaManager staminaRef;
+    public bool canDash;
     #endregion
     #region statsVars
     public float speed = 50f;
@@ -26,11 +28,14 @@ public class Dash : MonoBehaviour {
     #endregion
 
     private void Start() {
-        auxDis = maxDis;
+        canDash = true;
+        staminaRef = GetComponent<StaminaManager>();
+        movRef = GetComponent<SmoothMovement>();
         dashed = false;
         auxDashTime = dashTime;
         rg = GetComponent<Rigidbody>();
         targetTransform = transform;
+        dashDir = -targetTransform.forward;
     }
 
     private void Update() {
@@ -52,16 +57,20 @@ public class Dash : MonoBehaviour {
 
     private void _Input () {
         //Raycast
-        if (Input.GetButtonDown("B") && GetComponent<StaminaManager>().staminaAmount >= staminaCost && !GetComponent<Combat>().attacking) {
+        if (Input.GetButtonDown("B") && staminaRef.staminaAmount >= staminaCost && canDash) {
+            rg.isKinematic = false;
+            rg.velocity *= 0f;
             dashed = true;
             targetTransform = transform;
             if (GetComponent<LockOn>().locking) {
-                targetTransform = GetComponent<SmoothMovement>().movPivot.transform;
+                targetTransform = movRef.movPivot.transform;
             }
-            rg.AddForce(targetTransform.forward * speed, ForceMode.VelocityChange);
-            GetComponent<SmoothMovement>().canMove = false;
+            //Condition for the dash direction to go forward or backwards
+            dashDir = movRef.input != Vector2.zero ? targetTransform.forward : -targetTransform.forward;
+            rg.AddForce(dashDir * speed, ForceMode.VelocityChange);
+            movRef.canMove = false;
             GetComponent<Combat>().canMeleeAttack = false;
-            GetComponent<StaminaManager>().Reduce(staminaCost);
+            staminaRef.Reduce(staminaCost);
         }
     }
     private void _Dash () {
@@ -77,7 +86,7 @@ public class Dash : MonoBehaviour {
         dashed = false;
         rg.velocity *= 0f;
         GetComponent<Combat>().canMeleeAttack = true;
-        GetComponent<SmoothMovement>().canMove = true;
+        movRef.canMove = true;
     }
 
 }

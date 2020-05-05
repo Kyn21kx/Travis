@@ -30,6 +30,8 @@ public class LockOn : MonoBehaviour {
         var _target = GetTarget();
         if (locking) {
             Quaternion rotation = Quaternion.LookRotation(_target);
+            rotation.x = 0f;
+            rotation.z = 0f;
             collisionAux.rotation = rotation;
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 15f * Time.deltaTime);
             onetime = false;

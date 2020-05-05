@@ -37,6 +37,7 @@ public class Combat : MonoBehaviour {
     [SerializeField]
     private Transform magneticCollider;
     Quaternion attackRot;
+    private Dash dashRef;
     [Header("Number of attack animation that you are in")]
     public int attackIndex;
     #endregion
@@ -44,6 +45,7 @@ public class Combat : MonoBehaviour {
     //To Do: Correct the movement when doing the second Fire attack
     private void Start() {
         attackIndex = 0;
+        dashRef = GetComponent<Dash>();
         magneticCollider.gameObject.SetActive(false);
         generalBehaviours = new GeneralBehaviours();
         spellRef = GetComponent<SpellShooting>();
@@ -102,9 +104,7 @@ public class Combat : MonoBehaviour {
                 rig.MoveRotation(Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f));
             }
             //Move player forwards
-            if ((target == null || Vector3.Distance(target.position, transform.position) >= 1.5f) && !spellRef.type.Equals(SpellShooting.Type.Magnetism)) {
-                transform.position = Vector3.Lerp(rig.position, movingPos, Time.deltaTime * 4f);  
-            }
+            MoveOnAttack();
             //Activate slash motion
         }
         else {
@@ -127,6 +127,7 @@ public class Combat : MonoBehaviour {
     private void Start_Anim () {
         anim.SetTrigger(spellRef.type.ToString());
         movRef.canMove = false;
+        GetComponent<Dash>().canDash = false;
         rig.isKinematic = true;
         attacking = true;
         canMeleeAttack = false;
@@ -156,6 +157,7 @@ public class Combat : MonoBehaviour {
     private void FinishedStrike () {
         swordColl.enabled = false;
         canMeleeAttack = true;
+        dashRef.canDash = true;
         attackIndex++;
     }
     Vector3 pos2;
@@ -245,4 +247,11 @@ public class Combat : MonoBehaviour {
         magneticCollider.position = Vector3.Lerp(magneticCollider.position, basicAttackPos[1].position, Time.deltaTime * magneticSwordSpeed * 4f);
         rigSword.MovePosition(Vector3.Lerp(sword.position, basicAttackPos[1].position, Time.deltaTime * magneticSwordSpeed * 4f));
     }
+
+    private void MoveOnAttack () {
+        /*if ((target == null || Vector3.Distance(target.position, transform.position) >= 1.5f) && !spellRef.type.Equals(SpellShooting.Type.Magnetism) && dashRef.dashTime > 0f) {
+                transform.position = Vector3.Lerp(rig.position, movingPos, Time.deltaTime * 4f);  
+            }*/
+    }
+
 }

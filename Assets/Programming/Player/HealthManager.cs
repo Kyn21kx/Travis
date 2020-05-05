@@ -38,4 +38,11 @@ public class HealthManager : MonoBehaviour {
         parryRef.dmg = dmg;
     }
 
+    private void OnTriggerEnter(Collider other) {
+        if (other.transform.CompareTag("EnDmg")) {
+            var combatRef = other.transform.GetComponentInParent<EnemyCombat>();
+            Damage(combatRef.activeDmg);
+        }
+    }
+
 }

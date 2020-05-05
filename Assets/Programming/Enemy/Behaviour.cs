@@ -7,39 +7,6 @@ using System;
 
 public class Behaviour : MonoBehaviour {
 
-    /*
-     * TODO:
-     * Health Manager
-     * Levels
-     * Shooting
-     * Avoiding
-     * Go for the back of the player if there is another enemy in the front part of you
-     */
-    #region Types of enemies described
-    /*
-     * Enemy types {
-     *     
-*Melee
-  *Lígeros
-  *Pesados
-  *Player-like enemy
-
-*Híbridos
-
-*Buffer
-   *Healer
-   *Shielder (+ Shield)
-   *Damage booster
-
-*Bosses
-   *
-*Distancia
-   *Básicos
-   *Casters (hechizos pesados)
-*Minions (disposable enemies)
-     * }
-     */
-    #endregion
     public enum MasterType {Melee, Ranged, Buffer, Hybrid, Boss};
     public enum SubType {V1, V2, V3};
     public enum States {Patrol, Combat};
@@ -56,7 +23,8 @@ public class Behaviour : MonoBehaviour {
     public bool canMove;
     public TextMeshPro text;
     private Enemy_Environment environment;
-    Transform player;
+    [HideInInspector]
+    public Transform player;
     [Header("Posciciones a los que se va a mover el agente, en orden")]
     public Transform[] targets;
     private bool shot;
@@ -75,7 +43,12 @@ public class Behaviour : MonoBehaviour {
     private Transform[] rayPivot;
     [SerializeField]
     private LayerMask radiusAvoidanceMask;
+    public Animator anim;
     public bool hit;
+    [SerializeField]
+    private float movingTimer;
+    public bool stopped;
+    EnemyCombat enCombatRef;
     #endregion
 
     #region Stats
@@ -91,34 +64,38 @@ public class Behaviour : MonoBehaviour {
 
     //Initialization
     private void Start() {
-        detected = false;
+        enCombatRef = GetComponent<EnemyCombat>();
         unitPathfinder = GetComponent<UnitPathfinder>();
         generalBehaviours = new GeneralBehaviours();
         pathFindingSys = GetComponent<CorvoPathFinder>();
-        shot = false;
         rig = GetComponent<Rigidbody>();
-        rig.isKinematic = false;
+        environment = GameObject.FindGameObjectWithTag("GlobalParameters").GetComponent<Enemy_Environment>();
+        anim = GetComponent<Animator>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        stopped = true;
+        detected = false;
+        shot = false;
+        rig.isKinematic = true;
         canMove = true;
         state = States.Patrol;
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        environment = GameObject.FindGameObjectWithTag("GlobalParameters").GetComponent<Enemy_Environment>();
-        //auxSpeed = agent.speed;
     }
 
     private void Update() {
-        //agent.speed = speed;
         HealthBehaviour();
         Shoot();
         StealthBehaviour();
         detected = generalBehaviours.Detect(player, transform, radius, angle);
         StateControl();
-        if (hit) {
-            MoveOnHit();
-        }
     }
 
     private void StateControl() {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (!canMove) {
+            //Stop the player
+            unitPathfinder.stop();
+            rig.velocity = Vector3.zero;
+        }
         switch (state) {
             case States.Patrol:
                 //agent.speed = auxSpeed;
@@ -136,16 +113,20 @@ public class Behaviour : MonoBehaviour {
                 }
                 break;
             case States.Combat:
-                if (canMove) {
-                    RotateTowards(player, rotateSpeed);
-                    if (distanceToPlayer <= range) {
-                        //agent.isStopped = true;
+                RotateTowards(player, rotateSpeed);
+                if (enCombatRef.attackProbability < 1f) {
+                    if (distanceToPlayer <= radius / 2f && detected) {
+                        //The agent is ready to attack
+                        Stop();
+                        enCombatRef.inCombatRange = true;
                     }
                     else {
-                        //agent.isStopped = false;
-                        Vector3 pos = player.position;
-                        PathFindingMovement();
-                        //agent.SetDestination(pos);
+                        enCombatRef.inCombatRange = false;
+                        movingTimer += Time.deltaTime;
+                        float rnd = UnityEngine.Random.Range(0.5f, 1.5f);
+                        stopped = false;
+                        if (movingTimer >= rnd)
+                            PathFindingMovement(player);
                     }
                 }
                 break;
@@ -224,30 +205,36 @@ public class Behaviour : MonoBehaviour {
             Debug.Log(other.transform.forward);
             hit = true;
             //Apply velocity change;
+            MoveOnHit(other.transform);
         }
     }
     #endregion
 
-    private void MoveOnHit () {
-        canMove = false;
-        Vector3 newPos = (rig.position + player.forward).normalized * forceMult;
-        rig.MovePosition(Vector3.Lerp(rig.position, newPos, Time.deltaTime));
+    private void MoveOnHit (Transform damagingObj) {
+        //Maybe set a time limit just like the dash
+        rig.AddForce(damagingObj.forward * forceMult, ForceMode.Impulse);
     }
 
     bool followingPlayer = false;
 
-    private void PathFindingMovement () {
+    public void PathFindingMovement (Transform target) {
         //Destination - source
-        Vector3 dir = (player.position - transform.position).normalized;
-        followingPlayer = CollisionCheck();
-        if (followingPlayer) {
-            unitPathfinder.enabled = false;
-            rig.AddForce(dir * speed, ForceMode.Impulse);
-        }
-        else {
-            unitPathfinder.enabled = true;
-            //Extract the path
-            unitPathfinder.goTo(player.position);
+        //Move this to variable and function UpdateAnimatorParameters()
+        if (canMove) {
+            if (!stopped) {
+                anim.SetBool("Walking", true);
+                followingPlayer = CollisionCheck(target);
+                if (followingPlayer) {
+                    unitPathfinder.enabled = false;
+                    //Replace this method to control speed
+                    transform.position = Vector3.MoveTowards(transform.position, target.position, 0.1f);
+                }
+                else {
+                    unitPathfinder.enabled = true;
+                    //Extract the path
+                    unitPathfinder.goTo(target.position);
+                }
+            }
         }
     }
 
@@ -259,18 +246,18 @@ public class Behaviour : MonoBehaviour {
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, speed * Time.deltaTime);
     }
 
-    private bool CollisionCheck () {
+    private bool CollisionCheck (Transform _target) {
         bool allHit = true;
         //Setup pivot to calculate the raycast
         for (int i = 0; i < rayPivot.Length; i++) {
-            rayPivot[i].LookAt(player);
+            rayPivot[i].LookAt(_target);
             RaycastHit obstacleHit;
             if (Physics.Raycast(rayPivot[i].position, rayPivot[i].forward, out obstacleHit)) {
-                if (obstacleHit.transform.CompareTag("Player")) {
+                if (obstacleHit.transform.CompareTag(_target.tag)) {
                     continue;
                 }
                 else {
-                    if (Vector3.Distance(rayPivot[i].position, obstacleHit.point) <= obstacleDistanceDetection) {
+                    if (Vector3.Distance(rayPivot[i].position, obstacleHit.point) <= obstacleDistanceDetection && obstacleHit.transform != transform) {
                         allHit = false;
                         break;
                     }
@@ -283,6 +270,13 @@ public class Behaviour : MonoBehaviour {
     private void Shoot () {
 
     }
+
+    public void Stop () {
+        anim.SetBool("Walking", false);
+        movingTimer = 0f;
+        stopped = true;
+    }
+
     //Function for when the enum changes
 
 }

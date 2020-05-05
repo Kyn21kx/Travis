@@ -12,6 +12,7 @@ TagManager:
   - Mana
   - Enemy
   - Sword
+  - EnDmg
   layers:
   - Default
   - TransparentFX

@@ -220,6 +220,8 @@
     <Compile Include="Assets\Programming\Pathfinding\Node.cs" />
     <Compile Include="Assets\Programming\Pathfinding\Pathfinding.cs" />
     <Compile Include="Assets\Programming\Player\CallOfBeyond.cs" />
+    <Compile Include="Assets\Programming\Player\CamCollider.cs" />
+    <Compile Include="Assets\Programming\Player\CameraControl.cs" />
     <Compile Include="Assets\Programming\Player\Combat.cs" />
     <Compile Include="Assets\Programming\Player\ComboManager.cs" />
     <Compile Include="Assets\Programming\Player\Dash.cs" />
