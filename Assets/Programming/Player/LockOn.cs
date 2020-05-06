@@ -85,6 +85,10 @@ public class LockOn : MonoBehaviour {
         camControlRef.transform.rotation = Quaternion.LookRotation(-rot);
     }
         
+    private void Adjustments () {
+
+    }
+
     private void UnlockCamera () {
         onetime = true;
         var prevRotation = new Vector2(camControlRef.transform.eulerAngles.y, 0f);

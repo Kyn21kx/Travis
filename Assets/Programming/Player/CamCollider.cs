@@ -20,6 +20,10 @@ public class CamCollider : MonoBehaviour
     }
 
     private void Update() {
+        Colliding();
+    }
+
+    private void Colliding () {
         //Calculate a new position 
         Vector3 newPos = transform.parent.TransformPoint(dir * maxDistance);
         RaycastHit hit;
@@ -32,5 +36,4 @@ public class CamCollider : MonoBehaviour
         }
         transform.localPosition = Vector3.Lerp(transform.localPosition, dir * distance, Time.deltaTime * smoothness);
     }
-
 }
