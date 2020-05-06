@@ -39,7 +39,7 @@ public class EnemyCombat : MonoBehaviour {
 
     private void Update() {
         UpdateProbability();
-        inAttackRange = generalBehaviours.ReachedPos(transform, behaviourRef.player.position, behaviourRef.range);
+        inAttackRange = generalBehaviours.ReachedPos(transform.position, behaviourRef.player.position, behaviourRef.range);
         ActivateAttack();
     }
     

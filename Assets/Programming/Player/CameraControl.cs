@@ -25,7 +25,8 @@ public class CameraControl : MonoBehaviour
 
     private void Update() {
         _Input();
-        RotateCamera();
+        if (canControl)
+            RotateCamera();
     }
 
     private void _Input () {
@@ -36,6 +37,7 @@ public class CameraControl : MonoBehaviour
     private void RotateCamera () {
         _rotation.x += cameraInput.x * sensitivity * Time.deltaTime;
         _rotation.y += cameraInput.y * sensitivity * Time.deltaTime;
+        //Issue is caused by clamp angle
         _rotation.y = Mathf.Clamp(_rotation.y, -clampAngle, clampAngle);
         Quaternion rot = Quaternion.Euler(_rotation.y, _rotation.x, 0f);
         transform.rotation = rot;

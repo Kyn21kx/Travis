@@ -22,7 +22,7 @@ public class LockOn : MonoBehaviour {
     private void Awake() {
         camControlRef = Camera.main.transform.parent.GetComponent<CameraControl>();
         Cursor.lockState = CursorLockMode.Locked;
-        target = Vector3.zero;
+        dir = Vector3.zero;
     }
     //Check if there is a collision in between the player and the enemy, if there is, do not turn around
     private void Update() {
@@ -42,8 +42,9 @@ public class LockOn : MonoBehaviour {
             }
         }
         else {
-            UnlockCamera();
-            target = Vector3.zero;
+            if (!onetime)
+                UnlockCamera();
+            dir = Vector3.zero;
         }
     }
 
@@ -53,6 +54,7 @@ public class LockOn : MonoBehaviour {
         }
         else if (Input.GetButtonDown("RS") && locking) {
             locking = false;
+            onetime = false;
         }
     }
 
@@ -61,7 +63,7 @@ public class LockOn : MonoBehaviour {
     private Vector3 GetTarget () {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         float minDis = distanceThreshold;
-        if (target == Vector3.zero && !locking) {
+        if (dir == Vector3.zero && !locking) {
             foreach (var enemy in enemies) {
                 float distance = Vector3.Distance(enemy.transform.position, transform.position);
                 if (distance <= minDis) {
@@ -79,10 +81,16 @@ public class LockOn : MonoBehaviour {
 
     private void LockCamera(Vector3 rot) {
         camControlRef.canControl = false;
-        camControlRef.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
+        //Use lerp and then hard lock when you are close to the rotation
+        camControlRef.transform.rotation = Quaternion.LookRotation(-rot);
     }
-
+        
     private void UnlockCamera () {
+        onetime = true;
+        var prevRotation = new Vector2(camControlRef.transform.eulerAngles.y, 0f);
+        camControlRef._rotation = prevRotation;
+        camControlRef.transform.rotation = Quaternion.LookRotation(-dir);
         camControlRef.canControl = true;
+        closest_enemy = null;
     }
 }
