@@ -15,9 +15,11 @@ public class CameraControl : MonoBehaviour
     private Vector2 cameraInput;
     [SerializeField]
     public Vector2 _rotation;
+    public bool canControl;
     #endregion
 
     private void Start() {
+        canControl = true;
         _rotation = new Vector2(transform.rotation.eulerAngles.y, transform.rotation.x);
     }
 
@@ -27,7 +29,7 @@ public class CameraControl : MonoBehaviour
     }
 
     private void _Input () {
-        cameraInput = new Vector2(Input.GetAxis("RightJoystickX"), Input.GetAxis("RightJoystickY"));
+        cameraInput = canControl ? new Vector2(Input.GetAxis("RightJoystickX"), Input.GetAxis("RightJoystickY")) : Vector2.zero;
     }
     
 

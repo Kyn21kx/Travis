@@ -6,41 +6,44 @@ using Cinemachine;
 public class LockOn : MonoBehaviour {
 
     #region Variables
+    private Vector3 target;
     [SerializeField]
-    Transform target, player, collisionAux;
-    [SerializeField]
-    float distanceToTarget;
+    Transform collisionAux;
+    public Transform closest_enemy;
+    public float distanceThreshold;
     public bool locking;
     private bool onetime = false;
     private bool isCollided = true;
+    Vector3 dir = Vector3.zero;
+    CameraControl camControlRef;
     Vector2 viewportTarget, viewportPlayer;
-    public CinemachineFreeLook mainCam;
-    public CinemachineFreeLook lockCam;
     #endregion
 
     private void Awake() {
-        player = transform;
+        camControlRef = Camera.main.transform.parent.GetComponent<CameraControl>();
         Cursor.lockState = CursorLockMode.Locked;
-        target = null;
-        lockCam.gameObject.SetActive(false);
+        target = Vector3.zero;
     }
     //Check if there is a collision in between the player and the enemy, if there is, do not turn around
     private void Update() {
         _Input();
         var _target = GetTarget();
         if (locking) {
-            Quaternion rotation = Quaternion.LookRotation(_target);
-            rotation.x = 0f;
-            rotation.z = 0f;
-            collisionAux.rotation = rotation;
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 15f * Time.deltaTime);
-            onetime = false;
-            LockCamera();
-            Adjustments();
+            if (_target != Vector3.zero) {
+                LockCamera(_target);
+                Quaternion rotation = Quaternion.LookRotation(_target);
+                rotation.x = 0f;
+                rotation.z = 0f;
+                collisionAux.rotation = rotation;
+                transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 15f * Time.deltaTime);
+            }
+            else {
+                locking = false;
+            }
         }
         else {
             UnlockCamera();
-            target = null;
+            target = Vector3.zero;
         }
     }
 
@@ -54,71 +57,32 @@ public class LockOn : MonoBehaviour {
     }
 
     //Find the nearest target
-    //Add condition if there are no enemies
-    //Add a distance limit
+    //Make this a general behaviours method
     private Vector3 GetTarget () {
-        Vector2 joyInput = new Vector2(Input.GetAxis("RightJoystickX"), Input.GetAxis("RightJoystickY"));
-        if (target == null) {
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            if (enemies != null) {
-                float minDis = float.MaxValue;
-                float dis;
-                //Changing target to the right
-                if (joyInput. x > 0) {
-                    //Get the second nearest enemy based on +x
-                    foreach (GameObject enemy in enemies) {
-                        dis = Vector3.Distance(player.position, enemy.transform.position);
-                        if (dis < minDis) {
-                            minDis = dis;
-                            target = enemy.transform;
-                        }
-                        else if (dis == minDis) {
-                            target = enemy.transform;
-                        }
-                    }
-                }
-                //Chanigng target to the left
-                else if (joyInput.x < 0) {
-
-                }
-                //Changing target forwards
-                else if (joyInput.y > 0) {
-
-                }
-                //Changing target backwards
-                else if (joyInput.y < 0) {
-
-                }
-                //Default nearest target
-                else {
-                    foreach (GameObject enemy in enemies) {
-                        dis = Vector3.Distance(player.position, enemy.transform.position);
-                        if (dis < minDis) {
-                            minDis = dis;
-                            target = enemy.transform;
-                        }
-                        else if (dis == minDis) {
-                            target = enemy.transform;
-                        }
-                    }
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        float minDis = distanceThreshold;
+        if (target == Vector3.zero && !locking) {
+            foreach (var enemy in enemies) {
+                float distance = Vector3.Distance(enemy.transform.position, transform.position);
+                if (distance <= minDis) {
+                    minDis = distance;
+                    dir = enemy.transform.position - transform.position;
+                    closest_enemy = enemy.transform;
                 }
             }
         }
-        return target.position - player.position;
+        else {
+            dir = closest_enemy != null ? closest_enemy.position - transform.position : Vector3.zero;
+        }
+        return dir;
     }
 
-    private void Adjustments () {
-        mainCam.m_XAxis.Value = lockCam.m_XAxis.Value;
-        mainCam.m_YAxis.Value = lockCam.m_YAxis.Value;
-    }
-
-    private void LockCamera () {
-        mainCam.gameObject.SetActive(false);
-        lockCam.gameObject.SetActive(true);
+    private void LockCamera(Vector3 rot) {
+        camControlRef.canControl = false;
+        camControlRef.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
     }
 
     private void UnlockCamera () {
-        mainCam.gameObject.SetActive(true);
-        lockCam.gameObject.SetActive(false);
+        camControlRef.canControl = true;
     }
 }

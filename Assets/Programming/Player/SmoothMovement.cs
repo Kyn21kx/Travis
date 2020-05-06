@@ -9,6 +9,7 @@ public class SmoothMovement : MonoBehaviour {
     #region General variables
     public float walkSpeed = 5f;
     public float runSpeed = 7f;
+    public bool moving;
     [HideInInspector]
     public float auxSpeed;
     [HideInInspector]
@@ -22,11 +23,12 @@ public class SmoothMovement : MonoBehaviour {
     public GameObject movPivot;
     float distance;
     Vector3 rotation;
+    private Transform movingTarget;
     float maxDis = float.MaxValue;
     public Transform closestFloor = null;
     public bool canMove;
     public LockOn lockOn;
-    private CinemachineFreeLook mainCam;
+    Rigidbody rig;
     #endregion
 
     #region Animation variables
@@ -37,6 +39,9 @@ public class SmoothMovement : MonoBehaviour {
      * When in the air, disable movement if parrying
      */
     private void Start() {
+        rig = GetComponent<Rigidbody>();
+        moving = false;
+        movingTarget = transform;
         canMove = true;
         auxRunningSpeed = runSpeed;
         anim = GetComponentInChildren<Animator>();
@@ -47,18 +52,17 @@ public class SmoothMovement : MonoBehaviour {
 
     private void Update() {
         //Debug.Log(Input.GetAxis("LT"));
+        _Input();
         if (canMove) {
             Jump();
-            MovePlayer();
         }
+        MovePlayer();
         Identify();
     }
 
-    private void MovePlayer () {
-        //Input management
-        //if controller input, then change
-        input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+    private void _Input () {
         Vector2 inputDir = input.normalized;
+        input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         if (Input.GetKeyDown(KeyCode.LeftShift) || (Input.GetButtonDown("L3"))) {
             GamePad.SetVibration(PlayerIndex.One, 0.2f, 0.2f);
             anim.SetBool("Run", true);
@@ -69,33 +73,41 @@ public class SmoothMovement : MonoBehaviour {
             walkSpeed = auxSpeed;
         }
         if (inputDir != Vector2.zero) {
-            var rig = GetComponent<Rigidbody>();
+            moving = true;
+            float target = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+
             if (!lockOn.locking) {
-                float target = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
-                rotation = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, target, ref smoothVel, turnTime);
-                transform.eulerAngles = rotation;
-                //Change walk speed for speed and set the variable depending on the input
-                rig.MovePosition(transform.position + transform.forward * walkSpeed * Time.deltaTime);
-                anim.SetBool("Walk", true);
+                movingTarget = transform;
+                rotation = Vector3.up * Mathf.SmoothDampAngle(movingTarget.eulerAngles.y, target, ref smoothVel, turnTime);
+                movingTarget.eulerAngles = !GetComponent<Combat>().attacking ? rotation : movingTarget.eulerAngles;
             }
             else {
-                float target = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
-                rotation = Vector3.up * Mathf.SmoothDampAngle(movPivot.transform.eulerAngles.y, target, ref smoothVel, turnTime);
-                movPivot.transform.eulerAngles = rotation;
-                //Change walk speed for speed and set the variable depending on the input
-                rig.MovePosition(transform.position + movPivot.transform.forward * walkSpeed * Time.deltaTime);
+                movingTarget = movPivot.transform;
+                rotation = Vector3.up * Mathf.SmoothDampAngle(movingTarget.eulerAngles.y, target, ref smoothVel, turnTime);
+                movingTarget.eulerAngles = rotation;
+            }
+        }
+        else {
+            moving = false;
+        }
+
+    }
+
+    private void MovePlayer () {
+        if (moving) {
+            //Change walk speed for speed and set the variable depending on the input
+            if (canMove) {
+                rig.MovePosition(transform.position + movingTarget.forward * walkSpeed * Time.deltaTime);
                 anim.SetBool("Walk", true);
             }
         }
         else {
             anim.SetBool("Walk", false);
         }
-        
     }
 
     private void Jump () {
         var rb = GetComponent<Rigidbody>();
-        mainCam = lockOn.mainCam;
         if ((Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space)) && grounded) {
             //anim.SetBool("Jump", true);
             rb.velocity += Vector3.up * jumpForce;

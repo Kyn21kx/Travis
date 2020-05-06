@@ -21,6 +21,7 @@ public class Dash : MonoBehaviour {
     private SmoothMovement movRef;
     private StaminaManager staminaRef;
     public bool canDash;
+    private LockOn lockRef;
     #endregion
     #region statsVars
     public float speed = 50f;
@@ -29,6 +30,7 @@ public class Dash : MonoBehaviour {
 
     private void Start() {
         canDash = true;
+        lockRef = GetComponent<LockOn>();
         staminaRef = GetComponent<StaminaManager>();
         movRef = GetComponent<SmoothMovement>();
         dashed = false;
@@ -62,11 +64,13 @@ public class Dash : MonoBehaviour {
             rg.velocity *= 0f;
             dashed = true;
             targetTransform = transform;
-            if (GetComponent<LockOn>().locking) {
-                targetTransform = movRef.movPivot.transform;
+            if (lockRef.locking) {
+                dashDir = movRef.input != Vector2.zero ? movRef.movPivot.transform.forward : lockRef.closest_enemy.forward;
+            }
+            else {
+                dashDir = movRef.input != Vector2.zero ? transform.forward : -transform.forward;
             }
             //Condition for the dash direction to go forward or backwards
-            dashDir = movRef.input != Vector2.zero ? targetTransform.forward : -targetTransform.forward;
             rg.AddForce(dashDir * speed, ForceMode.VelocityChange);
             movRef.canMove = false;
             GetComponent<Combat>().canMeleeAttack = false;

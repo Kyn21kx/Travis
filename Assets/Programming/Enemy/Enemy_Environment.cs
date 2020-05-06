@@ -14,7 +14,7 @@ public class Enemy_Environment : MonoBehaviour
     #endregion
 
     private void Start() {
-        InvokeRepeating("UpdateNavMesh", 1f, 0.5f);
+
     }
 
     private void Update() {
