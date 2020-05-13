@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Programming;
+using System.Linq;
 
 public class EnemyCombat : MonoBehaviour {
     //To do: Add combos and when you are in the combo, the animations just play, the probability resets to 0, and you can't move
@@ -22,17 +23,21 @@ public class EnemyCombat : MonoBehaviour {
     public bool inCombatRange;
     public bool inAttackRange;
     public float aggressiveness;
+    public int priority;
     GeneralBehaviours generalBehaviours;
     public Transform sword;
+    private Animator anim;
     private CapsuleCollider swordColl;
+    private Enemy_Environment environmentRef;
     public bool attacking;
     #endregion
-
+    //To do: when the enemies detect you, they have a priority system in place, and if they are the same priority, it is assigned randomly
     private void Start() {
         swordColl = sword.GetComponent<CapsuleCollider>();
         generalBehaviours = new GeneralBehaviours();
         behaviourRef = GetComponent<Behaviour>();
-
+        anim = GetComponent<Animator>();
+        environmentRef = behaviourRef.environment;
         inCombatRange = false;
         swordColl.enabled = false;
     }
@@ -43,6 +48,11 @@ public class EnemyCombat : MonoBehaviour {
         ActivateAttack();
     }
     
+    public void Dueling () {
+        behaviourRef.stopped = false;
+        behaviourRef.PathFindingMovement(behaviourRef.player, behaviourRef.radius);
+    }
+
     private void UpdateProbability () {
         if (inCombatRange && attackProbability < 1f) {
             attackProbability += (Time.deltaTime * aggressiveness) / 10f;
@@ -54,7 +64,7 @@ public class EnemyCombat : MonoBehaviour {
         if (attackProbability >= 1f) {
             if (!inAttackRange) {
                 behaviourRef.stopped = false;
-                behaviourRef.PathFindingMovement(behaviourRef.player);
+                behaviourRef.PathFindingMovement(behaviourRef.player, behaviourRef.range / 2f);
             }
             else if (!attacking) {
                 behaviourRef.Stop();
@@ -79,5 +89,4 @@ public class EnemyCombat : MonoBehaviour {
         attacking = false;
         attackProbability = 0f;
     }
-
 }

@@ -30,7 +30,7 @@ public class CameraControl : MonoBehaviour
     }
 
     private void _Input () {
-        cameraInput = canControl ? new Vector2(Input.GetAxis("RightJoystickX"), Input.GetAxis("RightJoystickY")) : Vector2.zero;
+        cameraInput = canControl ? new Vector2(Input.GetAxis("RightJoystickX") + Input.GetAxis("Mouse X"), Input.GetAxis("RightJoystickY") + Input.GetAxis("Mouse Y")) : Vector2.zero;
     }
     
 

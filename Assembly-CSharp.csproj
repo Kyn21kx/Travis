@@ -2,8 +2,6 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <CscToolPath>X:\Unity Editors\2019.3.9f1\Editor\Data\Tools\RoslynScripts</CscToolPath>
-    <CscToolExe>unity_csc.bat</CscToolExe>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,6 +51,9 @@
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>2019.3.9f1</UnityVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>X:\Unity Editors\2019.3.9f1\Editor\Data\Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -241,6 +242,7 @@
     <Compile Include="Assets\Programming\Test Scripts\RotateShader.cs" />
     <Compile Include="Assets\Programming\Test Scripts\TestSpawner.cs" />
     <Compile Include="Assets\Programming\ThirdPerson\Scripts\MovementInput.cs" />
+    <Compile Include="Assets\Programming\UI\Menus\Testing\MenuNavigation.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\testPhysics.cs" />
     <None Include="Assets\KriptoFX\Realistic Effects Pack v1\Shaders\RFX1_Lightning.shader" />

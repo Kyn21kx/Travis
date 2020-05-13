@@ -13,6 +13,7 @@ public class StaminaManager : MonoBehaviour {
     private float proportion;
     #endregion
     #region Stats variables
+    public float cooldownRegeneration;
     public float staminaAmount = 50f;
     public float regenerationAmount = 5f;
     #endregion
@@ -37,7 +38,7 @@ public class StaminaManager : MonoBehaviour {
     public void Regenerate() {
         if (reduced) {
             cntr += Time.deltaTime;
-            if (cntr >= 4f) {
+            if (cntr >= cooldownRegeneration) {
                 staminaAmount += regenerationAmount * Time.deltaTime;
                 staminaAmount = Mathf.Clamp(staminaAmount, 0f, maxStamina);
             }

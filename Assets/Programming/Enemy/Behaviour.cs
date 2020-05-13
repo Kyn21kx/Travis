@@ -22,13 +22,15 @@ public class Behaviour : MonoBehaviour {
     public bool burn;
     public bool canMove;
     public TextMeshPro text;
-    private Enemy_Environment environment;
+    [HideInInspector]
+    public Enemy_Environment environment;
     [HideInInspector]
     public Transform player;
     [Header("Posciciones a los que se va a mover el agente, en orden")]
     public Transform[] targets;
     private bool shot;
-    private States state;
+    [HideInInspector]
+    public States state;
     public float speed;
     private float dmgOverTime, time;
     float playerRadius, playerAngleX, playerAngleZ;
@@ -76,7 +78,7 @@ public class Behaviour : MonoBehaviour {
         stopped = true;
         detected = false;
         shot = false;
-        rig.isKinematic = true;
+        rig.isKinematic = false;
         canMove = true;
         state = States.Patrol;
     }
@@ -98,37 +100,27 @@ public class Behaviour : MonoBehaviour {
         }
         switch (state) {
             case States.Patrol:
+                anim.SetBool("Patrol", true);
+                anim.SetBool("Combat", false);
                 //agent.speed = auxSpeed;
                 //agent.isStopped = false;
                 if (targets.Length != 0) {
                     disToPos = Vector3.Distance(transform.position, targets[patrolIndex].position);
                     //Replace with rigidbody motion
-                    //agent.SetDestination(targets[patrolIndex].position);
-                    /*if (generalBehaviours.ReachedPos()) {
+                    PathFindingMovement(targets[patrolIndex], 0.5f);
+                    if (generalBehaviours.ReachedPos(transform.position, targets[patrolIndex].position, 0.2f)) {
                         patrolIndex++;
                     }
                     if (patrolIndex >= targets.Length) {
                         patrolIndex = 0;
-                    }*/
+                    }
                 }
                 break;
             case States.Combat:
+                anim.SetBool("Patrol", false);
+                anim.SetBool("Combat", true);
                 RotateTowards(player, rotateSpeed);
-                if (enCombatRef.attackProbability < 1f) {
-                    if (distanceToPlayer <= radius / 2f && detected) {
-                        //The agent is ready to attack
-                        Stop();
-                        enCombatRef.inCombatRange = true;
-                    }
-                    else {
-                        enCombatRef.inCombatRange = false;
-                        movingTimer += Time.deltaTime;
-                        float rnd = UnityEngine.Random.Range(0.5f, 1.5f);
-                        stopped = false;
-                        if (movingTimer >= rnd)
-                            PathFindingMovement(player);
-                    }
-                }
+                enCombatRef.Dueling();
                 break;
         }
     }
@@ -191,12 +183,11 @@ public class Behaviour : MonoBehaviour {
         if (!environment.detected && detected) {
             environment.detected = true;
         }
-        if (environment.detected) {
+        if (environment.detected && generalBehaviours.ReachedPos(transform.position, player.position, radius * 1.5f)) {
             state = States.Combat;
         }
     }
 
-    #region MeleeCombat
     private void OnTriggerEnter(Collider other) {
         var combatController = player.GetComponent<Combat>();
         //Detects if the enemy is being hit by the player's sword
@@ -204,12 +195,11 @@ public class Behaviour : MonoBehaviour {
             this.Damage(combatController.swordDamage, 0f, 0f);
             Debug.Log(other.transform.forward);
             hit = true;
+            combatController.source.PlayOneShot(combatController.clip);
             //Apply velocity change;
             MoveOnHit(other.transform);
         }
     }
-    #endregion
-
     private void MoveOnHit (Transform damagingObj) {
         //Maybe set a time limit just like the dash
         rig.AddForce(damagingObj.forward * forceMult, ForceMode.Impulse);
@@ -217,9 +207,12 @@ public class Behaviour : MonoBehaviour {
 
     bool followingPlayer = false;
 
-    public void PathFindingMovement (Transform target) {
+    public void PathFindingMovement (Transform target, float minDistance) {
         //Destination - source
         //Move this to variable and function UpdateAnimatorParameters()
+        if (generalBehaviours.ReachedPos(transform.position, target.position, minDistance)) {
+            Stop();
+        }
         if (canMove) {
             if (!stopped) {
                 anim.SetBool("Walking", true);
@@ -227,10 +220,11 @@ public class Behaviour : MonoBehaviour {
                 if (followingPlayer) {
                     unitPathfinder.enabled = false;
                     //Replace this method to control speed
-                    transform.position = Vector3.MoveTowards(transform.position, target.position, 0.1f);
+                    rig.MovePosition(Vector3.Lerp(transform.position, target.position, speed * Time.deltaTime));
                 }
                 else {
                     unitPathfinder.enabled = true;
+                    unitPathfinder.speed = speed;
                     //Extract the path
                     unitPathfinder.goTo(target.position);
                 }
@@ -272,6 +266,7 @@ public class Behaviour : MonoBehaviour {
     }
 
     public void Stop () {
+        rig.velocity *= 0f;
         anim.SetBool("Walking", false);
         movingTimer = 0f;
         stopped = true;

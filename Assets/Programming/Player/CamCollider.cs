@@ -34,6 +34,6 @@ public class CamCollider : MonoBehaviour
         else {
             distance = maxDistance;
         }
-        transform.localPosition = Vector3.Lerp(transform.localPosition, dir * distance, Time.deltaTime * smoothness);
+        transform.localPosition = Vector3.Lerp(transform.localPosition, dir * distance + GameObject.FindGameObjectWithTag("Player").GetComponent<LockOn>().offset, Time.deltaTime * smoothness);
     }
 }

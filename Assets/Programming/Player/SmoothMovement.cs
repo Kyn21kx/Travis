@@ -61,8 +61,8 @@ public class SmoothMovement : MonoBehaviour {
     }
 
     private void _Input () {
-        Vector2 inputDir = input.normalized;
         input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        Vector2 inputDir = input;
         if (Input.GetKeyDown(KeyCode.LeftShift) || (Input.GetButtonDown("L3"))) {
             GamePad.SetVibration(PlayerIndex.One, 0.2f, 0.2f);
             anim.SetBool("Run", true);
@@ -75,8 +75,7 @@ public class SmoothMovement : MonoBehaviour {
         if (inputDir != Vector2.zero) {
             moving = true;
             float target = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
-
-            if (!lockOn.locking) {
+            if (!lockOn.locking && !GetComponent<Combat>().attacking) {
                 movingTarget = transform;
                 rotation = Vector3.up * Mathf.SmoothDampAngle(movingTarget.eulerAngles.y, target, ref smoothVel, turnTime);
                 movingTarget.eulerAngles = !GetComponent<Combat>().attacking ? rotation : movingTarget.eulerAngles;
@@ -97,7 +96,7 @@ public class SmoothMovement : MonoBehaviour {
         if (moving) {
             //Change walk speed for speed and set the variable depending on the input
             if (canMove) {
-                rig.MovePosition(transform.position + movingTarget.forward * walkSpeed * Time.deltaTime);
+                rig.MovePosition(transform.position + movingTarget.forward * input.magnitude * 1.5f * walkSpeed * Time.deltaTime);
                 anim.SetBool("Walk", true);
             }
         }

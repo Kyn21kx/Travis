@@ -6,6 +6,7 @@ using Assets.Programming;
 public class Combat : MonoBehaviour {
 
     #region Variables
+    public float staminaCost;
     GeneralBehaviours generalBehaviours;
     [SerializeField]
     private float angleOfAssist;
@@ -40,12 +41,19 @@ public class Combat : MonoBehaviour {
     private Dash dashRef;
     [Header("Number of attack animation that you are in")]
     public int attackIndex;
+    [HideInInspector]
+    public AudioSource source;
+    [Header("Attack Sound")]
+    public AudioClip clip;
+    StaminaManager staminaRef;
     #endregion
     //To Do: Work on magnetic combat so we can have a functioning system
     //To Do: Correct the movement when doing the second Fire attack
     private void Start() {
         attackIndex = 0;
+        staminaRef = GetComponent<StaminaManager>();
         dashRef = GetComponent<Dash>();
+        source = GetComponent<AudioSource>();
         magneticCollider.gameObject.SetActive(false);
         generalBehaviours = new GeneralBehaviours();
         spellRef = GetComponent<SpellShooting>();
@@ -74,7 +82,7 @@ public class Combat : MonoBehaviour {
     Vector3 pos1;
     //Replace combo manager's input with this one, and also kinda rewrite that whole script, please
     private void _Input () {
-        if (Input.GetButtonDown("X") && canMeleeAttack) {
+        if ((Input.GetButtonDown("X") || Input.GetMouseButtonDown(0)) && canMeleeAttack && movRef.grounded && staminaRef.staminaAmount >= staminaCost) {
             Start_Anim();
             movingPos = rig.position + transform.forward;
         }
@@ -103,8 +111,6 @@ public class Combat : MonoBehaviour {
                 rot = new Quaternion(0f, rot.y, 0f, rot.w);
                 rig.MoveRotation(Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f));
             }
-            //Move player forwards
-            MoveOnAttack();
             //Activate slash motion
         }
         else {
@@ -125,10 +131,10 @@ public class Combat : MonoBehaviour {
     }
 
     private void Start_Anim () {
+        MoveOnAttack();
         anim.SetTrigger(spellRef.type.ToString());
         movRef.canMove = false;
         GetComponent<Dash>().canDash = false;
-        rig.isKinematic = true;
         attacking = true;
         canMeleeAttack = false;
         //Update the transform.forward for another value if you are rotating
@@ -144,6 +150,8 @@ public class Combat : MonoBehaviour {
     }
 
     private void SwordSlash() {
+        staminaRef.Reduce(staminaCost);
+        rig.velocity *= 0f;
         if (spellRef.type.Equals(SpellShooting.Type.Magnetism)) {
             magneticCollider.gameObject.SetActive(true);
         }
@@ -165,7 +173,6 @@ public class Combat : MonoBehaviour {
         //canMagneticMove = true;
         pos2 = transform.position;
         Debug.Log(Vector3.Distance(pos1, pos2));
-        rig.isKinematic = false;
         rig.velocity *= 0f;
         attacking = false;
         target = null;
@@ -249,9 +256,9 @@ public class Combat : MonoBehaviour {
     }
 
     private void MoveOnAttack () {
-        /*if ((target == null || Vector3.Distance(target.position, transform.position) >= 1.5f) && !spellRef.type.Equals(SpellShooting.Type.Magnetism) && dashRef.dashTime > 0f) {
-                transform.position = Vector3.Lerp(rig.position, movingPos, Time.deltaTime * 4f);  
-            }*/
+        if ((target == null || Vector3.Distance(target.position, transform.position) >= 1.5f) && !spellRef.type.Equals(SpellShooting.Type.Magnetism) && dashRef.dashTime > 0f) {
+            rig.AddForce(transform.forward * 8f, ForceMode.VelocityChange);
+        }
     }
 
 }
