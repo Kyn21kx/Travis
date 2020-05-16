@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Assertions.Must;
 
 public class Enemy_Environment : MonoBehaviour
 {
@@ -10,35 +13,35 @@ public class Enemy_Environment : MonoBehaviour
     #region
     public bool detected;
     public NavMeshSurface surface;
-    public List<GameObject> prioritizedEnemies = new List<GameObject>();
+    public List<Behaviour>  prioritizedEnemies;
     public bool physicsUpdate;
-    private bool setup;
+    public bool inCombat;
+    public bool setup;
+    public bool oneTimeArr;
+    public List<Behaviour> enemiesOnCombat;
+    public int enemyCntr;
     #endregion
 
     private void Start() {
-        setup = false;
+        oneTimeArr = false;
+        enemyCntr = 0;
     }
-
     private void Update() {
-        if (!setup)
-            PriorityPicker();
+        PriorityPicker();
     }
-    //Loop this in update
     private void PriorityPicker() {
-        //Set up a distance check
-        List<GameObject> enemies = GameObject.FindGameObjectsWithTag("Enemy").ToList();
-        enemies.Remove(gameObject);
-        for (int i = 0; i < enemies.Count; i++) {
-            var behaviourRef = enemies[i].GetComponent<Behaviour>();
-            var enCombatRef = enemies[i].GetComponent<EnemyCombat>();
-            var nextEnCombatRef = enemies[i + 1].GetComponent<EnemyCombat>();
-            enCombatRef.priority = (int)behaviourRef.masterType;
-            if (enCombatRef.priority == nextEnCombatRef.priority) {
-                enCombatRef.priority += new System.Random().Next(0, 1);
-                i--;
+        //Issue lies within the enemiesOnCombat.Count -1 line
+        if (enemiesOnCombat.Count > 1 && enemyCntr < enemiesOnCombat.Count - 1) {
+            var enCombatRef = enemiesOnCombat[enemyCntr].GetComponent<EnemyCombat>();
+            var nextCombatRef = enemiesOnCombat[enemyCntr + 1].GetComponent<EnemyCombat>();
+            CheckAgain:
+            if (enCombatRef.priority == nextCombatRef.priority || (enemyCntr != 0 && enCombatRef.priority == enemiesOnCombat[enemyCntr - 1].GetComponent<EnemyCombat>().priority)) {
+                enCombatRef.priority++;
+                goto CheckAgain;
             }
-            prioritizedEnemies.Insert(enCombatRef.priority, enCombatRef.gameObject);
+            prioritizedEnemies[enCombatRef.priority] = enemiesOnCombat[enemyCntr];
+            prioritizedEnemies[nextCombatRef.priority] = enemiesOnCombat[enemyCntr + 1];
+            enemyCntr++;
         }
-        setup = true;
     }
 }

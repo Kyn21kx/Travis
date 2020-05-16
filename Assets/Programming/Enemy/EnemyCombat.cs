@@ -30,6 +30,7 @@ public class EnemyCombat : MonoBehaviour {
     private CapsuleCollider swordColl;
     private Enemy_Environment environmentRef;
     public bool attacking;
+    public bool prioritySetup;
     #endregion
     //To do: when the enemies detect you, they have a priority system in place, and if they are the same priority, it is assigned randomly
     private void Start() {
@@ -89,4 +90,5 @@ public class EnemyCombat : MonoBehaviour {
         attacking = false;
         attackProbability = 0f;
     }
+
 }

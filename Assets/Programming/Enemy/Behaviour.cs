@@ -117,6 +117,10 @@ public class Behaviour : MonoBehaviour {
                 }
                 break;
             case States.Combat:
+                if (!environment.enemiesOnCombat.Contains(this)) {
+                    environment.enemiesOnCombat.Add(this);
+                    environment.prioritizedEnemies.Add(this);
+                }
                 anim.SetBool("Patrol", false);
                 anim.SetBool("Combat", true);
                 RotateTowards(player, rotateSpeed);
@@ -163,6 +167,13 @@ public class Behaviour : MonoBehaviour {
     public void HealthBehaviour () {
         text.text = health.ToString();
         if (health <= 0) {
+            if (environment.enemiesOnCombat.Contains(this)) {
+                environment.enemiesOnCombat.Remove(this);
+                environment.prioritizedEnemies.Remove(this);
+                if (environment.enemiesOnCombat.Count <= 0) {
+                    environment.enemyCntr = 0;
+                }
+            }
             Destroy(gameObject);
         }
         if (burn) {

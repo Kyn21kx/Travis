@@ -84,7 +84,6 @@ public class Combat : MonoBehaviour {
     private void _Input () {
         if ((Input.GetButtonDown("X") || Input.GetMouseButtonDown(0)) && canMeleeAttack && movRef.grounded && staminaRef.staminaAmount >= staminaCost) {
             Start_Anim();
-            movingPos = rig.position + transform.forward;
         }
     }
 
@@ -131,6 +130,7 @@ public class Combat : MonoBehaviour {
     }
 
     private void Start_Anim () {
+        movingPos = rig.position + transform.forward;
         MoveOnAttack();
         anim.SetTrigger(spellRef.type.ToString());
         movRef.canMove = false;
@@ -150,6 +150,7 @@ public class Combat : MonoBehaviour {
     }
 
     private void SwordSlash() {
+        attackIndex++;
         staminaRef.Reduce(staminaCost);
         rig.velocity *= 0f;
         if (spellRef.type.Equals(SpellShooting.Type.Magnetism)) {
@@ -166,7 +167,6 @@ public class Combat : MonoBehaviour {
         swordColl.enabled = false;
         canMeleeAttack = true;
         dashRef.canDash = true;
-        attackIndex++;
     }
     Vector3 pos2;
     private void Finished_Anim () {
