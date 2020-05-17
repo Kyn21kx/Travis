@@ -13,6 +13,7 @@ public class LockOn : MonoBehaviour {
     public bool locking;
     private bool onetime = false;
     Vector3 dir = Vector3.zero;
+    public Vector3 rotOffset;
     private Vector3 auxOffset;
     CameraControl camControlRef;
     private bool enemiesAround;
@@ -120,7 +121,7 @@ public class LockOn : MonoBehaviour {
         offset = auxOffset;
         camControlRef.canControl = false;
         //Use lerp and then hard lock when you are close to the rotation
-        var camRot = Quaternion.LookRotation(-rot);
+        var camRot = Quaternion.LookRotation(-rot + rotOffset);
         camControlRef.transform.rotation = camRot;
     }
 
