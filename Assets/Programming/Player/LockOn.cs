@@ -16,6 +16,8 @@ public class LockOn : MonoBehaviour {
     public Vector3 rotOffset;
     private Vector3 auxOffset;
     CameraControl camControlRef;
+    [SerializeField]
+    private float switchInput;
     private bool enemiesAround;
     GeneralBehaviours generalBehaviours;
     #endregion
@@ -35,7 +37,7 @@ public class LockOn : MonoBehaviour {
         TargetChecking();
     }
     private void TargetChecking () {
-        var _target = GetTarget();
+        var _target = GetTarget(SwitchTarget());
         if (locking) {
             if (_target != Vector3.zero) {
                 LockCamera(_target);
@@ -52,6 +54,7 @@ public class LockOn : MonoBehaviour {
     }
 
     private void _Input () {
+        switchInput = Input.GetAxis("RightJoystickX") + Input.GetAxis("Mouse X");
         if (Input.GetButtonDown("RS") && !locking || (Input.GetKeyDown(KeyCode.Tab) && !locking)) {
             locking = true;
         }
@@ -63,14 +66,14 @@ public class LockOn : MonoBehaviour {
 
     //Find the nearest target
     //Make this a general behaviours method
-    private Vector3 GetTarget () {
+    private Vector3 GetTarget (Vector3 playerPos) {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         if (enemies != null) {
             if (dir == Vector3.zero && !locking) {
                 GetNearestEnemy(enemies);
             }
             else {
-                dir = closest_enemy != null ? closest_enemy.position - transform.position : Vector3.zero;
+                dir = closest_enemy != null ? closest_enemy.position - playerPos : Vector3.zero;
             }
         }
         else {
@@ -134,4 +137,15 @@ public class LockOn : MonoBehaviour {
         camControlRef.canControl = true;
         closest_enemy = null;
     }
+
+    private Vector3 SwitchTarget () {
+        Vector3 sPos = transform.position;
+        Vector3 targetDir = switchInput > 0 ? -transform.right : transform.right;
+        if (locking && switchInput != 0f) {
+            //b - a = d
+            sPos = sPos + targetDir;
+        }
+        return sPos;
+    }
+
 }

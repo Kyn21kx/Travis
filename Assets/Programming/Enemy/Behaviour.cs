@@ -33,7 +33,6 @@ public class Behaviour : MonoBehaviour {
     public States state;
     public float speed;
     private float dmgOverTime, time;
-    float playerRadius, playerAngleX, playerAngleZ;
     float auxSpeed;
     GeneralBehaviours generalBehaviours;
     public Rigidbody rig;
@@ -162,6 +161,12 @@ public class Behaviour : MonoBehaviour {
         }
         health -= dmg;
         player.GetComponent<CallOfBeyond>().wrath += (dmg * 0.1f);
+        anim.SetTrigger("Hit");
+        enCombatRef.swordColl.enabled = false;
+        enCombatRef.attacking = false;
+        //Substract a bit from the probability to allow movement to be restablished
+        enCombatRef.attackProbability -= UnityEngine.Random.Range(0.2f, 1f);
+        canMove = true;
         environment.detected = true;
     }
     public void HealthBehaviour () {
@@ -197,6 +202,10 @@ public class Behaviour : MonoBehaviour {
         if (environment.detected && generalBehaviours.ReachedPos(transform.position, player.position, radius * 1.5f)) {
             state = States.Combat;
         }
+        //If the player is too close, then the enemy will turn slowly
+        float distance = Vector3.Distance(transform.position, player.position);
+        float detectionP = -(distance - 1);
+        Debug.Log("Dis: " + detectionP);
     }
 
     private void OnTriggerEnter(Collider other) {

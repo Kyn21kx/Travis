@@ -39,6 +39,7 @@ public class Enemy_Environment : MonoBehaviour
                 enCombatRef.priority++;
                 goto CheckAgain;
             }
+            //Rearrange Array
             prioritizedEnemies[enCombatRef.priority] = enemiesOnCombat[enemyCntr];
             prioritizedEnemies[nextCombatRef.priority] = enemiesOnCombat[enemyCntr + 1];
             enemyCntr++;

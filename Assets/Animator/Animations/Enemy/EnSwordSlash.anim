@@ -30534,7 +30534,7 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 1
   m_Events:
-  - time: 0.35
+  - time: 0.45
     functionName: EnSlash
     data: 
     objectReferenceParameter: {fileID: 0}

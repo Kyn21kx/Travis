@@ -27,8 +27,9 @@ public class EnemyCombat : MonoBehaviour {
     GeneralBehaviours generalBehaviours;
     public Transform sword;
     private Animator anim;
-    private CapsuleCollider swordColl;
+    public CapsuleCollider swordColl;
     private Enemy_Environment environmentRef;
+    public Behaviour prevEnemy;
     public bool attacking;
     public bool prioritySetup;
     #endregion
@@ -50,6 +51,10 @@ public class EnemyCombat : MonoBehaviour {
     }
     
     public void Dueling () {
+        //Set this up only when the function has finished rearranging
+        if (priority != 0)
+            prevEnemy = environmentRef.prioritizedEnemies[priority - 1];
+        inCombatRange = true;
         behaviourRef.stopped = false;
         behaviourRef.PathFindingMovement(behaviourRef.player, behaviourRef.radius);
     }
@@ -67,12 +72,23 @@ public class EnemyCombat : MonoBehaviour {
                 behaviourRef.stopped = false;
                 behaviourRef.PathFindingMovement(behaviourRef.player, behaviourRef.range / 2f);
             }
-            else if (!attacking) {
-                behaviourRef.Stop();
-                attacking = true;
-                activeDmg = basicMeleeDmg;
-                behaviourRef.canMove = false;
-                behaviourRef.anim.SetTrigger("Attack");
+            else if (!attacking ) {
+                if (prevEnemy != null) {
+                    if (!prevEnemy.GetComponent<EnemyCombat>().attacking) {
+                        behaviourRef.Stop();
+                        attacking = true;
+                        activeDmg = basicMeleeDmg;
+                        behaviourRef.canMove = false;
+                        behaviourRef.anim.SetTrigger("Attack");
+                    }
+                }
+                else {
+                    behaviourRef.Stop();
+                    attacking = true;
+                    activeDmg = basicMeleeDmg;
+                    behaviourRef.canMove = false;
+                    behaviourRef.anim.SetTrigger("Attack");
+                }
             }
         }
     }

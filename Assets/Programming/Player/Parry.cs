@@ -28,6 +28,7 @@ public class Parry : MonoBehaviour {
     private AudioClip soundEffect;
     public AudioSource camAudio;
     SmoothMovement movRef;
+    private Animator anim;
     #endregion
     #region Stats Variables
     public float block_amount = 0.4f;
@@ -42,10 +43,12 @@ public class Parry : MonoBehaviour {
         movRef = GetComponent<SmoothMovement>();
         health = GetComponent<HealthManager>().Health;
         auxHealth = health;
+        anim = GetComponent<Animator>();
         combatRef = GetComponent<Combat>();
     }
     public void ActiveParry () {
         blocking = true;
+        anim.SetBool("Blocking", true);
         combatRef.canMeleeAttack = false;
         movRef.walkSpeed = 2.5f;
         movRef.runSpeed = 2.5f;

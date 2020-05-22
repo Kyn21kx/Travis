@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Programming;
+using System;
 
 public class Combat : MonoBehaviour {
 
@@ -169,7 +170,7 @@ public class Combat : MonoBehaviour {
         dashRef.canDash = true;
     }
     Vector3 pos2;
-    private void Finished_Anim () {
+    private void Finished_Anim (int final) {
         //canMagneticMove = true;
         pos2 = transform.position;
         Debug.Log(Vector3.Distance(pos1, pos2));
@@ -180,7 +181,7 @@ public class Combat : MonoBehaviour {
         GetComponent<SpellShooting>().canCastSpells = true;
         canMagneticMove = true;
         magneticCollider.gameObject.SetActive(false);
-        attackIndex = 0;
+        StartCoroutine(ResetAttackIndex(0.5f, Convert.ToBoolean(final)));
     }
 
     private void TypeManager () {
@@ -259,6 +260,13 @@ public class Combat : MonoBehaviour {
         if ((target == null || Vector3.Distance(target.position, transform.position) >= 1.5f) && !spellRef.type.Equals(SpellShooting.Type.Magnetism) && dashRef.dashTime > 0f) {
             rig.AddForce(transform.forward * 8f, ForceMode.VelocityChange);
         }
+    }
+
+    private IEnumerator ResetAttackIndex (float t, bool _final) {
+        if (!_final && !movRef.moving) {
+            yield return new WaitForSeconds(t);
+        }
+        attackIndex = 0;
     }
 
 }
