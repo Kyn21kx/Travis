@@ -148,6 +148,7 @@ public class Behaviour : MonoBehaviour {
         }
     }
     float time_down;
+    //Make different overloads for this function instead
     public void Damage (float dmg, float t, float dot) {
         //Apply force in the direction of the attack
         if (t != 0) {
@@ -194,6 +195,7 @@ public class Behaviour : MonoBehaviour {
     int numberOfAttacks = 0;
     [SerializeField]
     float positionOffset;
+    float detectionP = 0f;
     #endregion
     private void StealthBehaviour () {
         if (!environment.detected && detected) {
@@ -204,8 +206,19 @@ public class Behaviour : MonoBehaviour {
         }
         //If the player is too close, then the enemy will turn slowly
         float distance = Vector3.Distance(transform.position, player.position);
-        float detectionP = -(distance - 1);
-        Debug.Log("Dis: " + detectionP);
+        if (distance <= radius) {
+            //ƒ(x) = |-(distance - threshold_to_hit_1)|
+            detectionP += Time.deltaTime / Mathf.Abs(-(distance - 1.5f));
+            detectionP = Mathf.Clamp(detectionP, float.MinValue, 1f);
+        }
+        else {
+            if (detectionP > 0f)
+                detectionP -= Time.deltaTime;
+            detectionP = Mathf.Clamp(detectionP, 0f, 1f);
+        }
+        if (detectionP >= 1) {
+            state = States.Combat;
+        }
     }
 
     private void OnTriggerEnter(Collider other) {

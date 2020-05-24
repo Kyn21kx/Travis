@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Programming;
 using UnityEngine.Rendering.HighDefinition;
+using System;
 
 public class LockOn : MonoBehaviour {
 
@@ -15,6 +16,7 @@ public class LockOn : MonoBehaviour {
     Vector3 dir = Vector3.zero;
     public Vector3 rotOffset;
     private Vector3 auxOffset;
+    private Vector3 auxRotOffset;
     CameraControl camControlRef;
     [SerializeField]
     private float switchInput;
@@ -25,6 +27,7 @@ public class LockOn : MonoBehaviour {
     private void Awake() {
         enemiesAround = false;
         auxOffset = offset;
+        auxRotOffset = rotOffset;
         generalBehaviours = new GeneralBehaviours();
         camControlRef = Camera.main.transform.parent.GetComponent<CameraControl>();
         Cursor.lockState = CursorLockMode.Locked;
@@ -147,5 +150,4 @@ public class LockOn : MonoBehaviour {
         }
         return sPos;
     }
-
 }
