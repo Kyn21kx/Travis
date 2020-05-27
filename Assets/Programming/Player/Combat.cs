@@ -132,10 +132,10 @@ public class Combat : MonoBehaviour {
 
     private void Start_Anim () {
         movingPos = rig.position + transform.forward;
-        MoveOnAttack();
         anim.SetTrigger(spellRef.type.ToString());
+        MoveOnAttack();
         movRef.canMove = false;
-        GetComponent<Dash>().canDash = false;
+        dashRef.canDash = false;
         attacking = true;
         canMeleeAttack = false;
         //Update the transform.forward for another value if you are rotating
@@ -169,7 +169,17 @@ public class Combat : MonoBehaviour {
         canMeleeAttack = true;
         dashRef.canDash = true;
     }
+    private void HitAnimStart () {
+        attacking = false;
+        movRef.canMove = false;
+        //Change this so you can move with the velocity of the enemy like an impact
+        rig.velocity *= 0f;
+        canMeleeAttack = false;
+        dashRef.canDash = false;
+        spellRef.canCastSpells = false;
+    }
     Vector3 pos2;
+    //Overload for combos
     private void Finished_Anim (int final) {
         //canMagneticMove = true;
         pos2 = transform.position;
@@ -179,6 +189,7 @@ public class Combat : MonoBehaviour {
         target = null;
         movRef.canMove = true;
         GetComponent<SpellShooting>().canCastSpells = true;
+        FinishedStrike();
         canMagneticMove = true;
         magneticCollider.gameObject.SetActive(false);
         StartCoroutine(ResetAttackIndex(0.5f, Convert.ToBoolean(final)));

@@ -12,7 +12,6 @@ public class Enemy_Environment : MonoBehaviour
 
     #region
     public bool detected;
-    public NavMeshSurface surface;
     public List<Behaviour>  prioritizedEnemies;
     public bool physicsUpdate;
     public bool inCombat;

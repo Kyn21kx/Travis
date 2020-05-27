@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Programming;
-using UnityEngine.Rendering.HighDefinition;
 using System;
 
 public class LockOn : MonoBehaviour {
@@ -12,6 +11,7 @@ public class LockOn : MonoBehaviour {
     public Transform closest_enemy;
     public float distanceThreshold;
     public bool locking;
+    public float smoothness;
     private bool onetime = false;
     Vector3 dir = Vector3.zero;
     public Vector3 rotOffset;
@@ -40,7 +40,7 @@ public class LockOn : MonoBehaviour {
         TargetChecking();
     }
     private void TargetChecking () {
-        var _target = GetTarget(SwitchTarget());
+        var _target = GetTarget(transform.position);
         if (locking) {
             if (_target != Vector3.zero) {
                 LockCamera(_target);
@@ -115,6 +115,13 @@ public class LockOn : MonoBehaviour {
             else {
                 enemiesAround = false;
             }
+        }
+        if (locking && closest_enemy != null) {
+
+            float disToT = Vector3.Distance(transform.position, closest_enemy.position);
+            //ƒ(x) = |1-x-0.3|
+            rotOffset.y = Mathf.Abs(1.5f - disToT - 0.3f);
+            rotOffset.y = Mathf.Clamp(rotOffset.y, 0.3f, auxRotOffset.y);
         }
     }
 

@@ -263,8 +263,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 0
-  m_Radius: 1.5
-  m_Height: 12
+  m_Radius: 2
+  m_Height: 13
   m_Direction: 1
   m_Center: {x: -0.00000023841858, y: -2.6, z: 0.03169685}
 --- !u!1 &1529804602463700
@@ -278,8 +278,9 @@ GameObject:
   - component: {fileID: 4949396360848168}
   - component: {fileID: 3934223690866567445}
   - component: {fileID: 3934223690876050554}
-  - component: {fileID: 3934223690876050553}
   - component: {fileID: 803470644}
+  - component: {fileID: 3934223690876050553}
+  - component: {fileID: 1312251976}
   - component: {fileID: 1676097165}
   - component: {fileID: 1676097166}
   - component: {fileID: 1676097167}
@@ -342,6 +343,22 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!54 &803470644
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529804602463700}
+  serializedVersion: 2
+  m_Mass: 80
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 2
 --- !u!114 &3934223690876050553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,10 +378,11 @@ MonoBehaviour:
   burn: 0
   canMove: 0
   text: {fileID: 3934223691353515761}
+  environment: {fileID: 0}
   player: {fileID: 0}
   targets: []
   state: 0
-  speed: 0.5
+  speed: 1
   rig: {fileID: 0}
   obstacleDistanceDetection: 4
   rayPivot:
@@ -378,31 +396,35 @@ MonoBehaviour:
   hit: 0
   movingTimer: 0
   stopped: 0
+  cntr: 0
+  positionOffset: 0
   health: 40
   spells: []
   rotateSpeed: 2
   collided: 0
   angle: 70
-  radius: 10
+  radius: 15
   range: 2.5
-  cntr: 0
-  positionOffset: 0
---- !u!54 &803470644
-Rigidbody:
+--- !u!114 &1312251976
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1529804602463700}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 116
-  m_CollisionDetection: 3
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b89b07391331094ab786d7a3a88d077, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolPoint: {fileID: 4052011325255171225, guid: 99b30b99a9caa804f8fad98bd9e34681,
+    type: 3}
+  placePatrolPoint: 0
+  changedOrder: 0
+  targets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &1676097165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,7 +450,10 @@ MonoBehaviour:
   aggressiveness: 5
   priority: 0
   sword: {fileID: 1069431985}
+  swordColl: {fileID: 0}
+  prevEnemy: {fileID: 0}
   attacking: 0
+  prioritySetup: 0
 --- !u!114 &1676097166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -468,7 +493,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   prohibiteMask:
     serializedVersion: 2
-    m_Bits: 3072
+    m_Bits: 1024
   expansionCoefficient: 10
   diagonals: 1
   pathFindingPos: {fileID: 0}

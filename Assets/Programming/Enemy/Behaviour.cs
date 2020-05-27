@@ -27,9 +27,8 @@ public class Behaviour : MonoBehaviour {
     [HideInInspector]
     public Transform player;
     [Header("Posciciones a los que se va a mover el agente, en orden")]
-    public Transform[] targets;
+    public List<Transform> targets;
     private bool shot;
-    [HideInInspector]
     public States state;
     public float speed;
     private float dmgOverTime, time;
@@ -50,11 +49,23 @@ public class Behaviour : MonoBehaviour {
     private float movingTimer;
     public bool stopped;
     EnemyCombat enCombatRef;
+    [SerializeField]
+    float cntr = 0f;
+    int patrolIndex;
+    float disToPos;
+    int numberOfAttacks = 0;
+    [SerializeField]
+    float positionOffset;
+    float detectionP = 0f;
     #endregion
 
     #region Stats
     [Header("Stats")]
     public float health = 1f;
+    public float shield;
+    private float auxShield;
+    public float shieldRecoveryCooldown;
+    private float auxShieldRecoveryCooldown;
     public GameObject[] spells;
     [Header("The highest, the fastest... (Recommended value: 2)")]
     [Header("The time it takes the enemy to face the player")]
@@ -65,6 +76,8 @@ public class Behaviour : MonoBehaviour {
 
     //Initialization
     private void Start() {
+        auxShield = shield;
+        auxShieldRecoveryCooldown = shieldRecoveryCooldown;
         enCombatRef = GetComponent<EnemyCombat>();
         unitPathfinder = GetComponent<UnitPathfinder>();
         generalBehaviours = new GeneralBehaviours();
@@ -73,7 +86,7 @@ public class Behaviour : MonoBehaviour {
         environment = GameObject.FindGameObjectWithTag("GlobalParameters").GetComponent<Enemy_Environment>();
         anim = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-
+        patrolIndex = 0;
         stopped = true;
         detected = false;
         shot = false;
@@ -84,6 +97,7 @@ public class Behaviour : MonoBehaviour {
 
     private void Update() {
         HealthBehaviour();
+        RecoverShield();
         Shoot();
         StealthBehaviour();
         detected = generalBehaviours.Detect(player, transform, radius, angle);
@@ -102,15 +116,14 @@ public class Behaviour : MonoBehaviour {
                 anim.SetBool("Patrol", true);
                 anim.SetBool("Combat", false);
                 //agent.speed = auxSpeed;
-                //agent.isStopped = false;
-                if (targets.Length != 0) {
-                    disToPos = Vector3.Distance(transform.position, targets[patrolIndex].position);
+                stopped = false;
+                if (targets.Count != 0) {
                     //Replace with rigidbody motion
                     PathFindingMovement(targets[patrolIndex], 0.5f);
                     if (generalBehaviours.ReachedPos(transform.position, targets[patrolIndex].position, 0.2f)) {
                         patrolIndex++;
                     }
-                    if (patrolIndex >= targets.Length) {
+                    if (patrolIndex >= targets.Count) {
                         patrolIndex = 0;
                     }
                 }
@@ -149,6 +162,7 @@ public class Behaviour : MonoBehaviour {
     }
     float time_down;
     //Make different overloads for this function instead
+    #region Damage Overloads
     public void Damage (float dmg, float t, float dot) {
         //Apply force in the direction of the attack
         if (t != 0) {
@@ -160,9 +174,13 @@ public class Behaviour : MonoBehaviour {
         else {
             burn = false;
         }
-        health -= dmg;
         player.GetComponent<CallOfBeyond>().wrath += (dmg * 0.1f);
-        anim.SetTrigger("Hit");
+        //Will process the shield amount, and return the health
+        float newHealth = ShieldDamager(dmg);
+        if (newHealth != health)
+            anim.SetTrigger("Hit");
+        health = newHealth;
+        shieldRecoveryCooldown = auxShieldRecoveryCooldown;
         enCombatRef.swordColl.enabled = false;
         enCombatRef.attacking = false;
         //Substract a bit from the probability to allow movement to be restablished
@@ -170,6 +188,7 @@ public class Behaviour : MonoBehaviour {
         canMove = true;
         environment.detected = true;
     }
+    #endregion
     public void HealthBehaviour () {
         text.text = health.ToString();
         if (health <= 0) {
@@ -186,17 +205,6 @@ public class Behaviour : MonoBehaviour {
             //DamageOverTime();
         }
     }
-
-    #region global aux variables
-    [SerializeField]
-    float cntr = 0f;
-    int patrolIndex = 0;
-    float disToPos;
-    int numberOfAttacks = 0;
-    [SerializeField]
-    float positionOffset;
-    float detectionP = 0f;
-    #endregion
     private void StealthBehaviour () {
         if (!environment.detected && detected) {
             environment.detected = true;
@@ -208,7 +216,7 @@ public class Behaviour : MonoBehaviour {
         float distance = Vector3.Distance(transform.position, player.position);
         if (distance <= radius) {
             //ƒ(x) = |-(distance - threshold_to_hit_1)|
-            detectionP += Time.deltaTime / Mathf.Abs(-(distance - 1.5f));
+            detectionP += Time.deltaTime / Mathf.Abs(-(distance - 3.5f));
             detectionP = Mathf.Clamp(detectionP, float.MinValue, 1f);
         }
         else {
@@ -264,6 +272,30 @@ public class Behaviour : MonoBehaviour {
             }
         }
     }
+    public void PathFindingMovement(Vector3 target, string targetTag, float minDistance) {
+        //Destination - source
+        //Move this to variable and function UpdateAnimatorParameters()
+        if (generalBehaviours.ReachedPos(transform.position, target, minDistance)) {
+            Stop();
+        }
+        if (canMove) {
+            if (!stopped) {
+                anim.SetBool("Walking", true);
+                followingPlayer = CollisionCheck(target, targetTag);
+                if (followingPlayer) {
+                    unitPathfinder.enabled = false;
+                    //Replace this method to control speed
+                    rig.MovePosition(Vector3.Lerp(transform.position, target, speed * Time.deltaTime));
+                }
+                else {
+                    unitPathfinder.enabled = true;
+                    unitPathfinder.speed = speed;
+                    //Extract the path
+                    unitPathfinder.goTo(target);
+                }
+            }
+        }
+    }
 
     private void RotateTowards (Transform target, float speed) {
         Vector3 _target = target.position - transform.position;
@@ -294,6 +326,27 @@ public class Behaviour : MonoBehaviour {
         return allHit;
     }
 
+    private bool CollisionCheck(Vector3 _target, string tag) {
+        bool allHit = true;
+        //Setup pivot to calculate the raycast
+        for (int i = 0; i < rayPivot.Length; i++) {
+            rayPivot[i].LookAt(_target);
+            RaycastHit obstacleHit;
+            if (Physics.Raycast(rayPivot[i].position, rayPivot[i].forward, out obstacleHit)) {
+                if (obstacleHit.transform.CompareTag(tag)) {
+                    continue;
+                }
+                else {
+                    if (Vector3.Distance(rayPivot[i].position, obstacleHit.point) <= obstacleDistanceDetection && obstacleHit.transform != transform) {
+                        allHit = false;
+                        break;
+                    }
+                }
+            }
+        }
+        return allHit;
+    }
+
     private void Shoot () {
 
     }
@@ -303,6 +356,31 @@ public class Behaviour : MonoBehaviour {
         anim.SetBool("Walking", false);
         movingTimer = 0f;
         stopped = true;
+    }
+
+    private float ShieldDamager (float _dmg) {
+        if (shield > 0) {
+            shield -= _dmg;
+            //Check again after shield has changed to get the health
+            if (shield > 0) {
+                _dmg -= shield;
+            }
+            else {
+                _dmg = Mathf.Abs(shield);
+                shield = 0;
+            }
+        }
+        return shield > 0 ? health : health - _dmg;
+    }
+
+    private void RecoverShield () {
+        if (shield != auxShield) {
+            shieldRecoveryCooldown -= Time.deltaTime;
+            if (shieldRecoveryCooldown <= 0) {
+                shield = shield <= auxShield ? shield + Time.deltaTime : auxShield;
+                shieldRecoveryCooldown = 0;
+            }
+        }
     }
 
     //Function for when the enum changes

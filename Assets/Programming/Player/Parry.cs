@@ -4,6 +4,7 @@ using UnityEngine;
 using XInputDotNetPure;
 using UnityEngine.Audio;
 
+[RequireComponent(typeof(Combat))]
 [RequireComponent(typeof (HealthManager))]
 [RequireComponent(typeof (ManaManager))]
 [RequireComponent (typeof(SmoothMovement))]
@@ -48,7 +49,6 @@ public class Parry : MonoBehaviour {
     }
     public void ActiveParry () {
         blocking = true;
-        anim.SetBool("Blocking", true);
         combatRef.canMeleeAttack = false;
         movRef.walkSpeed = 2.5f;
         movRef.runSpeed = 2.5f;
@@ -66,6 +66,7 @@ public class Parry : MonoBehaviour {
         startTime = false;
     }
     private void Update() {
+        anim.SetBool("Blocking", blocking);
         health = GetComponent<HealthManager>().Health;
         VibDown();
         //Disable attack when blocking
@@ -86,6 +87,7 @@ public class Parry : MonoBehaviour {
             timeDifference = timeDown;
             perfect = PerfectParry();
             if (perfect) {
+                //Yeh boi perfect parry
                 cntr++;
                 vib = true;
                 dmg = 0f;
@@ -95,8 +97,13 @@ public class Parry : MonoBehaviour {
                 timeDifference = 0f;
             }
             else if (blocking && GetComponent<StaminaManager>().staminaAmount >= manaCost) {
+                //Did just the blocking
                 dmg *= block_amount;
                 GetComponent<StaminaManager>().Reduce(manaCost);
+            }
+            else {
+                //Did not get the parry
+                anim.SetTrigger("Hit");
             }
             GetComponent<HealthManager>().Health -= dmg;
             collided = false;
@@ -106,13 +113,7 @@ public class Parry : MonoBehaviour {
     
 
     private bool PerfectParry () {
-        //0.16f
-        if (timeDifference <= perfectTime && timeDifference != 0f) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (timeDifference <= perfectTime && timeDifference != 0f);
     }
     #region Global Aux variables
     float vibrationTimer = 0f;

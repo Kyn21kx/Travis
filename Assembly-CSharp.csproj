@@ -216,6 +216,8 @@
     <Compile Include="Assets\Programming\Enemy\Behaviour.cs" />
     <Compile Include="Assets\Programming\Enemy\EnemyCombat.cs" />
     <Compile Include="Assets\Programming\Enemy\Enemy_Environment.cs" />
+    <Compile Include="Assets\Programming\Enemy\Patrol scripts\PatrolCreator.cs" />
+    <Compile Include="Assets\Programming\Enemy\Patrol scripts\PatrolNode.cs" />
     <Compile Include="Assets\Programming\GeneralBehaviours.cs" />
     <Compile Include="Assets\Programming\Pathfinding\Grid.cs" />
     <Compile Include="Assets\Programming\Pathfinding\Node.cs" />

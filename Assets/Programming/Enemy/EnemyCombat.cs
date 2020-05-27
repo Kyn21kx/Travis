@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Programming;
 using System.Linq;
+using System;
+
+[RequireComponent(typeof(Behaviour))]
 
 public class EnemyCombat : MonoBehaviour {
     //To do: Add combos and when you are in the combo, the animations just play, the probability resets to 0, and you can't move
@@ -57,6 +60,7 @@ public class EnemyCombat : MonoBehaviour {
         inCombatRange = true;
         behaviourRef.stopped = false;
         behaviourRef.PathFindingMovement(behaviourRef.player, behaviourRef.radius);
+
     }
 
     private void UpdateProbability () {
