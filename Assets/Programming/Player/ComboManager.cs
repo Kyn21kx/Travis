@@ -151,7 +151,7 @@ public class ComboManager : MonoBehaviour {
                     foreach (var enemy in affectedEnemies) {
                         float dis = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(enemy.transform.position.x, enemy.transform.position.z));
                         if (dis <= airSmashRadius) {
-                            enemy.GetComponent<Behaviour>().Damage(airSmashDmg, 0f, 0f);
+                            enemy.GetComponent<Behaviour>().Damage(airSmashDmg);
                         }
                     }
                     AudioSource.PlayClipAtPoint(AirSmashClip, transform.position);

@@ -11,7 +11,7 @@ public class Dash : MonoBehaviour {
     #region Varibles
     public float time;
     private Rigidbody rg;
-    private bool dashed;
+    public bool dashed;
     Transform targetTransform;
     Vector3 dashDir;
     [SerializeField]

@@ -27,8 +27,10 @@ public class SmoothMovement : MonoBehaviour {
     float maxDis = float.MaxValue;
     public Transform closestFloor = null;
     public bool canMove;
+    public bool jumping;
     public LockOn lockOn;
     Rigidbody rig;
+    Vector3 movingVector;
     #endregion
 
     #region Animation variables
@@ -39,6 +41,8 @@ public class SmoothMovement : MonoBehaviour {
      * When in the air, disable movement if parrying
      */
     private void Start() {
+        jumping = false;
+        movingVector = Vector3.zero;
         rig = GetComponent<Rigidbody>();
         moving = false;
         movingTarget = transform;
@@ -51,13 +55,17 @@ public class SmoothMovement : MonoBehaviour {
     }
 
     private void Update() {
-        //Debug.Log(Input.GetAxis("LT"));
         _Input();
+        Identify();
+        anim.SetFloat("Speed", input.magnitude * walkSpeed * Time.deltaTime * 100f);
         if (canMove) {
             Jump();
         }
         MovePlayer();
-        Identify();
+    }
+
+    private void FixedUpdate() {
+        anim.SetFloat("Speed", input.magnitude * walkSpeed * Time.deltaTime * 100f);
     }
 
     private void _Input () {
@@ -93,22 +101,30 @@ public class SmoothMovement : MonoBehaviour {
     }
 
     private void MovePlayer () {
+        movingVector.y = 0f;
         if (moving) {
             //Change walk speed for speed and set the variable depending on the input
             if (canMove) {
-                rig.MovePosition(transform.position + movingTarget.forward * input.magnitude * 1.5f * walkSpeed * Time.deltaTime);
+                movingVector = movingTarget.forward * input.magnitude * walkSpeed * Time.deltaTime;
                 anim.SetBool("Walk", true);
+            }
+            else {
+                movingVector = Vector3.zero;
+                anim.SetBool("Walk", false);
             }
         }
         else {
+            movingVector = Vector3.zero;
             anim.SetBool("Walk", false);
         }
+        rig.MovePosition(transform.position + movingVector);
     }
 
     private void Jump () {
         var rb = GetComponent<Rigidbody>();
         if ((Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space)) && grounded) {
             //anim.SetBool("Jump", true);
+            jumping = true;
             rb.velocity += Vector3.up * jumpForce;
         }
         if (distance >= maxJumpDistance) {

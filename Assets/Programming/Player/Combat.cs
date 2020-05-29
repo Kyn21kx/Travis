@@ -13,7 +13,6 @@ public class Combat : MonoBehaviour {
     private float angleOfAssist;
     public Transform sword;
     public float swordDamage;
-    private float auxDamage;
     public float boostDamage;
     private Animator anim;
     [SerializeField]
@@ -23,7 +22,6 @@ public class Combat : MonoBehaviour {
     public bool canMeleeAttack;
     private Rigidbody rig;
     private Transform target;
-    Vector3 movingPos;
     CapsuleCollider swordColl;
     Rigidbody rigSword;
     [SerializeField]
@@ -35,7 +33,6 @@ public class Combat : MonoBehaviour {
     [SerializeField]
     private Transform[] basicAttackPos;
     Transform placeForSword;
-    Transform swordHolder;
     [SerializeField]
     private Transform magneticCollider;
     Quaternion attackRot;
@@ -62,8 +59,6 @@ public class Combat : MonoBehaviour {
         canMeleeAttack = true;
         oneTimeMagnetic = false;
         rig = GetComponent<Rigidbody>();
-        swordHolder = GameObject.Find("SwordHolder").transform;
-        auxDamage = swordDamage;
         attacking = false;
         anim = GetComponent<Animator>();
         sword = GameObject.FindGameObjectWithTag("Sword").transform;
@@ -131,7 +126,6 @@ public class Combat : MonoBehaviour {
     }
 
     private void Start_Anim () {
-        movingPos = rig.position + transform.forward;
         anim.SetTrigger(spellRef.type.ToString());
         MoveOnAttack();
         movRef.canMove = false;
@@ -140,7 +134,6 @@ public class Combat : MonoBehaviour {
         canMeleeAttack = false;
         //Update the transform.forward for another value if you are rotating
         pos1 = transform.position;
-        //movingPos = rig.position + attackStepDirection;
         spellRef.canCastSpells = false;
         if (spellRef.type.Equals(SpellShooting.Type.Magnetism)) {
             magneticCollider.position = basicAttackPos[0].position;
@@ -151,17 +144,19 @@ public class Combat : MonoBehaviour {
     }
 
     private void SwordSlash() {
-        attackIndex++;
-        staminaRef.Reduce(staminaCost);
-        rig.velocity *= 0f;
-        if (spellRef.type.Equals(SpellShooting.Type.Magnetism)) {
-            magneticCollider.gameObject.SetActive(true);
+        if (attacking) {
+            attackIndex++;
+            staminaRef.Reduce(staminaCost);
+            rig.velocity *= 0f;
+            if (spellRef.type.Equals(SpellShooting.Type.Magnetism)) {
+                magneticCollider.gameObject.SetActive(true);
+            }
+            else {
+                swordColl.enabled = true;
+            }
+            movRef.canMove = false;
+            canMagneticMove = false;
         }
-        else {
-            swordColl.enabled = true;
-        }
-        movRef.canMove = false;
-        canMagneticMove = false;
     }
 
     private void FinishedStrike () {

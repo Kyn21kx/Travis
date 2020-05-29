@@ -174,7 +174,20 @@ public class Behaviour : MonoBehaviour {
         else {
             burn = false;
         }
-        player.GetComponent<CallOfBeyond>().wrath += (dmg * 0.1f);
+        //Will process the shield amount, and return the health
+        float newHealth = ShieldDamager(dmg);
+        if (newHealth != health)
+            anim.SetTrigger("Hit");
+        health = newHealth;
+        shieldRecoveryCooldown = auxShieldRecoveryCooldown;
+        enCombatRef.swordColl.enabled = false;
+        enCombatRef.attacking = false;
+        //Substract a bit from the probability to allow movement to be restablished
+        enCombatRef.attackProbability -= UnityEngine.Random.Range(0.2f, 1f);
+        canMove = true;
+        environment.detected = true;
+    }
+    public void Damage(float dmg) {
         //Will process the shield amount, and return the health
         float newHealth = ShieldDamager(dmg);
         if (newHealth != health)
@@ -233,7 +246,7 @@ public class Behaviour : MonoBehaviour {
         var combatController = player.GetComponent<Combat>();
         //Detects if the enemy is being hit by the player's sword
         if (other.transform.CompareTag("Sword")) {
-            this.Damage(combatController.swordDamage, 0f, 0f);
+            this.Damage(combatController.swordDamage);
             Debug.Log(other.transform.forward);
             hit = true;
             combatController.source.PlayOneShot(combatController.clip);
@@ -247,7 +260,11 @@ public class Behaviour : MonoBehaviour {
     }
 
     bool followingPlayer = false;
-
+    /// <summary>
+    /// Sets up a destination to use the custom pathfinder (when there are no obstacles in a certain distance, the enemy will follow a direct vector towards the target, otherwise, turn on A* algorithm)
+    /// </summary>
+    /// <param name="target">Transform of the target object</param>
+    /// <param name="minDistance">Distance threshold to stop the agent</param>
     public void PathFindingMovement (Transform target, float minDistance) {
         //Destination - source
         //Move this to variable and function UpdateAnimatorParameters()
@@ -272,6 +289,12 @@ public class Behaviour : MonoBehaviour {
             }
         }
     }
+    /// <summary>
+    /// Sets up a destination to use the custom pathfinder (when there are no obstacles in a certain distance, the enemy will follow a direct vector towards the target, otherwise, turn on A* algorithm)
+    /// </summary>
+    /// <param name="target">Destination vector</param>
+    /// <param name="targetTag">Tag to check that there are obstacles in the way</param>
+    /// <param name="minDistance">Distance threshold for the agent to stop</param>
     public void PathFindingMovement(Vector3 target, string targetTag, float minDistance) {
         //Destination - source
         //Move this to variable and function UpdateAnimatorParameters()
@@ -367,12 +390,15 @@ public class Behaviour : MonoBehaviour {
             }
             else {
                 _dmg = Mathf.Abs(shield);
+                player.GetComponent<CallOfBeyond>().wrath += (_dmg * 0.1f);
                 shield = 0;
             }
         }
         return shield > 0 ? health : health - _dmg;
     }
-
+    /// <summary>
+    /// If the enemy does not take damage for the shieldRecoveryCooldown time value, the shield will start regenerating.
+    /// </summary>
     private void RecoverShield () {
         if (shield != auxShield) {
             shieldRecoveryCooldown -= Time.deltaTime;

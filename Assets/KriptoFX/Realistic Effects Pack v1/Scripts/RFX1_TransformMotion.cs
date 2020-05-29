@@ -162,7 +162,8 @@ public class RFX1_TransformMotion : MonoBehaviour
                 else {
                     if (hit.transform.CompareTag("Enemy")) {
                         var enemyRef = hit.transform.GetComponent<Behaviour>();
-                        enemyRef.Damage(damage, 0f, 0f);
+                        //Single hit
+                        enemyRef.Damage(damage);
                         switch (appliedEffect) {
                             case Effects.Burn:
                                 //Correct burn mechanic

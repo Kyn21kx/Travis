@@ -228,6 +228,7 @@
     <Compile Include="Assets\Programming\Player\Combat.cs" />
     <Compile Include="Assets\Programming\Player\ComboManager.cs" />
     <Compile Include="Assets\Programming\Player\Dash.cs" />
+    <Compile Include="Assets\Programming\Player\FeetGrounder.cs" />
     <Compile Include="Assets\Programming\Player\HealthManager.cs" />
     <Compile Include="Assets\Programming\Player\LevelManager.cs" />
     <Compile Include="Assets\Programming\Player\LockOn.cs" />
